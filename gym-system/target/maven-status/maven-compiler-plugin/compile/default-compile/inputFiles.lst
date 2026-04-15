@@ -1,0 +1,11 @@
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\controllers\person\PersonController.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\controllers\person\TestLogController.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\data\dto\PersonDTO.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\exception\ExceptionResponse.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\exception\hadler\CustomEntityResponseHandler.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\exception\ResourceNotFoundException.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\mapper\ObjectMapper.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\model\Person.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\repository\PersonRepository.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\service\PersonService.java
+C:\estudos-java\rest-with-spring-boot-and-java\08_EighthStepMigrationsWithFlyway\src\main\java\br\com\application\Startup.java

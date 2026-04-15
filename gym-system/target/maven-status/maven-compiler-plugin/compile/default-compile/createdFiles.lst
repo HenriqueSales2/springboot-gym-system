@@ -1,0 +1,11 @@
+br\com\application\model\Person.class
+br\com\application\exception\hadler\CustomEntityResponseHandler.class
+br\com\application\repository\PersonRepository.class
+br\com\application\Startup.class
+br\com\application\controllers\person\TestLogController.class
+br\com\application\data\dto\PersonDTO.class
+br\com\application\mapper\ObjectMapper.class
+br\com\application\service\PersonService.class
+br\com\application\controllers\person\PersonController.class
+br\com\application\exception\ResourceNotFoundException.class
+br\com\application\exception\ExceptionResponse.class
