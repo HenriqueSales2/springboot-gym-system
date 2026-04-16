@@ -1,12 +1,27 @@
 package br.com.application.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    @Value("${cors.originPatterns:default}") // spring vai setar essa propriedade através do application.yml na váriavel abaixo
+    private String corsOriginPatterns = "";
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) { // habilitando CORS na aplicação através deste método
+        var allowedOrigins = corsOriginPatterns.split(","); // isso vai gerar uma lista com as URLS que setei no application.yml, e vai splitar (cortar as virgulas e pegar só as URLS)
+        registry.addMapping("/**") // todas as requisições vão ser filtradas por CORS
+                .allowedOrigins(allowedOrigins)
+                //.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS") // caso queira filtrar os métodos que deseja permitir
+                .allowedMethods("*") // eu vou permitir todos, usando o "*"
+                .allowCredentials(true);
+    }
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
@@ -35,4 +50,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .mediaType("yaml", MediaType.APPLICATION_YAML); // permite fazer os métodos HTTPs pelo Header Param e utilizar YAML como forma de consultar os dados
 
     }
+
+
 }

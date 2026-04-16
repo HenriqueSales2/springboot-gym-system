@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/* especificar o dominio do site que vai ser acessado pelo cliente,
+ como estou rodando localhost vou atribuí-lo ao Cross Origin.
+ O correto é habilitar o CORS de Forma Global através da Classe de
+ Configuration, em último caso Annotations específicas para cada Endpoint
+*/
+// @CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/person/v1")
 @Tag(name = "People", description = "Endpoints for Managing People")
@@ -47,7 +53,8 @@ public class PersonController implements PersonControllerDocs {
         return service.findAll();
     }
 
-
+    // exemplo de implementação do CORS à um Endpoint específico
+    //@CrossOrigin(origins = {"http://localhost:8080", "https://example.com.br"})
     @PostMapping(
             consumes = {
                     MediaType.APPLICATION_JSON_VALUE,
