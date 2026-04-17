@@ -8,6 +8,7 @@ public interface TestConfigs {
 
     String ORIGIN_EXAMPLE = "https://example.com.br";
     String ORIGIN_ERROR = "https://error.com.br";
+    String ORIGIN_LOCAL = "http://localhost:8080";
 
 
 }
