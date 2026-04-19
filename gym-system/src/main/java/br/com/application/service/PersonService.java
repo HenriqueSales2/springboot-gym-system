@@ -16,6 +16,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,14 +28,6 @@ public class PersonService {
     @Autowired
     PersonRepository repository;
 
-
-    public List<PersonDTO> findAll() {
-        logger.info("Finding all People!");
-        var persons = parseListObjects(repository.findAll(), PersonDTO.class); // retornando uma lista de entidades
-        persons.forEach(PersonService::addHateoasLinks); // adicionando método Reference, ideal para listas
-        return persons;
-    }
-
     public PersonDTO findById(Long id) {
         logger.info("Finding one Person!");
         var entity = repository.findById(id)
@@ -43,6 +36,16 @@ public class PersonService {
         addHateoasLinks(dto);
         return dto;
     }
+
+
+    public List<PersonDTO> findAll() {
+        logger.info("Finding all People!");
+        var persons = parseListObjects(repository.findAll(), PersonDTO.class); // retornando uma lista de entidades
+        persons.forEach(PersonService::addHateoasLinks); // adicionando método Reference, ideal para listas
+        return persons;
+    }
+
+
 
 
     public PersonDTO create(PersonDTO personDTO) {
@@ -74,6 +77,20 @@ public class PersonService {
         return dto;
     }
 
+
+    // NOVO MÉTODO (esse método desabilita uma pessoa)
+    @Transactional // adicionando essa anotação chamada "Transactional", pois não é um método oficial do Spring JPA
+    public PersonDTO disablePerson(Long id) {
+        logger.info("Disable a Person!");
+        repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No record found for this ID!"));
+        repository.disablePerson(id);
+        var entity = repository.findById(id).get(); // pegando a entidade direto, pois se não existir id, cai em uma exceção
+        var dto = parseObject(entity, PersonDTO.class); // convertendo em DTO, atualizando, e salvando a entidade
+        addHateoasLinks(dto); // adicionando os links Hateoas à entidade convertida
+        return dto;
+    }
+
     public void delete(Long id) {
         logger.info("Delete one Person!");
         Person entity = repository.findById(id)
@@ -101,6 +118,11 @@ public class PersonService {
                 .update(dto)) // passando o PersonDTO como parâmetro
                 .withRel("update") // passamos o relacionamento dentro dos parenteses, nesse caso é o update
                 .withType("PUT")); // tipo de método HTTP
+
+        dto.add(linkTo(methodOn(PersonController.class)
+                .disablePerson(dto.getId())) // passando o PersonDTO como parâmetro
+                .withRel("disablePerson") // passamos o relacionamento dentro dos parenteses, nesse caso é o update
+                .withType("PATCH")); // tipo de método HTTP
 
 
         dto.add(linkTo(methodOn(PersonController.class)
