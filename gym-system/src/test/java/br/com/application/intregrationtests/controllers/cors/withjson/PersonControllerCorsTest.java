@@ -1,4 +1,4 @@
-package br.com.application.intregrationtests.controllers.person.withjson;
+package br.com.application.intregrationtests.controllers.cors.withjson;
 
 import br.com.application.config.TestConfigs;
 import br.com.application.intregrationtests.dto.PersonDTO;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT) // vamos definir a porta que o spring boot vai utilizar para os testes
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerTest extends AbstractIntegrationTest { // sem estender essa classe abstrata que criamos os testes falham
+class PersonControllerCorsTest extends AbstractIntegrationTest { // sem estender essa classe abstrata que criamos os testes falham
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
@@ -73,6 +73,7 @@ class PersonControllerTest extends AbstractIntegrationTest { // sem estender ess
         assertEquals("Doe", createdPerson.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
         assertEquals("New York City - New York - USA", createdPerson.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
         assertEquals("Male", createdPerson.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
+        assertTrue(createdPerson.getEnabled()); // verificar se o mock de uma pessoa está habilitado
     }
 
     @Test
@@ -140,6 +141,7 @@ class PersonControllerTest extends AbstractIntegrationTest { // sem estender ess
         assertEquals("Doe", createdPerson.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
         assertEquals("New York City - New York - USA", createdPerson.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
         assertEquals("Male", createdPerson.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
+        assertTrue(createdPerson.getEnabled()); // verificar se o mock de uma pessoa está habilitado
          }
 
     @Test
@@ -187,5 +189,7 @@ class PersonControllerTest extends AbstractIntegrationTest { // sem estender ess
         personDTO.setLastName("Doe");
         personDTO.setAddress("New York City - New York - USA");
         personDTO.setGender("Male");
+        personDTO.setEnabled(true);
+
     }
 }

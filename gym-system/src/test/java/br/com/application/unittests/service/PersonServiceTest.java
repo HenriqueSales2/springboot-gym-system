@@ -1,8 +1,10 @@
 package br.com.application.unittests.service;
 
 import br.com.application.data.dto.PersonDTO;
+import br.com.application.data.dto.PersonalDTO;
 import br.com.application.exception.RequiredObjectIsNullException;
 import br.com.application.model.Person;
+import br.com.application.model.Personal;
 import br.com.application.repository.PersonRepository;
 import br.com.application.service.PersonService;
 import br.com.application.unittests.mapper.mocks.MockPerson;
@@ -102,16 +104,11 @@ class PersonServiceTest {
     @Test
     void create() {
 
-        Person person =  input.mockEntity(1);
-        Person persisted = person;
-        persisted.setId(1L);
-
         PersonDTO dto = input.mockDTO(1);
 
-        person.setId(1L);
         when(repository // dizendo ao Mockito o que ele deve fazer quando o Repositório for invocado
-                .save(person)) // nesse caso é chamar o método findById (passando como parâmetro o id, que seria um mock)
-                .thenReturn(persisted); // e o que ele deve retornar (ele vai retornar uma instancia de "person", dessa vez não é Optional)
+                .save(any(Person.class))) // nesse caso é chamar o método findById (passando como parâmetro o id, que seria um mock)
+                .thenReturn(input.mockEntity(1)); // e o que ele deve retornar (ele vai retornar uma instancia de "person", dessa vez não é Optional)
 
         var result = service.create(dto);
 

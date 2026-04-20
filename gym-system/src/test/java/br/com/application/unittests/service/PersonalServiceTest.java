@@ -104,16 +104,11 @@ class PersonalServiceTest {
     @Test
     void create() {
 
-        Personal personal =  input.mockEntity(1);
-        Personal persisted = personal;
-        persisted.setId(1L);
-
         PersonalDTO dto = input.mockDTO(1);
 
-        personal.setId(1L);
         when(repository // dizendo ao Mockito o que ele deve fazer quando o Repositório for invocado
-                .save(personal)) // nesse caso é chamar o método findById (passando como parâmetro o id, que seria um mock)
-                .thenReturn(persisted); // e o que ele deve retornar (ele vai retornar uma instancia de "person", dessa vez não é Optional)
+                .save(any(Personal.class))) // nesse caso é chamar o método findById (passando como parâmetro o id, que seria um mock)
+                .thenReturn(input.mockEntity(1)); // e o que ele deve retornar (ele vai retornar uma instancia de "person", dessa vez não é Optional)
 
         var result = service.create(dto);
 
