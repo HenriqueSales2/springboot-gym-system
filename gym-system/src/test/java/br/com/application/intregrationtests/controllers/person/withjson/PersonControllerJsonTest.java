@@ -216,11 +216,6 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
     }
 
 
-
-//    @Test
-//    void findAll() {
-//    }
-
     private void mockPerson() {
         personDTO.setFirstName("Arthur");
         personDTO.setLastName("Morgan");

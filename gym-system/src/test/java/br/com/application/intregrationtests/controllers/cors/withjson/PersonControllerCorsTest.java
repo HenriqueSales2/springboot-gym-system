@@ -171,7 +171,6 @@ class PersonControllerCorsTest extends AbstractIntegrationTest { // sem estender
         assertEquals("Invalid CORS request", content); // esperamos essa mensagem, pois esse Mock é para simular um erro de "Invalid CORS request"
     }
 
-
 //    @Test
 //    void update() {
 //    }
