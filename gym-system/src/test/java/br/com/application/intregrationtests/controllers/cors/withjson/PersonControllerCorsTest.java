@@ -1,7 +1,7 @@
 package br.com.application.intregrationtests.controllers.cors.withjson;
 
 import br.com.application.config.TestConfigs;
-import br.com.application.intregrationtests.dto.PersonDTO;
+import br.com.application.intregrationtests.dto.withjson.PersonDTO;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -171,17 +171,6 @@ class PersonControllerCorsTest extends AbstractIntegrationTest { // sem estender
         assertEquals("Invalid CORS request", content); // esperamos essa mensagem, pois esse Mock é para simular um erro de "Invalid CORS request"
     }
 
-//    @Test
-//    void update() {
-//    }
-
-//    @Test
-//    void delete() {
-//    }
-
-//    @Test
-//    void findAll() {
-//    }
 
     private void mockPerson() {
         personDTO.setFirstName("John");

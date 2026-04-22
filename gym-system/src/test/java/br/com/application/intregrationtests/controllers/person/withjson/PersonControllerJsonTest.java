@@ -1,7 +1,7 @@
 package br.com.application.intregrationtests.controllers.person.withjson;
 
 import br.com.application.config.TestConfigs;
-import br.com.application.intregrationtests.dto.PersonDTO;
+import br.com.application.intregrationtests.dto.withjson.PersonDTO;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,6 +31,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
 
     @BeforeAll // para não ficar criando instâncias novas toda vez que um teste for executado
     static void setUp() {
+
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); // desabilita requisições para objetos desconhecidos
         personDTO = new PersonDTO();
@@ -39,6 +40,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
     @Test
     @Order(1) // vai ser o primeiro teste a ser executado
     void createTest() throws JsonProcessingException { // colocando o sufixo "Test" no método create
+
         mockPerson();
 
         specification = new RequestSpecBuilder()
@@ -77,6 +79,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
     @Test
     @Order(2) // vai ser o primeiro teste a ser executado
     void updateTest() throws JsonProcessingException { // colocando o sufixo "Test" no método update
+
         personDTO.setLastName("Callahan");
 
         var content = given(specification) // armazenando todo esse conteúdo em uma variável
@@ -109,6 +112,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
     @Test
     @Order(3) // vai ser o terceiro teste a ser executado
     void findByIdTest() throws JsonProcessingException { // colocando o sufixo "Test" no método findById
+
         var content = given(specification) // armazenando todo esse conteúdo em uma variável
                     .contentType(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
                     .pathParam("id", personDTO.getId()) // dessa vez passamos o parâmetro através do pathParam, ou seja, direto da URL, nesse caso eu coloco o nome do parâmetro e depois pego id da classe PersonDTO
@@ -137,6 +141,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
     @Test
     @Order(4) // vai ser o quarto teste a ser executado
     void disablePersonTest() throws JsonProcessingException { // colocando o sufixo "Test" no método disablePerson
+
         var content = given(specification) // armazenando todo esse conteúdo em uma variável
                     .contentType(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
                     .pathParam("id", personDTO.getId()) // dessa vez passamos o parâmetro através do pathParam, ou seja, direto da URL, nesse caso eu coloco o nome do parâmetro e depois pego id da classe PersonDTO
@@ -165,6 +170,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
     @Test
     @Order(5) // vai ser o quinto teste a ser executado
     void deleteTest() throws JsonProcessingException { // colocando o sufixo "Test" no método delete
+
         given(specification) // não precisa guardar todo o conteúdo em uma váriavel, pois o método "delete" não retorna nada
                     .pathParam("id", personDTO.getId()) // dessa vez passamos o parâmetro através do pathParam, ou seja, direto da URL, nesse caso eu coloco o nome do parâmetro e depois pego id da classe PersonDTO
                 .when() // quando executar uma operação
@@ -174,8 +180,9 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
     }
 
     @Test
-    @Order(6) // vai ser o terceiro teste a ser executado
+    @Order(6) // vai ser o sexto teste a ser executado
     void findAllTest() throws JsonProcessingException { // colocando o sufixo "Test" no método findAll
+
         var content = given(specification) // armazenando todo esse conteúdo em uma variável
                     .accept(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
                 .when() // quando executar uma operação
@@ -217,6 +224,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
 
 
     private void mockPerson() {
+
         personDTO.setFirstName("Arthur");
         personDTO.setLastName("Morgan");
         personDTO.setAddress("Indiana - USA");

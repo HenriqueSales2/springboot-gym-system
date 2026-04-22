@@ -1,4 +1,4 @@
-package br.com.application.intregrationtests.dto;
+package br.com.application.intregrationtests.dto.withjson;
 
 import java.io.Serializable;
 import java.util.Objects;
