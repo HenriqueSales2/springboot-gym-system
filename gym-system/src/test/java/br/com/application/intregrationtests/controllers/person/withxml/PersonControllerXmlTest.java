@@ -92,7 +92,7 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
                         TestConfigs.ORIGIN_LOCAL
                 )
                 .setBasePath("/api/person/v1")
-                .setPort(TestConfigs.SERVER_PORT) // trocar aqui talvez
+                .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();

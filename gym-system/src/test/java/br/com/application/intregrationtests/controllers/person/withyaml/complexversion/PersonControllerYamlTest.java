@@ -1,6 +1,6 @@
 package br.com.application.intregrationtests.controllers.person.withyaml.complexversion;
 // ainda incompleto
-/*import br.com.application.config.TestConfigs;
+import br.com.application.config.TestConfigs;
 import br.com.application.intregrationtests.controllers.person.withyaml.complexversion.mapper.YAMLMapper;
 import br.com.application.intregrationtests.dto.withyaml.PersonDTOYaml;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
@@ -17,6 +17,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -58,7 +59,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                     .config(RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("application/yaml", ContentType.TEXT)))
                     .accept(MediaType.APPLICATION_YAML_VALUE)
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
-                    .body(PersonControllerYamlTest.convertYaml())
+                    .body(personDTO, mapper) // serializando
                 .when()
                     .post()
                 .then()
@@ -66,13 +67,12 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .asString();
+                        .as(PersonDTOYaml.class, mapper); // desserializando
 
-        PersonDTOYaml createdPerson = mapper.readValue(content, PersonDTOYaml.class);
-        personDTO = createdPerson;
+        personDTO = content;
 
-        assertNotNull(createdPerson.getId());
-        assertTrue(createdPerson.getId() > 0);
+        assertNotNull(content.getId());
+        assertTrue(content.getId() > 0);
 
         personDTO.setFirstName("John");
         personDTO.setLastName("Marston");
@@ -102,7 +102,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                     .config(RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("application/yaml", ContentType.TEXT)))
                     .accept(MediaType.APPLICATION_YAML_VALUE)
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
-                    .body(PersonControllerYamlTest.convertYaml())
+                    .body(personDTO, mapper)
                 .when()
                     .put()
                 .then()
@@ -110,19 +110,18 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .asString();
+                        .as(PersonDTOYaml.class, mapper);
 
-        PersonDTOYaml createdPerson = yamlMapper.readValue(content, PersonDTOYaml.class);
-        personDTO = createdPerson;
+        personDTO = content;
 
-        assertNotNull(createdPerson.getId());
-        assertTrue(createdPerson.getId() > 0);
+        assertNotNull(content.getId());
+        assertTrue(content.getId() > 0);
 
-        assertEquals("Jim", createdPerson.getFirstName());
-        assertEquals("Milton", createdPerson.getLastName());
-        assertEquals("North - EUA", createdPerson.getAddress());
-        assertEquals("Male", createdPerson.getGender());
-        assertTrue(createdPerson.getEnabled());
+        assertEquals("Jim", content.getFirstName());
+        assertEquals("Milton", content.getLastName());
+        assertEquals("North - EUA", content.getAddress());
+        assertEquals("Male", content.getGender());
+        assertTrue(content.getEnabled());
     }
 
     @Test
@@ -140,19 +139,18 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .asString();
+                        .as(PersonDTOYaml.class, mapper);
 
-        PersonDTOYaml createdPerson = yamlMapper.readValue(content, PersonDTOYaml.class);
-        personDTO = createdPerson;
+        personDTO = content;
 
-        assertNotNull(createdPerson.getId());
-        assertTrue(createdPerson.getId() > 0);
+        assertNotNull(content.getId());
+        assertTrue(content.getId() > 0);
 
-        assertEquals("Jim", createdPerson.getFirstName());
-        assertEquals("Milton", createdPerson.getLastName());
-        assertEquals("North - EUA", createdPerson.getAddress());
-        assertEquals("Male", createdPerson.getGender());
-        assertTrue(createdPerson.getEnabled());
+        assertEquals("Jim", content.getFirstName());
+        assertEquals("Milton", content.getLastName());
+        assertEquals("North - EUA", content.getAddress());
+        assertEquals("Male", content.getGender());
+        assertTrue(content.getEnabled());
     }
 
     @Test
@@ -170,19 +168,18 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .asString();
+                        .as(PersonDTOYaml.class, mapper);
 
-        PersonDTOYaml createdPerson = yamlMapper.readValue(content, PersonDTOYaml.class);
-        personDTO = createdPerson;
+        personDTO = content;
 
-        assertNotNull(createdPerson.getId());
-        assertTrue(createdPerson.getId() > 0);
+        assertNotNull(content.getId());
+        assertTrue(content.getId() > 0);
 
-        assertEquals("Jim", createdPerson.getFirstName());
-        assertEquals("Milton", createdPerson.getLastName());
-        assertEquals("North - EUA", createdPerson.getAddress());
-        assertEquals("Male", createdPerson.getGender());
-        assertFalse(createdPerson.getEnabled());
+        assertEquals("Jim", content.getFirstName());
+        assertEquals("Milton", content.getLastName());
+        assertEquals("North - EUA", content.getAddress());
+        assertEquals("Male", content.getGender());
+        assertFalse(content.getEnabled());
     }
 
     @Test
@@ -201,7 +198,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
     @Order(6)
     void findAllTestYAML() throws JsonProcessingException {
 
-        var content = given(specification)
+        var response = given(specification)
                     .accept(MediaType.APPLICATION_YAML_VALUE)
                 .when()
                     .get()
@@ -210,9 +207,9 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .asString();
+                        .as(PersonDTOYaml[].class, mapper); // passando um Array de PersonDTOYaml
 
-        List<PersonDTOYaml> people = yamlMapper.readValue(content, new TypeReference<List<PersonDTOYaml>>() {});
+        List<PersonDTOYaml> people = Arrays.asList(response);
 
         PersonDTOYaml personOne = people.get(0);
         personDTO = personOne;
@@ -249,9 +246,4 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         personDTO.setEnabled(true);
     }
 
-    private static String convertYaml() throws JsonProcessingException {
-        return yamlMapper.writeValueAsString(personDTO);
-    }
-
 }
- */
