@@ -6,7 +6,6 @@ import br.com.application.data.dto.PersonDTO;
 import br.com.application.exception.RequiredObjectIsNullException;
 import br.com.application.exception.ResourceNotFoundException;
 import static br.com.application.mapper.ObjectMapper.parseObject;
-import static br.com.application.mapper.ObjectMapper.parseListObjects;
 import br.com.application.model.Person;
 import br.com.application.repository.PersonRepository;
 import org.slf4j.Logger;
@@ -15,10 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service // serve para injetar dependências sem ficar dando "new Objeto" por exemplo
 public class PersonService {
@@ -27,6 +30,9 @@ public class PersonService {
 
     @Autowired
     PersonRepository repository;
+
+    @Autowired
+    private PagedResourcesAssembler<PersonDTO> assembler;
 
     public PersonDTO findById(Long id) {
         logger.info("Finding one Person!");
@@ -38,15 +44,56 @@ public class PersonService {
     }
 
 
-    public List<PersonDTO> findAll() {
+    public PagedModel<EntityModel<PersonDTO>> findAll(Pageable pageable) {
         logger.info("Finding all People!");
-        var persons = parseListObjects(repository.findAll(), PersonDTO.class); // retornando uma lista de entidades
+
+        // LÓGICA ANTIGA!
+        /*var persons = parseListObjects(repository.findAll(), PersonDTO.class); // retornando uma lista de entidades
         persons.forEach(PersonService::addHateoasLinks); // adicionando método Reference, ideal para listas
         return persons;
+        */
+
+        // NOVA LÓGICA!
+        var people = repository.findAll(pageable);
+
+        var peopleWithLinks = people.map(person -> {
+            var dto = parseObject(person, PersonDTO.class); // convertendo em DTO, criando, e salvando a entidade
+            addHateoasLinks(dto); // adicionando os links Hateoas
+            return dto; // depois retornamos a entidade convertida junto com os links Hateoas
+                }
+        );
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo
+                (
+                        WebMvcLinkBuilder.methodOn(PersonController.class)
+                                .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))
+                ).withSelfRel();
+
+        return assembler.toModel(peopleWithLinks, findAllLink);
     }
 
+    // NOVO MÉTODO (esse método procura uma pessoa pelo nome)
+    public PagedModel<EntityModel<PersonDTO>> findPeopleByName(String firstName, Pageable pageable) {
 
+        logger.info("Finding People by Name!");
 
+        var people = repository.findPeopleByName(firstName, pageable);
+
+        var peopleWithLinks = people.map(person -> {
+            var dto = parseObject(person, PersonDTO.class); // convertendo em DTO, criando, e salvando a entidade
+            addHateoasLinks(dto); // adicionando os links Hateoas
+            return dto; // depois retornamos a entidade convertida junto com os links Hateoas
+        });
+
+        Link findAllLink  = WebMvcLinkBuilder.linkTo
+                        (
+                                WebMvcLinkBuilder.methodOn(PersonController.class)
+                                        .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))
+                        )
+                .withSelfRel();
+
+        return assembler.toModel(peopleWithLinks, findAllLink);
+    }
 
     public PersonDTO create(PersonDTO personDTO) {
 
@@ -77,7 +124,6 @@ public class PersonService {
         return dto;
     }
 
-
     // NOVO MÉTODO (esse método desabilita uma pessoa)
     @Transactional // adicionando essa anotação chamada "Transactional", pois não é um método oficial do Spring JPA
     public PersonDTO disablePerson(Long id) {
@@ -105,8 +151,14 @@ public class PersonService {
                 .withType("GET")); // tipo de método HTTP
 
         dto.add(linkTo(methodOn(PersonController.class)
-                .findAll()) // sem parâmetros
+                .findAll(1, 12, "asc"))
                 .withRel("findAll") // passamos o relacionamento dentro dos parenteses, nesse caso é o findAll
+                .withType("GET")); // tipo de método HTTP
+
+        // adicionando links hateoas ao novo método
+        dto.add(linkTo(methodOn(PersonController.class)
+                .findPeopleByName(dto.getFirstName(), 1, 12, "asc"))
+                .withRel("findPeopleByName") // passamos o relacionamento dentro dos parenteses, nesse caso é o findAll
                 .withType("GET")); // tipo de método HTTP
 
         dto.add(linkTo(methodOn(PersonController.class)
@@ -119,6 +171,7 @@ public class PersonService {
                 .withRel("update") // passamos o relacionamento dentro dos parenteses, nesse caso é o update
                 .withType("PUT")); // tipo de método HTTP
 
+        // adicionando links hateoas ao novo método
         dto.add(linkTo(methodOn(PersonController.class)
                 .disablePerson(dto.getId())) // passando o PersonDTO como parâmetro
                 .withRel("disablePerson") // passamos o relacionamento dentro dos parenteses, nesse caso é o update
