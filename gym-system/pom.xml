@@ -139,8 +139,8 @@
 				<artifactId>flyway-maven-plugin</artifactId>
 				<configuration>
 					<url>jdbc:mysql://localhost:3306/rest_with_spring_boot_java?userTimezone=true&amp;serverTimezone=UTC</url>
-					<user>seuuser</user>
-					<password>suasenha</password>
+					<user>your_username</user>
+					<password>your_password</password>
 				</configuration>
 
 <!--				adicionando a dependencia do MySQL no flyway-->
