@@ -35,6 +35,7 @@ public interface PersonControllerDocs {
     )
     PersonDTO findById(@PathVariable("id") Long id);
 
+
     // documentando com o Swagger
     @Operation(summary = "Find All People", // aqui é o título do Endpoint
             description = "Finds All People", // adicionando a descrição do Endpoint
@@ -60,6 +61,7 @@ public interface PersonControllerDocs {
             @RequestParam(value = "size", defaultValue = "12") Integer size, // tamanho da página, caso eu não especificar nada, ele retorna a quantidade de itens setada por padrão (que nesse caso é "12")
             @RequestParam(value = "direction", defaultValue = "asc") String direction // aqui é a direção da página, se ela é em ordem ascendente (crescente) ou descendente (decrescente), por padrão deixei ascendente (que nesse caso é "asc")
     );
+
 
     // documentando com o Swagger
     @Operation(summary = "Find People by FirstName", // aqui é o título do Endpoint
@@ -89,7 +91,6 @@ public interface PersonControllerDocs {
     );
 
 
-
     // documentando com o Swagger
     @Operation(summary = "Create a new Person", // aqui é o título do Endpoint
             description = "Adds a new person by passing in a JSON, XML or YML representation of the person.", // adicionando a descrição do Endpoint
@@ -106,6 +107,7 @@ public interface PersonControllerDocs {
             }
     )
     PersonDTO create(@RequestBody PersonDTO personDTO);
+
 
     // documentando com o Swagger
     @Operation(summary = "Updates a Person's information", // aqui é o título do Endpoint
@@ -126,6 +128,7 @@ public interface PersonControllerDocs {
     )
     PersonDTO update(@RequestBody PersonDTO personDTO);
 
+
     // documentando com o Swagger
     @Operation(summary = "Disable a Person", // aqui é o título do Endpoint
             description = "Disable a specific person by your ID", // adicionando a descrição do Endpoint
@@ -145,6 +148,7 @@ public interface PersonControllerDocs {
     )
     PersonDTO disablePerson(@PathVariable("id") Long id);
 
+
     // documentando com o Swagger
     @Operation(summary = "Deletes a Person", // aqui é o título do Endpoint
             description = "Deletes a specific person by their ID.", // adicionando a descrição do Endpoint
@@ -158,4 +162,5 @@ public interface PersonControllerDocs {
             }
     )
     ResponseEntity<?> delete(@PathVariable("id") Long id);
+
 }
