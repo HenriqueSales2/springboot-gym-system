@@ -1,6 +1,6 @@
-package br.com.application.intregrationtests.dto.wrappers.xml;
+package br.com.application.intregrationtests.dto.person.wrappers.xml;
 
-import br.com.application.intregrationtests.dto.PersonDTO;
+import br.com.application.intregrationtests.dto.person.PersonDTO;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 

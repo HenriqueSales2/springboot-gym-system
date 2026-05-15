@@ -1,11 +1,10 @@
 package br.com.application.intregrationtests.controllers.person.json;
 
 import br.com.application.config.TestConfigs;
-import br.com.application.intregrationtests.dto.PersonDTO;
-import br.com.application.intregrationtests.dto.wrappers.json.WrapperPersonDTO;
+import br.com.application.intregrationtests.dto.person.PersonDTO;
+import br.com.application.intregrationtests.dto.person.wrappers.json.WrapperPersonDTO;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.builder.RequestSpecBuilder;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,12 +45,11 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
         mockPerson();
 
         specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, // pegando os parâmetros setados no TestConfigs (esses parâmetros são que podemos setar no Postman na aba "Headers", esse por exemplo fica na parte de Key e é o Origin)
-                        TestConfigs.ORIGIN_EXAMPLE) // pegando os parâmetros setados no TestConfigs (esses parâmetros são que podemos setar no Postman na aba "Headers", esse por exemplo fica na parte de Value e é https://example.com.br)
+                .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN, // pegando os parâmetros setados no TestConfigs (esses parâmetros são que podemos setar no Postman na aba "Headers", esse por exemplo fica na parte de Key e é o Origin)
+                        TestConfigs.ORIGIN_EXAMPLE)) // pegando os parâmetros setados no TestConfigs (esses parâmetros são que podemos setar no Postman na aba "Headers", esse por exemplo fica na parte de Value e é https://example.com.br)
                 .setBasePath("/api/person/v1") // aqui é a URLBASE, ou seja, o caminho que fazemos para criar um user
                 .setPort(TestConfigs.SERVER_PORT) // aqui é a porta do servidor, nesse caso eu setei 8888, pois como aqui são testes se eu colocar 8080 pode conflitar com a aplicação base
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL)) // mostrar os destalhes das logs que estão indo na aplicação e investigar possíveis erros
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL)) // mostrar os destalhes das logs que vindo indo na aplicação e investigar possíveis erros
+                .addFilters(List.of(new RequestLoggingFilter(LogDetail.ALL), new ResponseLoggingFilter(LogDetail.ALL))) // mostrar os destalhes das logs que estão indo e voltando na aplicação e investigar possíveis erros
                 .build();
 
         var content = given(specification) // armazenando todo esse conteúdo em uma variável
@@ -181,14 +180,62 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
     }
 
     @Test
-    @Order(6) // vai ser o sexto teste a ser executado
-    void findAllTest() throws JsonProcessingException { // colocando o sufixo "Test" no método findAll
+    @Order(6)
+    void findAllTest() throws JsonProcessingException {
 
+        var content = given(specification)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .queryParams("page", 3, "size", 12, "direction", "asc")
+                .when()
+                    .get()
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                    .body()
+                        .asString();
+
+        //WrapperPersonDTO wrapper = mapper.readValue(content, WrapperPersonDTO.class);
+        WrapperPersonDTO wrapper = objectMapper.readValue(content, WrapperPersonDTO.class);
+        List<PersonDTO> people = wrapper.getEmbedded().getPeople();
+
+        PersonDTO personOne = people.get(0);
+        personDTO = personOne;
+
+        assertNotNull(personOne.getId());
+        assertTrue(personOne.getId() > 0);
+
+        assertEquals("Aluino", personOne.getFirstName());
+        assertEquals("Ollive", personOne.getLastName());
+        assertEquals("Apt 239", personOne.getAddress());
+        assertEquals("Male", personOne.getGender());
+        assertTrue(personOne.getEnabled());
+
+        PersonDTO personFour = people.get(4);
+        personDTO = personFour;
+
+        assertNotNull(personOne.getId());
+        assertTrue(personOne.getId() > 0);
+
+        assertEquals("Alyssa", personFour.getFirstName());
+        assertEquals("BURWIN", personFour.getLastName());
+        assertEquals("Apt 551", personFour.getAddress());
+        assertEquals("Female", personFour.getGender());
+        assertFalse(personFour.getEnabled());
+
+    }
+
+    @Test
+    @Order(7) // vai ser o sétimo teste a ser executado
+    void findPeopleByNameTest() throws JsonProcessingException { // colocando o sufixo "Test" no método findAll
+
+        // {{baseUrl}}/api/person/v1/findPeopleByName/and?page=0&size=12&direction=asc
         var content = given(specification) // armazenando todo esse conteúdo em uma variável
                     .accept(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
-                    .queryParams("page", 3, "size", 12, "direction", "asc")
+                    .pathParam("firstName", "and") // colocar o nome do parâmetro e o valor do parâmetro, nesse caso é "and" como exemplo
+                    .queryParams("page", 0, "size", 12, "direction", "asc")
                 .when() // quando executar uma operação
-                    .get()// do tipo get
+                    .get("findPeopleByName/{firstName}")// do tipo get
                 .then() // então
                     .statusCode(200)// eu espero a resposta de statusCode 200 OK (significa que deu tudo certo)
                     .contentType(MediaType.APPLICATION_JSON_VALUE) // assegurando que vai retornar um JSON após a execução do teste
@@ -206,10 +253,10 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
         assertNotNull(personOne.getId()); // assegurar que o id não é nulo
         assertTrue(personOne.getId() > 0); // assegurar que o id é maior que zero
 
-        assertEquals("Aluino", personOne.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Ollive", personOne.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Apt 239", personOne.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Male", personOne.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
+        assertEquals("Alejandrina", personOne.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
+        assertEquals("Turbayne", personOne.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
+        assertEquals("Room 1511", personOne.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
+        assertEquals("Female", personOne.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
         assertTrue(personOne.getEnabled()); // verificar se o mock de uma pessoa está habilitado
 
         PersonDTO personFour = people.get(4); // pegando o indíce 0 da lista, ou seja, a primeira pessoa da lista
@@ -218,12 +265,14 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
         assertNotNull(personFour.getId()); // assegurar que o id não é nulo
         assertTrue(personFour.getId() > 0); // assegurar que o id é maior que zero
 
-        assertEquals("Alyssa", personFour.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("BURWIN", personFour.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Apt 551", personFour.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
+        assertEquals("Andie", personFour.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
+        assertEquals("Gawler", personFour.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
+        assertEquals("Apt 234", personFour.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
         assertEquals("Female", personFour.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
         assertFalse(personFour.getEnabled()); // verificar se o mock de uma pessoa está desabilitada
     }
+
+
 
 
     private void mockPerson() {

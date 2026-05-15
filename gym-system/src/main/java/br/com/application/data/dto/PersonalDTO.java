@@ -1,10 +1,12 @@
 package br.com.application.data.dto;
 
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Relation(collectionRelation = "personals")
 public class PersonalDTO extends RepresentationModel<PersonalDTO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -14,6 +16,7 @@ public class PersonalDTO extends RepresentationModel<PersonalDTO> implements Ser
     private String lastName;
     private String address;
     private String gender;
+    private boolean isPersonal;
 
     public PersonalDTO(){
     }
@@ -58,16 +61,25 @@ public class PersonalDTO extends RepresentationModel<PersonalDTO> implements Ser
         this.gender = gender;
     }
 
+    public boolean isPersonal() {
+        return isPersonal;
+    }
+
+    public void setPersonal(boolean personal) {
+        isPersonal = personal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PersonalDTO that = (PersonalDTO) o;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getAddress(), that.getAddress()) && Objects.equals(getGender(), that.getGender());
+        return isPersonal() == that.isPersonal() && Objects.equals(getId(), that.getId()) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getAddress(), that.getAddress()) && Objects.equals(getGender(), that.getGender());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), getFirstName(), getLastName(), getAddress(), getGender());
+        return Objects.hash(super.hashCode(), getId(), getFirstName(), getLastName(), getAddress(), getGender(), isPersonal());
     }
+
 }

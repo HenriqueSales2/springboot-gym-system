@@ -1,5 +1,7 @@
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://example.com.br # preparando a aplicação para no futuro se conectar com React
+file: # essa propriedade está sendo gerenciado por mim
+  upload-dir: C:/estudos-java/rest-with-spring-boot-and-java/17_UploadAndDownloadFiles/Code/UploadDir
 spring:
   application:
     name: rest-with-spring-boot-and-java

@@ -1,7 +1,9 @@
 package br.com.application.service;
 
+import br.com.application.controllers.person.PersonController;
 import br.com.application.controllers.personal.PersonalController;
 import br.com.application.controllers.person.TestLogController;
+import br.com.application.data.dto.PersonDTO;
 import br.com.application.data.dto.PersonalDTO;
 import br.com.application.exception.RequiredObjectIsNullException;
 import br.com.application.exception.ResourceNotFoundException;
@@ -10,6 +12,12 @@ import br.com.application.repository.PersonalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,12 +35,30 @@ public class PersonalService {
     @Autowired
     PersonalRepository repository;
 
+    @Autowired
+    private PagedResourcesAssembler<PersonalDTO> assembler;
 
-    public List<PersonalDTO> findAllTeachers() {
-        logger.info("Finding all People!");
-        var teachers = parseListObjects(repository.findAll(), PersonalDTO.class); // retornando uma lista de entidades
-        teachers.forEach(PersonalService::addHateoasLinks); // adicionando método Reference, ideal para listas
-        return teachers;
+
+    public PagedModel<EntityModel<PersonalDTO>> findAllTeachers(Pageable pageable) {
+        logger.info("Finding all Personals!");
+
+        var people = repository.findAll(pageable);
+
+        var peopleWithLinks = people.map(person -> {
+                    var dto = parseObject(person, PersonalDTO.class); // convertendo em DTO, criando, e salvando a entidade
+                    addHateoasLinks(dto); // adicionando os links Hateoas
+                    return dto; // depois retornamos a entidade convertida junto com os links Hateoas
+                }
+        );
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo
+                (
+                        WebMvcLinkBuilder.methodOn(PersonController.class)
+                                .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))
+                ).withSelfRel();
+
+        return assembler.toModel(peopleWithLinks, findAllLink);
+
     }
 
     public PersonalDTO findPersonalById(Long id) {
@@ -49,7 +75,7 @@ public class PersonalService {
 
         if (personalDTO == null) throw new RequiredObjectIsNullException();
 
-        logger.info("Creating one Person!");
+        logger.info("Creating one Personal!");
         var entity = parseObject(personalDTO, Personal.class); // fazendo a conversão de PersonalDTO para Personal
         var dto = parseObject(repository.save(entity), PersonalDTO.class); // convertendo em DTO, criando, e salvando a entidade
         addHateoasLinks(dto);
@@ -60,7 +86,7 @@ public class PersonalService {
 
         if (personalDTO == null) throw new RequiredObjectIsNullException();
 
-        logger.info("Updating one Person!");
+        logger.info("Updating one Personal!");
         Personal personal = repository.findById(personalDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("No record found for this ID!"));
         personal.setFirstName(personalDTO.getFirstName());
@@ -75,7 +101,7 @@ public class PersonalService {
     }
 
     public void delete(Long id) {
-        logger.info("Delete one Person!");
+        logger.info("Delete one Personal!");
         Personal entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No record found for this ID!"));
         repository.delete(entity);
@@ -88,8 +114,8 @@ public class PersonalService {
                 .withType("GET")); // tipo de método HTTP
 
         dto.add(linkTo(methodOn(PersonalController.class)
-                .findAllTeachers()) // sem parâmetros
-                .withRel("findAll") // passamos o relacionamento dentro dos parenteses, nesse caso é o findAll
+                .findAllTeachers(1, 12, "asc")) // sem parâmetros
+                .withRel("findAllTeachers") // passamos o relacionamento dentro dos parenteses, nesse caso é o findAll
                 .withType("GET")); // tipo de método HTTP
 
         dto.add(linkTo(methodOn(PersonalController.class)

@@ -1,7 +1,7 @@
 package br.com.application.intregrationtests.controllers.cors.withjson;
 
 import br.com.application.config.TestConfigs;
-import br.com.application.intregrationtests.dto.PersonDTO;
+import br.com.application.intregrationtests.dto.person.PersonDTO;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;

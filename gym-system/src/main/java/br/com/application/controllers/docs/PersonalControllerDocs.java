@@ -1,15 +1,20 @@
 package br.com.application.controllers.docs;
 
+import br.com.application.data.dto.PersonDTO;
 import br.com.application.data.dto.PersonalDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -53,7 +58,11 @@ public interface PersonalControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content), // exibindo o tipo de Status Code (500 = Internal Server Error)
             }
     )
-    List<PersonalDTO> findAllTeachers();
+    ResponseEntity<PagedModel<EntityModel<PersonalDTO>>> findAllTeachers(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "12") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    );
 
     // documentando com o Swagger
     @Operation(summary = "Create a new Personal", // aqui é o título do Endpoint

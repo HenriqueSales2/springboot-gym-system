@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PersonalRepository extends JpaRepository<Personal, Long> {
-    Long id(Long id);
+
 }

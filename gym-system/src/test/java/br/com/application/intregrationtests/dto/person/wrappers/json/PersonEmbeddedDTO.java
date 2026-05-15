@@ -1,6 +1,6 @@
-package br.com.application.intregrationtests.dto.wrappers.json;
+package br.com.application.intregrationtests.dto.person.wrappers.json;
 
-import br.com.application.intregrationtests.dto.PersonDTO;
+import br.com.application.intregrationtests.dto.person.PersonDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;

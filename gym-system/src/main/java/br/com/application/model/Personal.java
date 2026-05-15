@@ -27,6 +27,9 @@ private String address;
 @Column(nullable = false, length = 6)
 private String gender;
 
+@Column(name = "is_personal", nullable = false)
+private boolean isPersonal;
+
     public Personal() {}
 
     public Long getId() {
@@ -69,15 +72,23 @@ private String gender;
         this.gender = gender;
     }
 
+    public boolean isPersonal() {
+        return isPersonal;
+    }
+
+    public void setPersonal(boolean personal) {
+        isPersonal = personal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Personal personal = (Personal) o;
-        return Objects.equals(getId(), personal.getId()) && Objects.equals(getFirstName(), personal.getFirstName()) && Objects.equals(getLastName(), personal.getLastName()) && Objects.equals(getAddress(), personal.getAddress()) && Objects.equals(getGender(), personal.getGender());
+        return isPersonal() == personal.isPersonal() && Objects.equals(getId(), personal.getId()) && Objects.equals(getFirstName(), personal.getFirstName()) && Objects.equals(getLastName(), personal.getLastName()) && Objects.equals(getAddress(), personal.getAddress()) && Objects.equals(getGender(), personal.getGender());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender());
+        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), isPersonal());
     }
 }

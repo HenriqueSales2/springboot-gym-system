@@ -2,8 +2,8 @@ package br.com.application.intregrationtests.controllers.person.yaml;
 
 import br.com.application.config.TestConfigs;
 import br.com.application.intregrationtests.controllers.person.yaml.mapper.YAMLMapper;
-import br.com.application.intregrationtests.dto.PersonDTO;
-import br.com.application.intregrationtests.dto.wrappers.xml.PagedModelPerson;
+import br.com.application.intregrationtests.dto.person.PersonDTO;
+import br.com.application.intregrationtests.dto.person.wrappers.xml.PagedModelPerson;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
@@ -17,8 +17,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.EncoderConfig.encoderConfig;
@@ -46,13 +46,11 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
 
         mockPersonYAML();
         specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN ,
-                        TestConfigs.ORIGIN_LOCAL
-                )
+                .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN,
+                        TestConfigs.ORIGIN_EXAMPLE))
                 .setBasePath("/api/person/v1")
-                .setPort(TestConfigs.SERVER_PORT) // trocar aqui talvez
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilters(List.of(new RequestLoggingFilter(LogDetail.ALL), new ResponseLoggingFilter(LogDetail.ALL)))
                 .build();
 
         var content = given(specification)
@@ -208,7 +206,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .as(PagedModelPerson.class, mapper); // passando um Array de PersonDTO
+                        .as(PagedModelPerson.class, mapper);
 
         List<PersonDTO> people = response.getContent();
 
@@ -236,6 +234,52 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Female", personFour.getGender());
         assertFalse(personFour.getEnabled());
 
+    }
+
+    @Test
+    @Order(7)
+    void findPeopleByNameTest() throws JsonProcessingException {
+
+        // {{baseUrl}}/api/person/v1/findPeopleByName/and?page=0&size=12&direction=asc
+        var content = given(specification)
+                    .accept(MediaType.APPLICATION_YAML_VALUE)
+                    .pathParam("firstName", "and")
+                    .queryParams("page", 0, "size", 12, "direction", "asc")
+                .when()
+                    .get("findPeopleByName/{firstName}")
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .extract()
+                    .body()
+                        .as(PagedModelPerson.class, mapper);
+
+        List<PersonDTO> people = content.getContent();
+
+
+        PersonDTO personOne = people.get(0);
+        personDTO = personOne;
+
+        assertNotNull(personOne.getId());
+        assertTrue(personOne.getId() > 0);
+
+        assertEquals("Alejandrina", personOne.getFirstName());
+        assertEquals("Turbayne", personOne.getLastName());
+        assertEquals("Room 1511", personOne.getAddress());
+        assertEquals("Female", personOne.getGender());
+        assertTrue(personOne.getEnabled());
+
+        PersonDTO personFour = people.get(4);
+        personDTO = personFour;
+
+        assertNotNull(personFour.getId());
+        assertTrue(personFour.getId() > 0);
+
+        assertEquals("Andie", personFour.getFirstName());
+        assertEquals("Gawler", personFour.getLastName());
+        assertEquals("Apt 234", personFour.getAddress());
+        assertEquals("Female", personFour.getGender());
+        assertFalse(personFour.getEnabled());
     }
 
     private void mockPersonYAML() {

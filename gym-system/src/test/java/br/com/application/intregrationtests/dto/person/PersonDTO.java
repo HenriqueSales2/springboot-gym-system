@@ -1,4 +1,4 @@
-package br.com.application.intregrationtests.dto;
+package br.com.application.intregrationtests.dto.person;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
