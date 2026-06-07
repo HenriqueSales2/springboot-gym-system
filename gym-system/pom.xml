@@ -22,6 +22,8 @@
 		<testcontainers.version>2.0.4</testcontainers.version>
         <commons-csv.version>1.14.1</commons-csv.version>
         <apache.poi.version>5.5.1</apache.poi.version>
+        <jasperreports.version>7.0.6</jasperreports.version>
+        <zxing.version>3.5.4</zxing.version>
 
 
 	</properties>
@@ -82,6 +84,47 @@
             <artifactId>poi-ooxml</artifactId>
             <version>${apache.poi.version}</version>
         </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
+        <!--dependencia do Jasper Reports-->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>${jasperreports.version}</version>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts -->
+        <!--dependencia do Jasper Reports Fonts-->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-fonts</artifactId>
+            <version>${jasperreports.version}</version>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-pdf -->
+        <!--dependencia do Jasper Reports PDF-->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-pdf</artifactId>
+            <version>${jasperreports.version}</version>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/com.google.zxing/core -->
+        <!--dependencia do Zxing Core (dependência para usar QR CODE na aplicação)-->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>${zxing.version}</version>
+        </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/com.google.zxing/javase -->
+        <!--dependencia do Zxing Java SE-->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>${zxing.version}</version>
+        </dependency>
+
 
 		<!-- Source: https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
 		<!--dependencia do MySQL-->
