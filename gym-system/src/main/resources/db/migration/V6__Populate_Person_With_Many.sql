@@ -1,4 +1,5 @@
-INSERT INTO person (first_name, last_name, address, gender, enabled) VALUES ('Somerset', 'Spadazzi', 'PO Box 69656', 'Male', b'0'),
+INSERT INTO person (first_name, last_name, address, gender, enabled) VALUES
+('Somerset', 'Spadazzi', 'PO Box 69656', 'Male', b'0'),
 ('Jeremiah', 'Firsby', 'PO Box 14432', 'Male', b'0'),
 ('Reynolds', 'Butfield', 'Apt 481', 'Male', b'1'),
 ('Ibrahim', 'Bowlesworth', 'Room 1296', 'Male', b'0'),
