@@ -1,0 +1,84 @@
+<!-- Created with Jaspersoft Studio version 7.0.6.final using JasperReports Library version 7.0.6-5d2a603fdc6b3db8f842a83383e594f41891534d  -->
+<jasperReport name="workouts" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14bae5e2-b511-4ea3-a687-2065c1e7da6e">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="cmVzdF93aXRoX3NwcmluZ19ib290X2phdmEud29ya291dHMgQVMgLDE2NCwxMDIsMDkwZmJkMGUt&#xa;YWJmYi00NDNlLThiOWYtNGIzMWJjZTM3NTNjOw=="/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL Connection"/>
+	<style name="zebraStyle">
+		<conditionalStyle mode="Opaque" forecolor="#FFFFFF" backcolor="#E0E0E0">
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></conditionExpression>
+		</conditionalStyle>
+	</style>
+	<parameter name="PERSON_ID" class="java.lang.String"/>
+	<parameter name="SUB_REPORT_DATA_SOURCE" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="workouts"/>
+	</field>
+	<field name="exerciseName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="exercise_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="exerciseName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="workouts"/>
+	</field>
+	<field name="muscleGroup" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="muscle_group"/>
+		<property name="com.jaspersoft.studio.field.label" value="muscleGroup"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="workouts"/>
+	</field>
+	<field name="equipment" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="equipment"/>
+		<property name="com.jaspersoft.studio.field.label" value="equipment"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="workouts"/>
+	</field>
+	<field name="difficulty" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="difficulty"/>
+		<property name="com.jaspersoft.studio.field.label" value="difficulty"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="workouts"/>
+	</field>
+	<background splitType="Stretch"/>
+	<columnHeader height="43" splitType="Stretch">
+		<element kind="staticText" uuid="b3be4d7e-f47f-41a3-971a-359144927dc9" mode="Opaque" x="10" y="13" width="40" height="30" forecolor="#FFFFFF" backcolor="#363030" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Code]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0b5a9760-532b-4d29-a492-2fe6098ca7c8"/>
+		</element>
+		<element kind="staticText" uuid="14cb97da-2feb-4cb0-a3e3-0a973af0b0be" mode="Opaque" x="50" y="13" width="239" height="30" forecolor="#FFFFFF" backcolor="#363030" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Exercise Name]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fd3f7d41-0db0-4ba6-a76c-92662738c3ef"/>
+		</element>
+		<element kind="staticText" uuid="38e27d37-3ac1-47f1-8661-9c8d51167c8e" mode="Opaque" x="280" y="13" width="89" height="30" forecolor="#FFFFFF" backcolor="#363030" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Muscle Group]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f07c1e25-4215-4771-8a28-718e3e4756c6"/>
+		</element>
+		<element kind="staticText" uuid="ef9c72f7-8a1b-435f-aac6-0c335370703e" mode="Opaque" x="369" y="13" width="111" height="30" forecolor="#FFFFFF" backcolor="#363030" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Equipment]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8885e8d0-31d1-4753-8778-ba090d154218"/>
+		</element>
+		<element kind="staticText" uuid="82a5c9db-3f2f-43f8-917a-c6998ce47f69" mode="Opaque" x="480" y="13" width="63" height="30" forecolor="#FFFFFF" backcolor="#363030" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Difficulty]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b296695-c881-4cc8-8052-2ee553f6b1b3"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<element kind="textField" uuid="62aabd9e-332c-4db4-ba17-5f7bf60d2708" x="10" y="0" width="40" height="30" forecolor="#241F1F" hTextAlign="Center" vTextAlign="Middle" style="zebraStyle">
+				<expression><![CDATA[$F{id}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0b5a9760-532b-4d29-a492-2fe6098ca7c8"/>
+			</element>
+			<element kind="textField" uuid="14856bf4-d120-4288-bc65-c49496dd6416" x="50" y="0" width="230" height="30" forecolor="#241F1F" vTextAlign="Middle" style="zebraStyle">
+				<expression><![CDATA[$F{exerciseName}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fd3f7d41-0db0-4ba6-a76c-92662738c3ef"/>
+			</element>
+			<element kind="textField" uuid="ae6ef862-370f-4ea0-9f60-390e24aa0c6f" x="280" y="0" width="88" height="30" forecolor="#241F1F" hTextAlign="Center" vTextAlign="Middle" style="zebraStyle">
+				<expression><![CDATA[$F{muscleGroup}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f07c1e25-4215-4771-8a28-718e3e4756c6"/>
+			</element>
+			<element kind="textField" uuid="c065a52b-8495-4375-88e5-0949cf8f2e27" x="368" y="0" width="112" height="30" forecolor="#241F1F" hTextAlign="Center" vTextAlign="Middle" style="zebraStyle">
+				<expression><![CDATA[$F{equipment}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8885e8d0-31d1-4753-8778-ba090d154218"/>
+			</element>
+			<element kind="textField" uuid="469491d4-8333-4463-9ad4-8f0981c40244" x="480" y="0" width="63" height="30" forecolor="#241F1F" hTextAlign="Center" vTextAlign="Middle" style="zebraStyle">
+				<expression><![CDATA[$F{difficulty}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5b296695-c881-4cc8-8052-2ee553f6b1b3"/>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

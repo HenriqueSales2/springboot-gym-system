@@ -3,6 +3,7 @@ package br.com.application.model;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -29,6 +30,20 @@ public class Person implements Serializable {
 
     @Column(nullable = false)
     private Boolean enabled;
+
+    @Column(name = "wikipedia_profile_url", length = 255)
+    private String profileUrl;
+
+    @Column(name = "photo_url", length = 255)
+    private String photoUrl;
+
+    @ManyToMany(fetch = FetchType.EAGER) // define o tipo de relacionamento entre as tabelas e trazer os dados assim que carregar as pessoas
+    @JoinTable(
+            name = "person_workouts", // temos uma coluna específica para a junção de persons com workouts
+            joinColumns = @JoinColumn(name = "person_id"), // coluna que vai ser usada para fazer a conexão com a tabela person
+            inverseJoinColumns = @JoinColumn(name = "workout_id") // coluna que vai ser usada para fazer a conexão com o tabela workout
+    )
+    private List<Workout> workouts;
 
     public Person() {
     }
@@ -81,15 +96,39 @@ public class Person implements Serializable {
         this.enabled = enabled;
     }
 
+    public String getProfileUrl() {
+        return profileUrl;
+    }
+
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public List<Workout> getWorkouts() {
+        return workouts;
+    }
+
+    public void setWorkouts(List<Workout> workouts) {
+        this.workouts = workouts;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender()) && Objects.equals(getEnabled(), person.getEnabled());
+        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender) && Objects.equals(enabled, person.enabled) && Objects.equals(profileUrl, person.profileUrl) && Objects.equals(photoUrl, person.photoUrl) && Objects.equals(workouts, person.workouts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), getEnabled());
+        return Objects.hash(id, firstName, lastName, address, gender, enabled, profileUrl, photoUrl, workouts);
     }
 }

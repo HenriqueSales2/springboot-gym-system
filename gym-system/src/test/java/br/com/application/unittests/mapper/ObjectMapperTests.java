@@ -22,7 +22,9 @@ public class ObjectMapperTests {
     @Test
     public void parseEntityToDTOTest() {
         PersonDTO output = parseObject(inputObject.mockEntity(), PersonDTO.class);
+
         assertEquals(Long.valueOf(0L), output.getId());
+
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
         assertEquals("Address Test0", output.getAddress());
@@ -32,6 +34,7 @@ public class ObjectMapperTests {
     @Test
     public void parseEntityListToDTOListTest() {
         List<PersonDTO> outputList = parseListObjects(inputObject.mockEntityList(), PersonDTO.class);
+
         PersonDTO outputZero = outputList.get(0);
 
         assertEquals(Long.valueOf(0L), outputZero.getId());
@@ -60,7 +63,9 @@ public class ObjectMapperTests {
     @Test
     public void parseDTOToEntityTest() {
         Person output = parseObject(inputObject.mockDTO(), Person.class);
+
         assertEquals(Long.valueOf(0L), output.getId());
+
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
         assertEquals("Address Test0", output.getAddress());
@@ -70,6 +75,7 @@ public class ObjectMapperTests {
     @Test
     public void parserDTOListToEntityListTest() {
         List<Person> outputList = parseListObjects(inputObject.mockDTOList(), Person.class);
+
         Person outputZero = outputList.get(0);
 
         assertEquals(Long.valueOf(0L), outputZero.getId());

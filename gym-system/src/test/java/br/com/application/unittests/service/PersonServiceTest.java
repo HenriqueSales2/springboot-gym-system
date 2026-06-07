@@ -1,10 +1,8 @@
 package br.com.application.unittests.service;
 
 import br.com.application.data.dto.PersonDTO;
-import br.com.application.data.dto.PersonalDTO;
 import br.com.application.exception.RequiredObjectIsNullException;
 import br.com.application.model.Person;
-import br.com.application.model.Personal;
 import br.com.application.repository.PersonRepository;
 import br.com.application.service.PersonService;
 import br.com.application.unittests.mapper.mocks.MockPerson;

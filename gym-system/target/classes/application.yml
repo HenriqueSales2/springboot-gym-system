@@ -1,7 +1,7 @@
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://example.com.br # preparando a aplicação para no futuro se conectar com React
 file: # essa propriedade está sendo gerenciado por mim
-  upload-dir: C:/projetos-pessoais/springboot-gym-system/springboot-gym-system/Code/UploadDir
+  upload-dir: C:/projetos-pessoais/springboot-gym-system/springboot-gym-system/Code/UploadDir # coloque o caminho do seu projeto em seu computador
 spring:
   application:
     name: rest-with-spring-boot-and-java
@@ -28,6 +28,7 @@ spring:
 logging:
   level:
     root: INFO # (o comando root dentro desse contexto, serve para eu especificar quais logs eu quero ver dentro da aplicação)
+    #net.sf.jasperreports.engine.*: TRACE tive que mudar o nível de log para poder investigar possíveis erros no relatório
     #br.com.application: DEBUG (aqui eu consigo especificar que dentro desse pacote, eu consigo listar quais das quatro logs principais eu quero que apareça (DEBUG, INFO, WARN, ERROR))
 springdoc:
   paths-to-match: /api/**/v1/**

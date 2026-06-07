@@ -35,22 +35,22 @@ public class MockPerson {
     
     public Person mockEntity(Integer number) {
         Person person = new Person();
-        person.setAddress("Address Test" + number);
-        person.setFirstName("First Name Test" + number);
-        person.setGender(((number % 2)==0) ? "Male" : "Female");
         person.setId(number.longValue());
+        person.setFirstName("First Name Test" + number);
         person.setLastName("Last Name Test" + number);
+        person.setAddress("Address Test" + number);
+        person.setGender(((number % 2)==0) ? "Male" : "Female");
         return person;
     }
 
     public PersonDTO mockDTO(Integer number) {
-        PersonDTO person = new PersonDTO();
-        person.setAddress("Address Test" + number);
-        person.setFirstName("First Name Test" + number);
-        person.setGender(((number % 2)==0) ? "Male" : "Female");
-        person.setId(number.longValue());
-        person.setLastName("Last Name Test" + number);
-        return person;
+        PersonDTO personDTO = new PersonDTO();
+        personDTO.setId(number.longValue());
+        personDTO.setFirstName("First Name Test" + number);
+        personDTO.setLastName("Last Name Test" + number);
+        personDTO.setAddress("Address Test" + number);
+        personDTO.setGender(((number % 2)==0) ? "Male" : "Female");
+        return personDTO;
     }
 
 }

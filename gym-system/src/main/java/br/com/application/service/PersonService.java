@@ -7,7 +7,7 @@ import br.com.application.exception.*;
 
 import static br.com.application.mapper.ObjectMapper.parseObject;
 
-import br.com.application.file.exporter.contract.FileExporter;
+import br.com.application.file.exporter.contract.PersonExporter;
 import br.com.application.file.exporter.factory.FileExporterFactory;
 import br.com.application.file.importer.contract.FileImporter;
 import br.com.application.file.importer.factory.FileImporterFactory;
@@ -112,6 +112,22 @@ public class PersonService {
         return dto;
     }
 
+    public Resource exportPerson(Long id, String acceptHeader) {
+        logger.info("Exporting data of one Person!");
+
+        var person = repository.findById(id)
+                .map(entity -> parseObject(entity, PersonDTO.class))
+                .orElseThrow(() -> new ResourceNotFoundException("No record found for this ID!"));
+
+        try {
+            PersonExporter fileExporter = this.exporter.getExporter(acceptHeader);
+            return fileExporter.exportPerson(person);
+        }
+        catch (Exception e) {
+            throw new FileNotExportingException("Error during file export!", e);
+        }
+    }
+
     public Resource exportPage(Pageable pageable, String acceptHeader) {
         logger.info("Exporting a People page!");
 
@@ -120,8 +136,8 @@ public class PersonService {
                 .getContent();
 
         try {
-            FileExporter fileExporter = this.exporter.getExporter(acceptHeader);
-            return fileExporter.exportFile(people);
+            PersonExporter personExporter = this.exporter.getExporter(acceptHeader);
+            return personExporter.exportPeople(people);
         } catch (Exception e) {
             throw new FileNotExportingException("Error during file export!", e);
         }
@@ -244,6 +260,12 @@ public class PersonService {
                 .findById(dto.getId())) // passando o id como parâmetro
                 .withSelfRel() // redirecionando a URL onde acontecerá a ocorrência
                 .withType("GET")); // tipo de método HTTP
+
+        dto.add(linkTo(methodOn(PersonController.class)
+                .exportPerson(dto.getId(), null)) // passando os parâmetros do método de exportação
+                .withRel("exportPerson") // redirecionando a URL onde acontecerá a ocorrência
+                .withType("GET") // tipo de método HTTP
+                .withTitle("Export Person"));
 
         dto.add(linkTo(methodOn(PersonController.class)
                 .exportPage(

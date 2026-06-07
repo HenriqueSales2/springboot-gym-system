@@ -28,6 +28,7 @@ spring:
 logging:
   level:
     root: INFO # (o comando root dentro desse contexto, serve para eu especificar quais logs eu quero ver dentro da aplicação)
+    #net.sf.jasperreports.engine.*: TRACE tive que mudar o nível de log para poder investigar possíveis erros no relatório
     #br.com.application: DEBUG (aqui eu consigo especificar que dentro desse pacote, eu consigo listar quais das quatro logs principais eu quero que apareça (DEBUG, INFO, WARN, ERROR))
 springdoc:
   paths-to-match: /api/**/v1/**

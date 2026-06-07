@@ -93,8 +93,29 @@ public interface PersonControllerDocs {
     )
     PersonDTO findById(@PathVariable("id") Long id);
 
+    @Operation(summary = "Export Person data as PDF",
+            description = "Export a specific Person data as PDF by your ID",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(mediaType = MediaTypes.APPLICATION_PDF_VALUE)
+                    ),
+                    @ApiResponse(description = "No content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
+            }
+    )
+    ResponseEntity<Resource> exportPerson(
+            @PathVariable("id") Long id,
+            HttpServletRequest request
+    );
+
     @Operation(summary = "Export People", // aqui é o título do Endpoint
-            description = "Export a Page of People in XLSX and CSV format", // adicionando a descrição do Endpoint
+            description = "Export a Page of People in XLSX, CSV and PDF format", // adicionando a descrição do Endpoint
             tags = {"People"}, // tags do Endpoint
             responses = {
                     @ApiResponse(
@@ -102,7 +123,8 @@ public interface PersonControllerDocs {
                             responseCode = "200", // exibindo o tipo de Status Code (200 = Sucess)
                             content = {
                                     @Content(mediaType = MediaTypes.APPLICATION_XLSX_VALUE),
-                                    @Content(mediaType = MediaTypes.APPLICATION_CSV_VALUE)
+                                    @Content(mediaType = MediaTypes.APPLICATION_CSV_VALUE),
+                                    @Content(mediaType = MediaTypes.APPLICATION_PDF_VALUE)
                             }),
                     @ApiResponse(description = "No content", responseCode = "204", content = @Content), // exibindo o tipo de Status Code (204 = No Content)
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content), // exibindo o tipo de Status Code (400 = Bad Request)
