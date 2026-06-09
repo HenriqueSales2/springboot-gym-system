@@ -4,6 +4,9 @@ cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://example.com.br
 file: # essa propriedade está sendo gerenciado por mim
   upload-dir: C:/projetos-pessoais/springboot-gym-system/springboot-gym-system/Code/UploadDir
+email:
+  subject: "Default Subject"
+  message: "Default Message"
 spring:
   application:
     name: springboot-gym-project
@@ -16,8 +19,16 @@ spring:
       hibernate:
         #dialect: org.hibernate.dialect.MySQLDialect não há necessidade de especificar esse classe filha do hibernate, pois o Spring já a reconhece por padrão
     show_sql: false # ativar essa funcao somente para debugar
-
     open-in-view: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enabled: true
+      mail.smtp.starttls.required: true
   servlet:
     multipart:
       enabled: true

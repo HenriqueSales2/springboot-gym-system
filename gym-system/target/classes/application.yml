@@ -2,6 +2,9 @@ cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://example.com.br # preparando a aplicação para no futuro se conectar com React
 file: # essa propriedade está sendo gerenciado por mim
   upload-dir: C:/projetos-pessoais/springboot-gym-system/springboot-gym-system/Code/UploadDir # coloque o caminho do seu projeto em seu computador
+email:
+  subject: "Default Subject"
+  message: "Default Message"
 spring:
   application:
     name: rest-with-spring-boot-and-java
@@ -17,8 +20,16 @@ spring:
       hibernate:
         #dialect: org.hibernate.dialect.MySQLDialect não há necessidade de especificar esse classe filha do hibernate, pois o Spring já a reconhece por padrão
     show_sql: false # ativar essa funcao somente para debugar
-
     open-in-view: false
+  mail:
+    host: smtp.gmail.com
+    port: 587 # porta que a google usa
+    username: ${EMAIL_USERNAME} # configure sua váriavel de ambiente no computador com o nome "EMAIL_USERNAME" e coloque o seu email do gmail
+    password: ${EMAIL_PASSWORD} # configure sua váriavel de ambiente no computador com o nome "EMAIL_PASSWORD" e coloque sua senha gerada na autenticação de 2 fatores do gmail
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enabled: true
+      mail.smtp.starttls.required: true
   servlet:
     multipart:
       enabled: true
