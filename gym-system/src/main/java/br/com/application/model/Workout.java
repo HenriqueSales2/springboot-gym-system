@@ -2,7 +2,6 @@ package br.com.application.model;
 
 import jakarta.persistence.*;
 
-
 import java.util.Objects;
 
 @Entity
@@ -68,7 +67,6 @@ private String difficulty;
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
-
 
     @Override
     public boolean equals(Object o) {

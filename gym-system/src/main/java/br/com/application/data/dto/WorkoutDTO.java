@@ -17,7 +17,6 @@ public class WorkoutDTO extends RepresentationModel<WorkoutDTO> implements Seria
     private String equipment;
     private String difficulty;
 
-
     public WorkoutDTO(){
     }
 

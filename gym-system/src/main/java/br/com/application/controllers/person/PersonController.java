@@ -39,27 +39,26 @@ public class PersonController implements PersonControllerDocs {
     private PersonService service;
 
     @GetMapping(
-            produces = {
+            produces = { // produz JSON, ou seja, me retorna um JSON
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE
             }
     )
-    @Override
+    @Override //  criei uma interface para a documentação dos Endpoints no Swagger. Diante disso, surge uma annotation obrigatória
     public ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findAll(
-            @RequestParam (value = "page", defaultValue = "0") Integer page,
-            @RequestParam (value = "size", defaultValue = "12") Integer size,
-            @RequestParam (value = "direction", defaultValue = "asc") String direction
+            @RequestParam (value = "page", defaultValue = "0") Integer page, // aqui são o número de páginas, por padrão ele vai retornar a primeira página (que nesse caso é o valor "0")
+            @RequestParam (value = "size", defaultValue = "12") Integer size, // tamanho da página, caso eu não especificar nada, ele retorna a quantidade de itens setada por padrão (que nesse caso é "12")
+            @RequestParam (value = "direction", defaultValue = "asc") String direction // aqui é a direção da página, se ela é em ordem ascendente (crescente) ou descendente (decrescente), por padrão deixei ascendente (que nesse caso é "asc")
     ) {
-        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC; // SE for igual à "desc", independente se for maiúsculo ou minúsculo na hora de passar o parâmetro ele vai ordenar a lista em ordem decrescente, caso contrário vai ser em ordem crescente
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName")); // lembrando que na hora da escolha para ordenar é preciso colocar o nome igual o da váriavel, pois é Case Sensitive
         return ResponseEntity.ok(service.findAll(pageable));
-
     }
 
     @GetMapping(
             value = "/findPeopleByName/{firstName}",
-            produces = { // produz JSON, ou seja, me retorna um JSON
+            produces = {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE
@@ -68,12 +67,12 @@ public class PersonController implements PersonControllerDocs {
     @Override
     public ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findPeopleByName(
             @PathVariable("firstName") String firstName,
-            @RequestParam(value = "page", defaultValue = "0") Integer page, // aqui são o número de páginas, por padrão ele vai retornar a primeira página (que nesse caso é o valor "0")
-            @RequestParam(value = "size", defaultValue = "12") Integer size, // tamanho da página, caso eu não especificar nada, ele retorna a quantidade de itens setada por padrão (que nesse caso é "12")
-            @RequestParam(value = "direction", defaultValue = "asc") String direction // aqui é a direção da página, se ela é em ordem ascendente (crescente) ou descendente (decrescente), por padrão deixei ascendente (que nesse caso é "asc")
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "12") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
     ) {
-        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC; // SE for igual à "desc", independente se for maiúsculo ou minúsculo na hora de passar o parâmetro ele vai ordenar a lista em ordem decrescente, caso contrário vai ser em ordem crescente
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName")); // lembrando que na hora da escolha para ordenar é preciso colocar o nome igual o da váriavel, pois é Case Sensitive
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
         return ResponseEntity.ok(service.findPeopleByName(firstName, pageable));
     }
 
@@ -85,7 +84,7 @@ public class PersonController implements PersonControllerDocs {
                     MediaType.APPLICATION_YAML_VALUE
             }
     )
-    @Override //  criei uma interface para a documentação dos Endpoints no Swagger. Diante disso, surge uma annotation obrigatória
+    @Override
     public PersonDTO findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
@@ -96,7 +95,6 @@ public class PersonController implements PersonControllerDocs {
     )
     @Override
     public ResponseEntity<Resource> exportPerson(@PathVariable("id") Long id, HttpServletRequest request) {
-
         String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
 
         Resource file = service.exportPerson(id, acceptHeader);
@@ -112,7 +110,7 @@ public class PersonController implements PersonControllerDocs {
 
     @GetMapping(
             value = "/exportPage",
-            produces = { // produz JSON, ou seja, me retorna um JSON
+            produces = {
                     MediaTypes.APPLICATION_XLSX_VALUE,
                     MediaTypes.APPLICATION_CSV_VALUE,
                     MediaTypes.APPLICATION_PDF_VALUE
@@ -125,11 +123,11 @@ public class PersonController implements PersonControllerDocs {
             @RequestParam(value = "direction", defaultValue = "asc") String direction,
             HttpServletRequest request
     ) {
-        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC; // SE for igual à "desc", independente se for maiúsculo ou minúsculo na hora de passar o parâmetro ele vai ordenar a lista em ordem decrescente, caso contrário vai ser em ordem crescente
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName")); // lembrando que na hora da escolha para ordenar é preciso colocar o nome igual o da váriavel, pois é Case Sensitive
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
 
-        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT); // constante chamada Accept para trabalhar no Header
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
 
         Resource file = service.exportPage(pageable, acceptHeader);
 
@@ -171,12 +169,8 @@ public class PersonController implements PersonControllerDocs {
         return service.create(personDTO);
     }
 
-    /*
-    adicionando um value no PostMapping para evitar erro de ambiguidade
-    (ou seja, usar o postMapping para métodos diferentes)
-     */
     @PostMapping( value = "/massCreation",
-            produces = { // produz JSON, ou seja, me retorna um JSON
+            produces = {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE

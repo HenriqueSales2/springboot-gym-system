@@ -8,7 +8,5 @@ public class Startup {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Startup.class, args);
-		// LEMBRE-SE DE ALTERAR O USER E PASSWORD NO APPLICATION.YML
-		// SE NÃO A APLICAÇÃO QUEBRA
 	}
 }

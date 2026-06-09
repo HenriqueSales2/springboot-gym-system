@@ -16,7 +16,6 @@ import java.util.List;
 @Tag(name = "File Endpoint")
 public interface FileControllerDocs {
 
-
     @Operation(summary = "Upload a File",
             description = "Upload a specific File",
             tags = {"Files"},
@@ -34,7 +33,6 @@ public interface FileControllerDocs {
             }
     )
     UploadFileDTO uploadFile(MultipartFile file);
-
 
     @Operation(summary = "Upload a Multiples Files",
             description = "Upload a Multiples Files",
@@ -54,7 +52,6 @@ public interface FileControllerDocs {
     )
     List<UploadFileDTO> uploadMultiplesFiles(MultipartFile[] files);
 
-
     @Operation(summary = "Download Files",
             description = "Download a Multiples Files",
             tags = {"Files"},
@@ -73,5 +70,4 @@ public interface FileControllerDocs {
     )
     ResponseEntity<Resource> downloadFile(String fileName,
                                           HttpServletRequest request);
-
 }

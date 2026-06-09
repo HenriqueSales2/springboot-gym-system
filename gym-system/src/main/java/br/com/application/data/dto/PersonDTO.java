@@ -8,6 +8,7 @@ import org.springframework.hateoas.server.core.Relation;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+
 // é necessário estender essa classe "RepresentationModel" para utilizar HATEOAS
 @Relation(collectionRelation = "people")
 public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {

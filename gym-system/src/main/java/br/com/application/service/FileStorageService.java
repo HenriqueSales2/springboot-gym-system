@@ -27,7 +27,6 @@ public class FileStorageService {
     // construtor
     @Autowired // fazendo a injeção de dependências através do construtor
     public FileStorageService(FileStorageConfig fileStorageConfig) {
-
         Path path = Paths.get(fileStorageConfig.getUploadDir()) // definindo o caminho do diretório de salvamento do arquivo
                 .toAbsolutePath()
                 .toAbsolutePath()
@@ -46,7 +45,6 @@ public class FileStorageService {
     }
 
     public String storageFile(MultipartFile file) {
-
         String fileName = StringUtils.cleanPath(file.getOriginalFilename()); // limpa o nome do arquivo, remove algum caracter que não pode ser aceito
 
         try {
@@ -66,11 +64,9 @@ public class FileStorageService {
             logger.error("Could not store file " + fileName + ". Please try again!");
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", e); // lançando exceção caso não tenha espaço no HD/SSD para o arquivo
         }
-
     }
 
     public Resource loadFileAsResource(String fileName) {
-
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName) // vai acessar onde o arquivo está salvo no projeto e determinar o nome que o arquivo vai ter na hora que fazer o download
                     .normalize();
@@ -79,11 +75,9 @@ public class FileStorageService {
             if(resource.exists()) { // se o resource existir
                 return resource; // ele retorna o resource
             }
-
             else  {
                 throw new FileNotFoundException("File Not Found " + fileName);
             }
-
         } catch (Exception e) {
             logger.error("File not found " + fileName); // retorna uma log de erro no terminal com uma mensagem sinalizando que o arquivo não foi encontrado
             throw new FileNotFoundException("File not found " + fileName, e); // lança uma exceção falando que o arquivo não foi encontrado

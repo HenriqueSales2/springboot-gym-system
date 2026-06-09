@@ -38,8 +38,6 @@ public class EmailSender implements Serializable {
         return this;
     }
 
-
-
     public EmailSender withSubject(String subject) {
         this.subject = subject;
         return this;
@@ -75,8 +73,6 @@ public class EmailSender implements Serializable {
         } catch (Exception e) {
             throw new RuntimeException("Error sending the email", e);
         }
-
-
     }
 
     private void reset() {
@@ -93,7 +89,6 @@ public class EmailSender implements Serializable {
         ArrayList<InternetAddress> recipientsList = new ArrayList<>();
 
         while (tokenizer.hasMoreElements()) {
-
             try {
                 recipientsList.add(new InternetAddress(tokenizer.nextElement().toString()));
             } catch (Exception e) {

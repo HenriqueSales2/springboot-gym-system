@@ -68,7 +68,6 @@ public class FileController implements FileControllerDocs {
     @GetMapping("/downloadFile/{fileName:.+}")
     @Override
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-
         Resource resource = service.loadFileAsResource(fileName); // lendo o arquivo em disco, a partir do nome, armazenando em uma váriavel com o nome "resource"
         String contentyType = null; // declarando uma váriavel null para conseguir puxa-lá no try-catch
 

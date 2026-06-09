@@ -19,9 +19,6 @@ public class ObjectMapper {
         for (Object o : origin) {
             destinationObjects.add(mapper.map(o, destination));
         }
-
         return destinationObjects;
-
     }
-
 }

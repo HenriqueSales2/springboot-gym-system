@@ -1,6 +1,5 @@
 package br.com.application.file.importer.impl;
 
-
 import br.com.application.data.dto.PersonDTO;
 import br.com.application.file.importer.contract.FileImporter;
 import org.apache.commons.csv.CSVFormat;

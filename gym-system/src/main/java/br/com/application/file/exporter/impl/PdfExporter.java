@@ -36,7 +36,6 @@ public class PdfExporter implements PersonExporter {
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(people);
 
         Map<String, Object> parameters = new HashMap<>();
-        // parameters.put("title", "People Report");
 
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
@@ -63,7 +62,6 @@ public class PdfExporter implements PersonExporter {
 
         JasperReport mainReport = JasperCompileManager.compileReport(mainTemplateStream);
         JasperReport subReport = JasperCompileManager.compileReport(subReportStream);
-
 
         InputStream qrCodeStream = service.GenerateQRCode(person.getProfileUrl(), 200, 200);
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface WorkoutControllerDocs {
 
     @Operation(summary = "Finds a Training",
-            description = "Finds a specific Training by your ID",
+            description = "Find's a specific Training by your ID",
             tags = {"Workouts"},
             responses = {
                     @ApiResponse(description = "Sucess",
@@ -34,9 +34,8 @@ public interface WorkoutControllerDocs {
     )
     WorkoutDTO findWorkoutById(@PathVariable("id") Long id);
 
-
     @Operation(summary = "Find All Workouts",
-            description = "Finds All Workouts",
+            description = "Find's All Workouts",
             tags = {"Workouts"},
             responses = {
                     @ApiResponse(description = "Sucess",
@@ -60,7 +59,6 @@ public interface WorkoutControllerDocs {
             @RequestParam(value = "direction", defaultValue = "asc") String direction
     );
 
-
     @Operation(summary = "Create a new Workout",
             description = "Create a new Workout by passing in a JSON, XML or YML representation of the Workouts.",
             tags = {"Workouts"},
@@ -77,8 +75,7 @@ public interface WorkoutControllerDocs {
     )
     WorkoutDTO create(@RequestBody WorkoutDTO workoutDTO);
 
-
-    @Operation(summary = "Updates a Workout's information",
+    @Operation(summary = "Update a Workout's information",
             description = "Updating a Workout's information by passing in a JSON, XML or YML representation of the Workouts.",
             tags = {"Workouts"},
             responses = {
@@ -96,9 +93,8 @@ public interface WorkoutControllerDocs {
     )
     WorkoutDTO update(@RequestBody WorkoutDTO workoutDTO);
 
-
-    @Operation(summary = "Deletes a Workout",
-            description = "Deletes a specific Workout by their ID.",
+    @Operation(summary = "Delete a Workout",
+            description = "Delete's a specific Workout by their ID.",
             tags = {"Workouts"},
             responses = {
                     @ApiResponse(description = "No content", responseCode = "204", content = @Content),
@@ -109,5 +105,4 @@ public interface WorkoutControllerDocs {
             }
     )
     ResponseEntity<?> delete(@PathVariable("id") Long id);
-
 }

@@ -40,7 +40,6 @@ public class WorkoutController implements WorkoutControllerDocs {
         return ResponseEntity.ok(service.findAllWorkout(pageable));
     }
 
-
     @GetMapping(
             value = "/{id}",
             produces = {

@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-/*não é necessário colocar essa annotation,
-porém é importante salientar que em sistemas legados
+/*não é necessário colocar essa annotation.
+Porém, é importante salientar que em sistemas legados
 se remover essa annotation é perigoso quebrar o projeto inteiro.
  */
 @Repository
@@ -24,5 +24,4 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     // Leandro, Andressa, Amanda, Andre. Independente da posição das letras "and", o método irá listar
     @Query("SELECT p FROM Person p WHERE p.firstName LIKE LOWER(concat('%', :firstName, '%'))") // implementando comando SQL para listar todos os usuários pelo nome, ou parte dele
     Page<Person> findPeopleByName(@Param("firstName") String firstName, Pageable pageable); // isso é Camel Case
-
 }

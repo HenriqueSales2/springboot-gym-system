@@ -55,13 +55,6 @@ public class PersonService {
     public PagedModel<EntityModel<PersonDTO>> findAll(Pageable pageable) {
         logger.info("Finding all People!");
 
-        // LÓGICA ANTIGA!
-        /*var persons = parseListObjects(repository.findAll(), PersonDTO.class); // retornando uma lista de entidades
-        persons.forEach(PersonService::addHateoasLinks); // adicionando método Reference, ideal para listas
-        return persons;
-        */
-
-        // NOVA LÓGICA!
         var people = repository.findAll(pageable);
 
         var peopleWithLinks = people.map(person -> {
@@ -76,13 +69,10 @@ public class PersonService {
                         WebMvcLinkBuilder.methodOn(PersonController.class)
                                 .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))
                 ).withSelfRel();
-
         return assembler.toModel(peopleWithLinks, findAllLink);
     }
 
-    // NOVO MÉTODO (esse método procura uma pessoa pelo nome)
     public PagedModel<EntityModel<PersonDTO>> findPeopleByName(String firstName, Pageable pageable) {
-
         logger.info("Finding People by Name!");
 
         var people = repository.findPeopleByName(firstName, pageable);
@@ -105,6 +95,7 @@ public class PersonService {
 
     public PersonDTO findById(Long id) {
         logger.info("Finding one Person!");
+
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No record found for this ID!"));
         var dto = parseObject(entity, PersonDTO.class);
@@ -144,10 +135,10 @@ public class PersonService {
     }
 
     public PersonDTO create(PersonDTO personDTO) {
-
         if (personDTO == null) throw new RequiredObjectIsNullException();
 
         logger.info("Creating one Person!");
+
         var entity = parseObject(personDTO, Person.class); // fazendo a conversão de PersonDTO para Person
         var dto = parseObject(repository.save(entity), PersonDTO.class); // convertendo em DTO, criando, e salvando a entidade
         addHateoasLinks(dto);
@@ -179,15 +170,12 @@ public class PersonService {
 
                     })
                     .toList();
-
-
         } catch (Exception e) {
             throw new FileStorageException("Error processing the file!");
         }
     }
 
     public PersonDTO update(PersonDTO personDTO) {
-
         if (personDTO == null) throw new RequiredObjectIsNullException();
 
         logger.info("Updating one Person!");
@@ -204,10 +192,10 @@ public class PersonService {
         return dto;
     }
 
-    // NOVO MÉTODO (esse método desabilita uma pessoa)
     @Transactional // adicionando essa anotação chamada "Transactional", pois não é um método oficial do Spring JPA
     public PersonDTO disablePerson(Long id) {
         logger.info("Disable a Person!");
+
         repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No record found for this ID!"));
         repository.disablePerson(id);
@@ -219,6 +207,7 @@ public class PersonService {
 
     public void delete(Long id) {
         logger.info("Delete one Person!");
+
         Person entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No record found for this ID!"));
         repository.delete(entity);
@@ -227,11 +216,9 @@ public class PersonService {
     // criando um método para a construção da página para evitar a reutilização de código e deixar a camada service da aplicação mais enxuta
     private PagedModel<EntityModel<PersonDTO>> buildPagedModel(Pageable pageable, Page<Person> people) {
         var peopleWithLinks = people.map(person -> {
-
             var dto = parseObject(person, PersonDTO.class); // convertendo em DTO, criando, e salvando a entidade
             addHateoasLinks(dto); // adicionando os links Hateoas
             return dto; // depois retornamos a entidade convertida junto com os links Hateoas
-
         });
 
         Link findAllLink = WebMvcLinkBuilder.linkTo
@@ -240,66 +227,62 @@ public class PersonService {
                                         .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))
                         )
                 .withSelfRel();
-
         return assembler.toModel(peopleWithLinks, findAllLink);
     }
 
     private static void addHateoasLinks(PersonDTO dto) {
         dto.add(linkTo(methodOn(PersonController.class)
                 .findAll(1, 12, "asc"))
-                .withRel("findAll") // passamos o relacionamento dentro dos parenteses, nesse caso é o findAll
+                .withRel("findAll") // redirecionando a URL onde acontecerá a ocorrência
                 .withType("GET")); // tipo de método HTTP
 
-        // adicionando links hateoas ao novo método
         dto.add(linkTo(methodOn(PersonController.class)
                 .findPeopleByName(dto.getFirstName(), 1, 12, "asc"))
-                .withRel("findPeopleByName") // passamos o relacionamento dentro dos parenteses, nesse caso é o findAll
-                .withType("GET")); // tipo de método HTTP
+                .withRel("findPeopleByName")
+                .withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class)
                 .findById(dto.getId())) // passando o id como parâmetro
-                .withSelfRel() // redirecionando a URL onde acontecerá a ocorrência
-                .withType("GET")); // tipo de método HTTP
+                .withSelfRel()
+                .withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class)
-                .exportPerson(dto.getId(), null)) // passando os parâmetros do método de exportação
-                .withRel("exportPerson") // redirecionando a URL onde acontecerá a ocorrência
-                .withType("GET") // tipo de método HTTP
+                .exportPerson(dto.getId(), null))
+                .withRel("exportPerson")
+                .withType("GET")
                 .withTitle("Export Person"));
 
         dto.add(linkTo(methodOn(PersonController.class)
                 .exportPage(
-                        1, 12, "asc", null) // passando os parâmetros do método de exportação
+                        1, 12, "asc", null)
         )
-                .withRel("exportPage") // redirecionando a URL onde acontecerá a ocorrência
-                .withType("GET") // tipo de método HTTP
+                .withRel("exportPage")
+                .withType("GET")
                 .withTitle("Export People"));
 
         dto.add(linkTo(methodOn(PersonController.class)
-                .create(dto)) // passando o PersonDTO como parâmetro
-                .withRel("create") // passamos o relacionamento dentro dos parenteses, nesse caso é o create
-                .withType("POST")); // tipo de método HTTP
+                .create(dto))
+                .withRel("create")
+                .withType("POST"));
 
         dto.add(linkTo(methodOn(PersonController.class))
                 .slash("massCreation")
-                .withRel("massCreation") // passamos o relacionamento dentro dos parenteses, nesse caso é o create
-                .withType("POST")); // tipo de método HTTP
+                .withRel("massCreation")
+                .withType("POST"));
 
         dto.add(linkTo(methodOn(PersonController.class)
-                .update(dto)) // passando o PersonDTO como parâmetro
-                .withRel("update") // passamos o relacionamento dentro dos parenteses, nesse caso é o update
-                .withType("PUT")); // tipo de método HTTP
-
-        // adicionando links hateoas ao novo método
-        dto.add(linkTo(methodOn(PersonController.class)
-                .disablePerson(dto.getId())) // passando o PersonDTO como parâmetro
-                .withRel("disablePerson") // passamos o relacionamento dentro dos parenteses, nesse caso é o update
-                .withType("PATCH")); // tipo de método HTTP
-
+                .update(dto))
+                .withRel("update")
+                .withType("PUT"));
 
         dto.add(linkTo(methodOn(PersonController.class)
-                .delete(dto.getId())) // passando o id como parâmetro
-                .withRel("delete") // passamos o relacionamento dentro dos parenteses, nesse caso é o delete
-                .withType("DELETE")); // tipo de método HTTP
+                .disablePerson(dto.getId()))
+                .withRel("disablePerson")
+                .withType("PATCH"));
+
+        dto.add(linkTo(methodOn(PersonController.class)
+                .delete(dto.getId()))
+                .withRel("delete")
+                .withType("DELETE"));
     }
 }

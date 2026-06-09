@@ -43,7 +43,6 @@ public class XlsxExporter implements PersonExporter {
                 row.createCell(5).setCellValue(personDTO.getEnabled() != null && personDTO.getEnabled() ? "Yes" : "No");
             }
 
-
             // reformatando a planilha para que os dados fiquem legíveis
             for (int i = 0; i < headers.length; i++) {
                 sheet.autoSizeColumn(i); // refo

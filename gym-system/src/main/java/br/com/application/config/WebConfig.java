@@ -50,6 +50,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .mediaType("yaml", MediaType.APPLICATION_YAML); // permite fazer os métodos HTTPs pelo Header Param e utilizar YAML como forma de consultar os dados
 
     }
-
-
 }

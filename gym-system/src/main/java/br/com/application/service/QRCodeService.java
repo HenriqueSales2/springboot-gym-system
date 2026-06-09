@@ -14,7 +14,6 @@ import java.io.InputStream;
 public class QRCodeService {
 
     public InputStream GenerateQRCode(String url, int width, int height) throws Exception {
-
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix =  qrCodeWriter.encode(url, BarcodeFormat.QR_CODE, width, height);
 

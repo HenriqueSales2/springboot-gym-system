@@ -22,7 +22,6 @@ public class EmailService {
     private EmailConfig emailConfig;
 
     public void sendSimpleEmail(EmailRequestDTO emailRequestDTO) {
-
         // como é só um email não é necessário desserializar (fica mais simples, apenas passando os parametros)
         emailSender // enviando o email
                 .to(emailRequestDTO.getTo()) // para alguém
@@ -33,6 +32,7 @@ public class EmailService {
 
     public void sendEmailWithAttachment(String emailRequestJSON, MultipartFile attachment) {
         File tempFile = null;
+
         try {
             EmailRequestDTO emailRequestDTO = new ObjectMapper() // desserializando o email e fazendo com que ele vire um objeto
                     .readValue(emailRequestJSON, EmailRequestDTO.class);
