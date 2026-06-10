@@ -68,16 +68,19 @@ REST API desenvolvida com **Java 21**, **Spring Boot**, **Spring Data JPA**, **M
 src
 ├── main
 │   ├── java
-│   │   └── br/com/henriquesales
+│   │   └── br/com/application
 │   │       ├── config/          # Configurações da aplicação
-│   │       ├── controller/      # Endpoints REST
+│   │       ├── controller/      # Endpoints REST e documentação com Swagger
 │   │       ├── data/
 │   │       │   ├── dto/         # Objetos de transferência
 │   │       │   └── vo/          # Value Objects
 │   │       ├── exception/       # Tratamento global de exceções
+│   │       ├── file/            # Exportador e Importador de arquivos
+│   │       ├── mail/            # Lógica de mandar email
 │   │       ├── mapper/          # Conversão entre entidades e DTOs
 │   │       ├── model/           # Entidades JPA
 │   │       ├── repository/      # Camada de acesso a dados
+│   │       ├── serialization/   # Suporte para YAML
 │   │       ├── service/         # Regras de negócio
 │   │       └── SpringBootGymSystemApplication.java
 │   │
@@ -86,9 +89,9 @@ src
 │       ├── templates/           # Templates JasperReports e auxiliares
 │       └── application.yml      # Configurações da aplicação
 │
-└── test
+└── test                         # todos os testes
     └── java
-        └── br/com/henriquesales
+        └── br/com/application
             ├── integrationtests/
             ├── mocks/
             ├── repository/
