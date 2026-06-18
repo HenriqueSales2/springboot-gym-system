@@ -16,29 +16,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface WorkoutControllerDocs {
 
-    @Operation(summary = "Finds a Training",
-            description = "Find's a specific Training by your ID",
+    @Operation(summary = "Find Workout by ID",
+            description = "Retrieve a specific workout using its identifier",
             tags = {"Workouts"},
             responses = {
-                    @ApiResponse(description = "Sucess",
-                            responseCode = "200",
-                            content =
-                            @Content(schema = @Schema(implementation = WorkoutDTO.class))
-                    ),
-                    @ApiResponse(description = "No content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Workout retrieved successfully", responseCode = "200", content = @Content(schema = @Schema(implementation = WorkoutDTO.class))),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Workout not found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
     WorkoutDTO findWorkoutById(@PathVariable("id") Long id);
 
     @Operation(summary = "Find All Workouts",
-            description = "Find's All Workouts",
+            description = "Retrieve a paginated list of all workouts",
             tags = {"Workouts"},
             responses = {
-                    @ApiResponse(description = "Sucess",
+                    @ApiResponse(description = "Workouts retrieved successfully",
                             responseCode = "200",
                             content = {
                                     @Content(
@@ -46,10 +40,7 @@ public interface WorkoutControllerDocs {
                                             array = @ArraySchema(schema = @Schema(implementation = WorkoutDTO.class))
                                     )
                             }),
-                    @ApiResponse(description = "No content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
@@ -59,48 +50,38 @@ public interface WorkoutControllerDocs {
             @RequestParam(value = "direction", defaultValue = "asc") String direction
     );
 
-    @Operation(summary = "Create a new Workout",
-            description = "Create a new Workout by passing in a JSON, XML or YML representation of the Workouts.",
+    @Operation(summary = "Create Workout",
+            description = "Create a new Workout by passing in a JSON, XML or YML representation of the Workouts",
             tags = {"Workouts"},
             responses = {
-                    @ApiResponse(description = "Sucess",
-                            responseCode = "200",
-                            content =
-                            @Content(schema = @Schema(implementation = WorkoutDTO.class))
-                    ),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Workout created successfully", responseCode = "200", content = @Content(schema = @Schema(implementation = WorkoutDTO.class))),
+                    @ApiResponse(description = "Invalid request body", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
     WorkoutDTO create(@RequestBody WorkoutDTO workoutDTO);
 
-    @Operation(summary = "Update a Workout's information",
-            description = "Updating a Workout's information by passing in a JSON, XML or YML representation of the Workouts.",
+    @Operation(summary = "Update Workout",
+            description = "Update an existing workout information",
             tags = {"Workouts"},
             responses = {
-                    @ApiResponse(description = "Sucess",
-                            responseCode = "200",
-                            content =
-                            @Content(schema = @Schema(implementation = WorkoutDTO.class))
-                    ),
-                    @ApiResponse(description = "No content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Workout updated successfully", responseCode = "200", content = @Content(schema = @Schema(implementation = WorkoutDTO.class))),
+                    @ApiResponse(description = "Invalid request body", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Workout not found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
     WorkoutDTO update(@RequestBody WorkoutDTO workoutDTO);
 
-    @Operation(summary = "Delete a Workout",
-            description = "Delete's a specific Workout by their ID.",
+    @Operation(summary = "Delete Workout",
+            description = "Delete a specific workout using its identifier",
             tags = {"Workouts"},
             responses = {
-                    @ApiResponse(description = "No content", responseCode = "204", content = @Content),
-                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Workout deleted successfully", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Workout not found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )

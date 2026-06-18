@@ -1,8 +1,10 @@
 package br.com.application.controllers.email;
 
+import br.com.application.config.SecurityConfig;
 import br.com.application.controllers.docs.EmailControllerDocs;
 import br.com.application.data.dto.request.EmailRequestDTO;
-import br.com.application.service.EmailService;
+import br.com.application.service.email.EmailService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/email/v1")
-@Tag(name = "e-Mail", description = "Endpoints for sends an e-Mail")
+@Tag(name = "Email", description = "Endpoints for sends an e-Mail")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class EmailController implements EmailControllerDocs {
 
     @Autowired

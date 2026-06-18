@@ -4,7 +4,7 @@ import br.com.application.data.dto.WorkoutDTO;
 import br.com.application.exception.RequiredObjectIsNullException;
 import br.com.application.model.Workout;
 import br.com.application.repository.WorkoutRepository;
-import br.com.application.service.WorkoutService;
+import br.com.application.service.workout.WorkoutService;
 import br.com.application.unittests.mapper.mocks.MockWorkout;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

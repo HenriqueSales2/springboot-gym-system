@@ -1,4 +1,4 @@
-package br.com.application.service;
+package br.com.application.service.person;
 
 import br.com.application.controllers.person.PersonController;
 import br.com.application.controllers.person.TestLogController;

@@ -1,4 +1,4 @@
-package br.com.application.service;
+package br.com.application.service.email;
 
 import br.com.application.config.EmailConfig;
 import br.com.application.data.dto.request.EmailRequestDTO;

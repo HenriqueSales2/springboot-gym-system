@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/test/v1")
+//@RequestMapping("/api/test/v1")
 public class TestLogController {
 
     private Logger logger = LoggerFactory.getLogger(TestLogController.class.getName());
 
-    @GetMapping( "/test")
+    //@GetMapping( "/test")
     public String testLog() {
         logger.debug("This is an DEBUG log");
         logger.info("This is an INFO log");

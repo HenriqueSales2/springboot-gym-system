@@ -1,9 +1,11 @@
 package br.com.application.controllers.person;
 
+import br.com.application.config.SecurityConfig;
 import br.com.application.controllers.docs.PersonControllerDocs;
 import br.com.application.data.dto.PersonDTO;
 import br.com.application.file.exporter.MediaTypes;
-import br.com.application.service.PersonService;
+import br.com.application.service.person.PersonService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +36,7 @@ especificar o dominio do site que vai ser acessado pelo cliente,
 @RestController
 @RequestMapping("/api/person/v1")
 @Tag(name = "People", description = "Endpoints for Managing People")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class PersonController implements PersonControllerDocs {
 
     @Autowired
@@ -165,8 +169,9 @@ public class PersonController implements PersonControllerDocs {
             }
     )
     @Override
-    public PersonDTO create(@RequestBody PersonDTO personDTO) {
-        return service.create(personDTO);
+    public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO personDTO) {
+        var user = service.create(personDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PostMapping( value = "/massCreation",

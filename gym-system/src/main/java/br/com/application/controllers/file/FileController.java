@@ -1,8 +1,10 @@
 package br.com.application.controllers.file;
 
+import br.com.application.config.SecurityConfig;
 import br.com.application.controllers.docs.FileControllerDocs;
 import br.com.application.data.dto.UploadFileDTO;
-import br.com.application.service.FileStorageService;
+import br.com.application.service.file.FileStorageService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-
 @RequestMapping("/api/file/v1")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class FileController implements FileControllerDocs {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
@@ -57,7 +59,7 @@ public class FileController implements FileControllerDocs {
 
     @PostMapping("/uploadMultipleFiles")
     @Override
-    public List<UploadFileDTO> uploadMultiplesFiles(@RequestParam("files") MultipartFile[] files) {
+    public List<UploadFileDTO> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
         // retornando um lambda com uma lista de upload de múltiplos arquivos
         return Arrays.asList(files)
                 .stream()

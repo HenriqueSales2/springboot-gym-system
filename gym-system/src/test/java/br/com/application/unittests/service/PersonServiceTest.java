@@ -4,7 +4,7 @@ import br.com.application.data.dto.PersonDTO;
 import br.com.application.exception.RequiredObjectIsNullException;
 import br.com.application.model.Person;
 import br.com.application.repository.PersonRepository;
-import br.com.application.service.PersonService;
+import br.com.application.service.person.PersonService;
 import br.com.application.unittests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

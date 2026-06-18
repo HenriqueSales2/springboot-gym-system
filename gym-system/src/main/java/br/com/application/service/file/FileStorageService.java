@@ -1,4 +1,4 @@
-package br.com.application.service;
+package br.com.application.service.file;
 
 import br.com.application.config.FileStorageConfig;
 import br.com.application.exception.FileNotFoundException;

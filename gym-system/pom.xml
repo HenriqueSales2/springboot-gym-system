@@ -24,12 +24,10 @@
         <apache.poi.version>5.5.1</apache.poi.version>
         <jasperreports.version>7.0.6</jasperreports.version>
         <zxing.version>3.5.4</zxing.version>
-
-
+		<java-jwt.version>4.5.2</java-jwt.version>
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -49,6 +47,20 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<!--adicionando a dependencia para habilitar a função do spring security-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- Source: https://mvnrepository.com/artifact/com.auth0/java-jwt -->
+		<!--adicionando a dependencia do JWT-->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>${java-jwt.version}</version>
+		</dependency>
+
 <!--adicionando a dependencia do HATEOAS-->
 		<dependency>
 			<groupId>org.springframework.hateoas</groupId>
@@ -64,6 +76,7 @@
 <!--			<scope>compile</scope>-->
 		</dependency>
 
+		<!--adicionando a dependencia do Scalar-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-scalar</artifactId>
@@ -138,7 +151,6 @@
             <version>${zxing.version}</version>
         </dependency>
 
-
 		<!-- Source: https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
 		<!--dependencia do MySQL-->
 		<dependency>
@@ -171,7 +183,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
 		<!--dependencia do TestContainers-->
 		<dependency>
 			<groupId>org.testcontainers</groupId>
@@ -189,14 +200,12 @@
 			<scope>test</scope>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -208,7 +217,6 @@
 
 <!--			adicionando o plugin do flyway no maven-->
 			<plugin>
-
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 				<configuration>
@@ -216,7 +224,6 @@
 					<user>your_username</user>
 					<password>your_password</password>
 				</configuration>
-
 <!--				adicionando a dependencia do MySQL no flyway-->
 <!--				nesse caso aqui devemos adicionar a versao do plugin na dependencia do MySQL-->
 <!--					pois na hora de executar o terminal nao pega o contexto do spring, só o do plugin,-->
@@ -232,20 +239,10 @@
 								<groupId>org.slf4j</groupId>
 								<artifactId>slf4j-api</artifactId>
 							</exclusion>
-
 						</exclusions>
 					</dependency>
 				</dependencies>
-
 			</plugin>
-
 		</plugins>
 	</build>
-
-<!--	<repositories>-->
-<!--		<repository>-->
-
-<!--		</repository>-->
-<!--	</repositories>-->
-
 </project>

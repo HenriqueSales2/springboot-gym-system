@@ -1,8 +1,10 @@
 package br.com.application.controllers.workout;
 
+import br.com.application.config.SecurityConfig;
 import br.com.application.controllers.docs.WorkoutControllerDocs;
 import br.com.application.data.dto.WorkoutDTO;
-import br.com.application.service.WorkoutService;
+import br.com.application.service.workout.WorkoutService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/workout/v1")
 @Tag(name = "Workouts", description = "Endpoints for Workouts")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class WorkoutController implements WorkoutControllerDocs {
 
     @Autowired
