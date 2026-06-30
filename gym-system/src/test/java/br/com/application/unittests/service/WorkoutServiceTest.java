@@ -6,28 +6,31 @@ import br.com.application.model.Workout;
 import br.com.application.repository.WorkoutRepository;
 import br.com.application.service.workout.WorkoutService;
 import br.com.application.unittests.mapper.mocks.MockWorkout;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) // o ciclo de vida dos objetos vão durar apenas para essa classe
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class WorkoutServiceTest {
 
-    MockWorkout input; // vamos passar como parâmetro para os testes
+    MockWorkout input;
 
     @InjectMocks
     private WorkoutService service;
@@ -35,135 +38,45 @@ class WorkoutServiceTest {
     @Mock
     WorkoutRepository repository;
 
+    @Mock
+    private PagedResourcesAssembler<WorkoutDTO> assembler;
+
     @BeforeEach
     void setUp() {
         input = new MockWorkout();
-        MockitoAnnotations.openMocks(this); // essa linha é muito importante, pois sem isso, é inviável injetar o Repository e Service na classe de testes
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void findWorkoutById() { // testa se todos os campos do Objeto Person e os Links estão funcionando, caso não estejam, retorna um erro
-        Workout workout =  input.mockEntity(1);
-        workout.setId(1L);
-        when(repository // dizendo ao Mockito o que ele deve fazer quando o Repositório for invocado
-                .findById(1L)) // nesse caso é chamar o método findById (passando como parâmetro o id, que seria um mock)
-                .thenReturn(Optional.of(workout)); // e o que ele deve retornar (ele vai retornar uma instancia de "person")
-
-        var result = service.findWorkoutById(1L);
-
-        assertNotNull(result); // verificando se os objetos são coerentes
-        assertNotNull(result.getId()); // verificando se os id é coerente
-        assertNotNull(result.getLinks()); // verificando se o link é coerente
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("self") // verificando se a propriedade "self" é coerente em ambas as partes (self é o findById)
-                                && link.getHref().endsWith("/api/workout/v1/1") // verificando se a propriedade "href" é coerente em ambas as partes
-                                && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("findAllWorkouts") // verificando se a propriedade "findAll" é coerente em ambas as partes
-                                && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                                && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("create") // verificando se a propriedade "create" é coerente em ambas as partes
-                                && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                                && link.getType().equals("POST") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("update") // verificando se a propriedade "update" é coerente em ambas as partes
-                                && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                                && link.getType().equals("PUT") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("delete") // verificando se a propriedade "delete" é coerente em ambas as partes
-                                && link.getHref().endsWith("/api/workout/v1/1") // verificando se a propriedade "href" é coerente em ambas as partes
-                                && link.getType().equals("DELETE") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-        assertEquals("Exercise Name Test1", result.getExerciseName());
-        assertEquals("Muscle Group Test1", result.getMuscleGroup());
-        assertEquals("Equipment Test1", result.getEquipment());
-        assertEquals("Difficulty Test1", result.getDifficulty());
-
-
-    }
-
-    @Test
-    void create() {
-
+    @Order(1)
+    void createWorkoutTest() {
         WorkoutDTO dto = input.mockDTO(1);
 
-        when(repository // dizendo ao Mockito o que ele deve fazer quando o Repositório for invocado
-                .save(any(Workout.class))) // nesse caso é chamar o método findById (passando como parâmetro o id, que seria um mock)
-                .thenReturn(input.mockEntity(1)); // e o que ele deve retornar (ele vai retornar uma instancia de "person", dessa vez não é Optional)
+        when(repository
+                .save(any(Workout.class)))
+                .thenReturn(input.mockEntity(1));
 
         var result = service.create(dto);
 
-        assertNotNull(result); // verificando se os objetos são coerentes
-        assertNotNull(result.getId()); // verificando se os id é coerente
-        assertNotNull(result.getLinks()); // verificando se o link é coerente
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("self") // verificando se a propriedade "self" é coerente em ambas as partes (self é o findById)
-                        && link.getHref().endsWith("/api/workout/v1/1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertNotNull(result.getLinks());
 
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("findAllWorkouts") // verificando se a propriedade "findAll" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("create") // verificando se a propriedade "create" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("POST") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("update") // verificando se a propriedade "update" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("PUT") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("delete") // verificando se a propriedade "delete" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1/1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("DELETE") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertHasLink(result, "self", "/api/workout/v1/1", "GET");
+        assertHasLink(result, "findAllWorkouts", "/api/workout/v1", "GET");
+        assertHasLink(result, "create", "/api/workout/v1", "POST");
+        assertHasLink(result, "update", "/api/workout/v1", "PUT");
+        assertHasLink(result, "delete", "/api/workout/v1/1", "DELETE");
 
         assertEquals("Exercise Name Test1", result.getExerciseName());
         assertEquals("Muscle Group Test1", result.getMuscleGroup());
         assertEquals("Equipment Test1", result.getEquipment());
         assertEquals("Difficulty Test1", result.getDifficulty());
-
-
     }
 
     @Test
-    void testCreateWithNullPerson() {
+    @Order(2)
+    void createWithNullWorkoutTest() {
         Exception exception = assertThrows(RequiredObjectIsNullException.class,
                 () -> {
             service.create(null);
@@ -175,8 +88,8 @@ class WorkoutServiceTest {
     }
 
     @Test
-    void update() {
-
+    @Order(3)
+    void updateWorkoutTest() {
         Workout workout =  input.mockEntity(1);
         Workout persisted = workout;
         persisted.setId(1L);
@@ -184,63 +97,31 @@ class WorkoutServiceTest {
         WorkoutDTO dto = input.mockDTO(1);
 
         workout.setId(1L);
-        when(repository // dizendo ao Mockito o que ele deve fazer quando o Repositório for invocado
-                .findById(1L)) // nesse caso é chamar o método findById (passando como parâmetro o id, que seria um mock)
+        when(repository
+                .findById(1L))
                 .thenReturn(Optional.of(workout));
         when(repository.save(workout)).thenReturn(persisted);
         var result = service.update(dto);
 
-        assertNotNull(result); // verificando se os objetos são coerentes
-        assertNotNull(result.getId()); // verificando se os id é coerente
-        assertNotNull(result.getLinks()); // verificando se o link é coerente
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("self") // verificando se a propriedade "self" é coerente em ambas as partes (self é o findById)
-                        && link.getHref().endsWith("/api/workout/v1/1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertNotNull(result.getLinks());
 
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("findAllWorkouts") // verificando se a propriedade "findAll" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("create") // verificando se a propriedade "create" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("POST") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("update") // verificando se a propriedade "update" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("PUT") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(result.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("delete") // verificando se a propriedade "delete" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1/1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("DELETE") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertHasLink(result, "self", "/api/workout/v1/1", "GET");
+        assertHasLink(result, "findAllWorkouts", "/api/workout/v1", "GET");
+        assertHasLink(result, "create", "/api/workout/v1", "POST");
+        assertHasLink(result, "update", "/api/workout/v1", "PUT");
+        assertHasLink(result, "delete", "/api/workout/v1/1", "DELETE");
 
         assertEquals("Exercise Name Test1", result.getExerciseName());
         assertEquals("Muscle Group Test1", result.getMuscleGroup());
         assertEquals("Equipment Test1", result.getEquipment());
         assertEquals("Difficulty Test1", result.getDifficulty());
-
     }
 
     @Test
-    void testUpdateWithNullPerson() {
+    @Order(4)
+    void updateWithNullWorkoutTest() {
         Exception exception = assertThrows(RequiredObjectIsNullException.class,
                 () -> {
                     service.update(null);
@@ -252,122 +133,106 @@ class WorkoutServiceTest {
     }
 
     @Test
-    void delete() {
+    @Order(5)
+    void findWorkoutByIdTest() {
+        Workout workout =  input.mockEntity(1);
+        workout.setId(1L);
+        when(repository
+                .findById(1L))
+                .thenReturn(Optional.of(workout));
+
+        var result = service.findWorkoutById(1L);
+
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertNotNull(result.getLinks());
+
+        assertHasLink(result, "self", "/api/workout/v1/1", "GET");
+        assertHasLink(result, "findAllWorkouts", "/api/workout/v1", "GET");
+        assertHasLink(result, "create", "/api/workout/v1", "POST");
+        assertHasLink(result, "update", "/api/workout/v1", "PUT");
+        assertHasLink(result, "delete", "/api/workout/v1/1", "DELETE");
+
+        assertEquals("Exercise Name Test1", result.getExerciseName());
+        assertEquals("Muscle Group Test1", result.getMuscleGroup());
+        assertEquals("Equipment Test1", result.getEquipment());
+        assertEquals("Difficulty Test1", result.getDifficulty());
+    }
+
+    @Test
+    @Order(6)
+    void deleteWorkoutTest() {
         Workout workout = input.mockEntity(1);
         workout.setId(1L);
-        when(repository // dizendo ao Mockito o que ele deve fazer quando o Repositório for invocado
-                .findById(1L)) // nesse caso é chamar o método findById (passando como parâmetro o id, que seria um mock)
-                .thenReturn(Optional.of(workout)); // e o que ele deve retornar (ele vai retornar uma instancia de "person")
+        when(repository
+                .findById(1L))
+                .thenReturn(Optional.of(workout));
 
         service.delete(1L);
-        verify(repository, times(1)).findById(anyLong()); // vai invocar o número de vezes que eu chamar o método FindById
-        verify(repository, times(1)).delete(any(Workout.class)); // vai invocar o número de vezes que eu chamar o método delete passando como parâmetro a entidade Person
+        verify(repository, times(1)).findById(anyLong());
+        verify(repository, times(1)).delete(any(Workout.class));
         verifyNoMoreInteractions(repository);
     }
 
     @Test
-    @Disabled("REASON: Still Under Development")
-    void findAll() {
+    @Order(7)
+    void findAllWorkoutsTest() {
+        var page = 0;
+        var size = 12;
+        var direction = "asc";
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "exerciseName"));
 
         List<Workout> list = input.mockEntityList();
-        when(repository.findAll()).thenReturn(list);
-        List<WorkoutDTO> workouts =  new ArrayList<>();//service.findAllTeachers();
 
-        assertEquals(14, workouts.size());
+        Page<Workout> pageImpl = new PageImpl<>(list);
 
-        var workoutOne = workouts.get(1);
+        PagedModel<EntityModel<WorkoutDTO>> pagedModel = mock(PagedModel.class);
 
-        assertNotNull(workoutOne); // verificando se os objetos são coerentes
-        assertNotNull(workoutOne.getId()); // verificando se os id é coerente
-        assertNotNull(workoutOne.getLinks()); // verificando se o link é coerente
-        assertNotNull(workoutOne.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("self") // verificando se a propriedade "self" é coerente em ambas as partes (self é o findById)
-                        && link.getHref().endsWith("/api/workout/v1/1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        when(repository.findAll(any(Pageable.class)))
+                .thenReturn(pageImpl);
 
+        when(assembler.toModel(any(Page.class), any(Link.class)))
+                .thenReturn(pagedModel);
 
-        assertNotNull(workoutOne.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("findAllWorkouts") // verificando se a propriedade "findAll" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        service.findAllWorkout(pageable);
 
+        ArgumentCaptor<Page<WorkoutDTO>> pageCaptor = ArgumentCaptor.forClass(Page.class);
 
-        assertNotNull(workoutOne.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("create") // verificando se a propriedade "create" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("POST") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        verify(assembler).toModel(pageCaptor.capture(), any(Link.class));
 
+        Page<WorkoutDTO> pageSentToAssembler = pageCaptor.getValue();
 
-        assertNotNull(workoutOne.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("update") // verificando se a propriedade "update" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("PUT") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertEquals(14, pageSentToAssembler.getContent().size());
 
+        WorkoutDTO workoutOne = pageSentToAssembler.getContent().get(1);
 
-        assertNotNull(workoutOne.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("delete") // verificando se a propriedade "delete" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1/1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("DELETE") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertNotNull(workoutOne);
+        assertNotNull(workoutOne.getId());
+        assertNotNull(workoutOne.getLinks());
+
+        assertHasLink(workoutOne, "self", "/api/workout/v1/1", "GET");
+        assertHasLink(workoutOne, "findAllWorkouts", "/api/workout/v1", "GET");
+        assertHasLink(workoutOne, "create", "/api/workout/v1", "POST");
+        assertHasLink(workoutOne, "update", "/api/workout/v1", "PUT");
+        assertHasLink(workoutOne, "delete", "/api/workout/v1/1", "DELETE");
 
         assertEquals("Exercise Name Test1", workoutOne.getExerciseName());
         assertEquals("Muscle Group Test1", workoutOne.getMuscleGroup());
         assertEquals("Equipment Test1", workoutOne.getEquipment());
         assertEquals("Difficulty Test1", workoutOne.getDifficulty());
 
+        WorkoutDTO workoutFour = pageSentToAssembler.getContent().get(4);
 
-        var workoutFour = workouts.get(4);
+        assertNotNull(workoutFour);
+        assertNotNull(workoutFour.getId());
+        assertNotNull(workoutFour.getLinks());
 
-        assertNotNull(workoutFour); // verificando se os objetos são coerentes
-        assertNotNull(workoutFour.getId()); // verificando se os id é coerente
-        assertNotNull(workoutFour.getLinks()); // verificando se o link é coerente
-        assertNotNull(workoutFour.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("self") // verificando se a propriedade "self" é coerente em ambas as partes (self é o findById)
-                        && link.getHref().endsWith("/api/workout/v1/4") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(workoutFour.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("findAllWorkouts") // verificando se a propriedade "findAll" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(workoutFour.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("create") // verificando se a propriedade "create" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("POST") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(workoutFour.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("update") // verificando se a propriedade "update" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("PUT") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(workoutFour.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("delete") // verificando se a propriedade "delete" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1/4") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("DELETE") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertHasLink(workoutFour, "self", "/api/workout/v1/4", "GET");
+        assertHasLink(workoutFour, "findAllWorkouts", "/api/workout/v1", "GET");
+        assertHasLink(workoutFour, "create", "/api/workout/v1", "POST");
+        assertHasLink(workoutFour, "update", "/api/workout/v1", "PUT");
+        assertHasLink(workoutFour, "delete", "/api/workout/v1/4", "DELETE");
 
         assertEquals("Exercise Name Test4", workoutFour.getExerciseName());
         assertEquals("Muscle Group Test4", workoutFour.getMuscleGroup());
@@ -375,54 +240,30 @@ class WorkoutServiceTest {
         assertEquals("Difficulty Test4", workoutFour.getDifficulty());
 
 
-        var workoutSeven = workouts.get(7);
+        WorkoutDTO workoutSeven = pageSentToAssembler.getContent().get(7);
 
-        assertNotNull(workoutSeven); // verificando se os objetos são coerentes
-        assertNotNull(workoutSeven.getId()); // verificando se os id é coerente
-        assertNotNull(workoutSeven.getLinks()); // verificando se o link é coerente
-        assertNotNull(workoutSeven.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("self") // verificando se a propriedade "self" é coerente em ambas as partes (self é o findById)
-                        && link.getHref().endsWith("/api/workout/v1/7") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertNotNull(workoutSeven);
+        assertNotNull(workoutSeven.getId());
+        assertNotNull(workoutSeven.getLinks());
 
-
-        assertNotNull(workoutSeven.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("findAllWorkouts") // verificando se a propriedade "findAll" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("GET") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(workoutSeven.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("create") // verificando se a propriedade "create" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("POST") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(workoutSeven.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("update") // verificando se a propriedade "update" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("PUT") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
-
-
-        assertNotNull(workoutSeven.getLinks().stream()
-                .anyMatch(link -> link.getRel().value().equals("delete") // verificando se a propriedade "delete" é coerente em ambas as partes
-                        && link.getHref().endsWith("/api/workout/v1/7") // verificando se a propriedade "href" é coerente em ambas as partes
-                        && link.getType().equals("DELETE") // verificando se a propriedade "type" é coerente em ambas as partes
-                )
-        );
+        assertHasLink(workoutSeven, "self", "/api/workout/v1/7", "GET");
+        assertHasLink(workoutSeven, "findAllWorkouts", "/api/workout/v1", "GET");
+        assertHasLink(workoutSeven, "create", "/api/workout/v1", "POST");
+        assertHasLink(workoutSeven, "update", "/api/workout/v1", "PUT");
+        assertHasLink(workoutSeven, "delete", "/api/workout/v1/7", "DELETE");
 
         assertEquals("Exercise Name Test7", workoutSeven.getExerciseName());
         assertEquals("Muscle Group Test7", workoutSeven.getMuscleGroup());
         assertEquals("Equipment Test7", workoutSeven.getEquipment());
         assertEquals("Difficulty Test7", workoutSeven.getDifficulty());
+    }
 
+    private static void assertHasLink(WorkoutDTO dto, String rel, String href, String httpMethod) {
+        assertTrue(dto.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals(rel)
+                        && link.getHref().contains(href)
+                        && link.getType().equals(httpMethod)
+                )
+        );
     }
 }

@@ -32,7 +32,7 @@ public class AuthController implements AuthControllerDocs {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body("Invalid client request!");
 
-        return ResponseEntity.ok().body(token);
+        return token;
     }
 
     @PutMapping("/refresh/{username}")
@@ -48,7 +48,7 @@ public class AuthController implements AuthControllerDocs {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body("Invalid client request!");
 
-        return ResponseEntity.ok().body(token);
+        return token;
     }
 
     @PostMapping(value = "/createUser",

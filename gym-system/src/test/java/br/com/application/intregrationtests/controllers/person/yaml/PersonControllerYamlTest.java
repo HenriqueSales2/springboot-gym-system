@@ -4,8 +4,9 @@ import br.com.application.config.TestConfigs;
 import br.com.application.intregrationtests.controllers.person.yaml.mapper.YAMLMapper;
 import br.com.application.intregrationtests.dto.person.PersonDTO;
 import br.com.application.intregrationtests.dto.person.wrappers.xml.PagedModelPerson;
+import br.com.application.intregrationtests.dto.security.AccountCredentialsDTO;
+import br.com.application.intregrationtests.dto.security.TokenDTO;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -31,24 +32,48 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
     public static RequestSpecification specification;
     public static YAMLMapper mapper;
     public static PersonDTO personDTO;
-
+    public static TokenDTO tokenDTO;
 
     @BeforeAll
-    static void setUp() throws JsonProcessingException {
-
+    static void setUp() {
         mapper = new YAMLMapper();
         personDTO = new PersonDTO();
+        tokenDTO = new TokenDTO();
+    }
+
+    @Test
+    @Order(0)
+    void sigIn() {
+        AccountCredentialsDTO credentials = new AccountCredentialsDTO("john", "admin123");
+
+        tokenDTO = given()
+                    .config(RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("application/yaml", ContentType.TEXT)))
+                    .basePath("auth/signin")
+                    .port(TestConfigs.SERVER_PORT)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
+                    .accept(MediaType.APPLICATION_YAML_VALUE)
+                    .body(credentials, mapper)
+                .when()
+                    .post()
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .extract()
+                    .body()
+                        .as(TokenDTO.class, mapper);
+
+        assertNotNull(tokenDTO.getAccessToken());
+        assertNotNull(tokenDTO.getRefreshToken());
     }
 
     @Test
     @Order(1)
-    void createTestYAML() throws JsonProcessingException {
-
+    void createTestYAML() {
         mockPersonYAML();
         specification = new RequestSpecBuilder()
-                .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN,
-                        TestConfigs.ORIGIN_EXAMPLE))
-                .setBasePath("/api/person/v1")
+                .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCAL))
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, TestConfigs.BEARER_PREFIX + tokenDTO.getAccessToken())
+                .setBasePath(TestConfigs.BASEPATH_PARAM)
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilters(List.of(new RequestLoggingFilter(LogDetail.ALL), new ResponseLoggingFilter(LogDetail.ALL)))
                 .build();
@@ -61,7 +86,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                 .when()
                     .post()
                 .then()
-                    .statusCode(200)
+                    .statusCode(201)
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
@@ -81,20 +106,9 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(2)
-    void updateTestYAML() throws JsonProcessingException {
-
+    void updateTestYAML() {
         personDTO.setFirstName("Jim");
         personDTO.setLastName("Milton");
-
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN,
-                        TestConfigs.ORIGIN_LOCAL
-                )
-                .setBasePath("/api/person/v1")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
 
         var content = given(specification)
                     .config(RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("application/yaml", ContentType.TEXT)))
@@ -105,7 +119,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                     .put()
                 .then()
                     .statusCode(200)
-                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
                         .as(PersonDTO.class, mapper);
@@ -124,8 +138,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(3)
-    void findByIdTestYAML() throws JsonProcessingException {
-
+    void findByIdTestYAML() {
         var content = given(specification)
                     .config(RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("application/yaml", ContentType.TEXT)))
                     .accept(MediaType.APPLICATION_YAML_VALUE)
@@ -153,8 +166,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(4)
-    void disablePersonTestYAML() throws JsonProcessingException {
-
+    void disablePersonTestYAML() {
         var content = given(specification)
                     .config(RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("application/yaml", ContentType.TEXT)))
                     .accept(MediaType.APPLICATION_YAML_VALUE)
@@ -182,9 +194,8 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(5)
-    void deleteTestYAML() throws JsonProcessingException {
-
-        var content = given(specification)
+    void deleteTestYAML() {
+        given(specification)
                     .pathParam("id", personDTO.getId())
                 .when()
                     .delete("{id}")
@@ -194,8 +205,7 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(6)
-    void findAllTestYAML() throws JsonProcessingException {
-
+    void findAllTestYAML() {
         var response = given(specification)
                     .accept(MediaType.APPLICATION_YAML_VALUE)
                     .queryParams("page", 3, "size", 12, "direction", "asc")
@@ -233,14 +243,11 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Apt 551", personFour.getAddress());
         assertEquals("Female", personFour.getGender());
         assertFalse(personFour.getEnabled());
-
     }
 
     @Test
     @Order(7)
-    void findPeopleByNameTest() throws JsonProcessingException {
-
-        // {{baseUrl}}/api/person/v1/findPeopleByName/and?page=0&size=12&direction=asc
+    void findPeopleByNameTest() {
         var content = given(specification)
                     .accept(MediaType.APPLICATION_YAML_VALUE)
                     .pathParam("firstName", "and")
@@ -255,7 +262,6 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
                         .as(PagedModelPerson.class, mapper);
 
         List<PersonDTO> people = content.getContent();
-
 
         PersonDTO personOne = people.get(0);
         personDTO = personOne;
@@ -283,12 +289,10 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
     }
 
     private void mockPersonYAML() {
-
         personDTO.setFirstName("John");
         personDTO.setLastName("Marston");
         personDTO.setAddress("North - EUA");
         personDTO.setGender("Male");
         personDTO.setEnabled(true);
     }
-
 }

@@ -2,6 +2,8 @@ package br.com.application.intregrationtests.controllers.workout.yaml;
 
 import br.com.application.config.TestConfigs;
 import br.com.application.intregrationtests.controllers.person.yaml.mapper.YAMLMapper;
+import br.com.application.intregrationtests.dto.security.AccountCredentialsDTO;
+import br.com.application.intregrationtests.dto.security.TokenDTO;
 import br.com.application.intregrationtests.dto.workout.WorkoutDTO;
 import br.com.application.intregrationtests.dto.workout.wrappers.xml.PagedModelWorkout;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
@@ -31,24 +33,47 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
     private static RequestSpecification specification;
     private static YAMLMapper mapper;
     private static WorkoutDTO workoutDTO;
+    private static TokenDTO tokenDTO;
 
     @BeforeAll
     static void setUp() {
-
         mapper = new YAMLMapper();
         workoutDTO = new WorkoutDTO();
+        tokenDTO = new TokenDTO();
+    }
 
+    @Test
+    @Order(0)
+    void sigIn() {
+        AccountCredentialsDTO credentials = new AccountCredentialsDTO("john", "admin123");
+
+        tokenDTO = given()
+                .basePath("auth/signin")
+                .port(TestConfigs.SERVER_PORT)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(credentials)
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                .body()
+                .as(TokenDTO.class);
+
+        assertNotNull(tokenDTO.getAccessToken());
+        assertNotNull(tokenDTO.getRefreshToken());
     }
 
     @Test
     @Order(1)
-    void createWorkoutTestYaml() throws JsonProcessingException {
-
-        mockWorkout();
+    void createWorkoutTestYaml() {
+        mockWorkoutYaml();
 
         specification = new RequestSpecBuilder()
                 .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN,
                         TestConfigs.ORIGIN_EXAMPLE))
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, TestConfigs.BEARER_PREFIX + tokenDTO.getAccessToken())
                 .setBasePath("/api/workout/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilters(List.of(new RequestLoggingFilter(LogDetail.ALL), new ResponseLoggingFilter(LogDetail.ALL)))
@@ -62,7 +87,7 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
                 .when()
                     .post()
                 .then()
-                    .statusCode(200)
+                    .statusCode(201)
                     .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
@@ -81,8 +106,7 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(2)
-    void updateWorkoutTestYaml() throws JsonProcessingException {
-
+    void updateWorkoutTestYaml() {
         workoutDTO.setExerciseName("Hammer Curl");
         workoutDTO.setEquipment("Dumbbells");
 
@@ -105,18 +129,15 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
         assertNotNull(content.getId());
         assertTrue(content.getId() > 0);
 
-
         assertEquals("Hammer Curl", content.getExerciseName());
         assertEquals("Biceps", content.getMuscleGroup());
         assertEquals("Dumbbells", content.getEquipment());
         assertEquals("Beginner", content.getDifficulty());
-
     }
 
     @Test
     @Order(3)
-    void findByIdWorkoutTestYaml() throws JsonProcessingException {
-
+    void findByIdWorkoutTestYaml() {
         var content = given(specification)
                     .config(RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("application/yaml", ContentType.TEXT)))
                     .accept(MediaType.APPLICATION_YAML_VALUE)
@@ -131,7 +152,6 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
                     .body()
                         .as(WorkoutDTO.class, mapper);
 
-        
         workoutDTO = content;
 
         assertNotNull(content.getId());
@@ -141,13 +161,11 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Biceps", content.getMuscleGroup());
         assertEquals("Dumbbells", content.getEquipment());
         assertEquals("Beginner", content.getDifficulty());
-
     }
 
     @Test
     @Order(4)
-    void deleteWorkoutTestYaml() throws JsonProcessingException {
-
+    void deleteWorkoutTestYaml() {
         given(specification)
                     .pathParam("id", workoutDTO.getId())
                 .when()
@@ -159,8 +177,7 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(5)
-    void findAllWorkoutsTestYaml() throws JsonProcessingException {
-
+    void findAllWorkoutsTestYaml() {
         var response = given(specification)
                     .accept(MediaType.APPLICATION_YAML_VALUE)
                     .queryParams("page", 0, "size", 6, "direction", "asc")
@@ -173,7 +190,6 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
                     .body()
                         .as(PagedModelWorkout.class, mapper);
 
-        
         List<WorkoutDTO> workouts = response.getContent();
 
         WorkoutDTO workoutOne = workouts.get(0);
@@ -197,11 +213,9 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
         assertEquals("Legs", workoutFour.getMuscleGroup());
         assertEquals("Barbell", workoutFour.getEquipment());
         assertEquals("Advanced", workoutFour.getDifficulty());
-
     }
 
-    private void mockWorkout() {
-
+    private void mockWorkoutYaml() {
         workoutDTO.setExerciseName("Barbell Curl");
         workoutDTO.setMuscleGroup("Biceps");
         workoutDTO.setEquipment("Barbell");

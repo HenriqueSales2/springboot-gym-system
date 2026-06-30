@@ -8,7 +8,6 @@ import br.com.application.model.Person;
 
 public class MockPerson {
 
-
     public Person mockEntity() {
         return mockEntity(0);
     }
@@ -40,6 +39,10 @@ public class MockPerson {
         person.setLastName("Last Name Test" + number);
         person.setAddress("Address Test" + number);
         person.setGender(((number % 2)==0) ? "Male" : "Female");
+        person.setEnabled((number % 2) == 0);
+        person.setProfileUrl("Profile Url Test" + number);
+        person.setPhotoUrl("Photo Url Test" + number);
+
         return person;
     }
 
@@ -50,7 +53,10 @@ public class MockPerson {
         personDTO.setLastName("Last Name Test" + number);
         personDTO.setAddress("Address Test" + number);
         personDTO.setGender(((number % 2)==0) ? "Male" : "Female");
+        personDTO.setEnabled((number % 2) == 0);
+        personDTO.setProfileUrl("Profile Url Test" + number);
+        personDTO.setPhotoUrl("Photo Url Test" + number);
+
         return personDTO;
     }
-
 }

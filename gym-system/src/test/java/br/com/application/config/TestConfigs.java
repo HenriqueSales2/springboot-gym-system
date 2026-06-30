@@ -1,9 +1,11 @@
 package br.com.application.config;
 
 public interface TestConfigs {
-    int SERVER_PORT = 8888;
+    int SERVER_PORT = 80;
 
     String HEADER_PARAM_AUTHORIZATION = "Authorization";
+    String BEARER_PREFIX = "Bearer ";
+    String PATH_PARAM_USERNAME = "username";
     String HEADER_PARAM_ORIGIN = "Origin";
     String BASEPATH_PARAM = "/api/person/v1";
     String BASEPATH_PARAM_WORKOUT = "/api/workout/v1";

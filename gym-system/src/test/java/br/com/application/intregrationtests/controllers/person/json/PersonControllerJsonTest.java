@@ -3,6 +3,8 @@ package br.com.application.intregrationtests.controllers.person.json;
 import br.com.application.config.TestConfigs;
 import br.com.application.intregrationtests.dto.person.PersonDTO;
 import br.com.application.intregrationtests.dto.person.wrappers.json.WrapperPersonDTO;
+import br.com.application.intregrationtests.dto.security.AccountCredentialsDTO;
+import br.com.application.intregrationtests.dto.security.TokenDTO;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -17,172 +19,190 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import java.util.List;
-import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT) // vamos definir a porta que o spring boot vai utilizar para os testes
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender essa classe abstrata que criamos os testes falham
+class PersonControllerJsonTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
     private static PersonDTO personDTO;
+    private static TokenDTO tokenDTO;
 
-    @BeforeAll // para não ficar criando instâncias novas toda vez que um teste for executado
+    @BeforeAll
     static void setUp() {
-
         objectMapper = new ObjectMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES); // desabilita requisições para objetos desconhecidos
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         personDTO = new PersonDTO();
+        tokenDTO = new TokenDTO();
     }
 
     @Test
-    @Order(1) // vai ser o primeiro teste a ser executado
-    void createTest() throws JsonProcessingException { // colocando o sufixo "Test" no método create
+    @Order(0)
+    void sigIn() {
+        AccountCredentialsDTO credentials = new AccountCredentialsDTO("john", "admin123");
 
+        tokenDTO = given()
+                    .basePath("auth/signin")
+                    .port(TestConfigs.SERVER_PORT)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(credentials)
+                .when()
+                    .post()
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                    .body()
+                        .as(TokenDTO.class);
+
+        assertNotNull(tokenDTO.getAccessToken());
+        assertNotNull(tokenDTO.getRefreshToken());
+    }
+
+    @Test
+    @Order(1)
+    void createTest() throws JsonProcessingException {
         mockPerson();
 
         specification = new RequestSpecBuilder()
-                .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN, // pegando os parâmetros setados no TestConfigs (esses parâmetros são que podemos setar no Postman na aba "Headers", esse por exemplo fica na parte de Key e é o Origin)
-                        TestConfigs.ORIGIN_EXAMPLE)) // pegando os parâmetros setados no TestConfigs (esses parâmetros são que podemos setar no Postman na aba "Headers", esse por exemplo fica na parte de Value e é https://example.com.br)
-                .setBasePath("/api/person/v1") // aqui é a URLBASE, ou seja, o caminho que fazemos para criar um user
-                .setPort(TestConfigs.SERVER_PORT) // aqui é a porta do servidor, nesse caso eu setei 8888, pois como aqui são testes se eu colocar 8080 pode conflitar com a aplicação base
-                .addFilters(List.of(new RequestLoggingFilter(LogDetail.ALL), new ResponseLoggingFilter(LogDetail.ALL))) // mostrar os destalhes das logs que estão indo e voltando na aplicação e investigar possíveis erros
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN,
+                        TestConfigs.ORIGIN_EXAMPLE)
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, TestConfigs.BEARER_PREFIX + tokenDTO.getAccessToken())
+                .setBasePath(TestConfigs.BASEPATH_PARAM)
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
 
-        var content = given(specification) // armazenando todo esse conteúdo em uma variável
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
+        var content = given(specification)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(personDTO)
-                .when() // quando executar uma operação
-                    .post()// do tipo post
-                .then() // então
-                    .statusCode(200)// eu espero a resposta de statusCode 200 OK (significa que deu tudo certo)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // assegurando que vai retornar um JSON após a execução do teste
+                .when()
+                    .post()
+                .then()
+                    .statusCode(201)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract()
-                    .body() // pegar o conteúdo do body (corpo)
-                        .asString(); // transformar em String
+                    .body()
+                        .asString();
 
         PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         personDTO = createdPerson;
-        assertNotNull(createdPerson.getId()); // assegurar que o id não é nulo
-        assertTrue(createdPerson.getId() > 0); // assegurar que o id é maior que zero
 
-        assertEquals("Arthur", createdPerson.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Morgan", createdPerson.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Indiana - USA", createdPerson.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Male", createdPerson.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
-        assertTrue(createdPerson.getEnabled()); // verificar se o mock de uma pessoa está habilitado
+        assertNotNull(createdPerson.getId());
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("Arthur", createdPerson.getFirstName());
+        assertEquals("Morgan", createdPerson.getLastName());
+        assertEquals("Indiana - USA", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
     }
 
     @Test
-    @Order(2) // vai ser o primeiro teste a ser executado
-    void updateTest() throws JsonProcessingException { // colocando o sufixo "Test" no método update
-
+    @Order(2)
+    void updateTest() throws JsonProcessingException {
         personDTO.setLastName("Callahan");
 
-        var content = given(specification) // armazenando todo esse conteúdo em uma variável
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
+        var content = given(specification)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(personDTO)
-                .when() // quando executar uma operação
-                    .put()// do tipo put
-                .then() // então
-                    .statusCode(200)// eu espero a resposta de statusCode 200 OK (significa que deu tudo certo)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // assegurando que vai retornar um JSON após a execução do teste
+                .when()
+                    .put()
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract()
-                    .body() // pegar o conteúdo do body (corpo)
-                        .asString(); // transformar em String
-
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
-        personDTO = createdPerson;
-        assertNotNull(createdPerson.getId()); // assegurar que o id não é nulo
-        assertTrue(createdPerson.getId() > 0); // assegurar que o id é maior que zero
-
-        assertEquals("Arthur", createdPerson.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Callahan", createdPerson.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Indiana - USA", createdPerson.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Male", createdPerson.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
-        assertTrue(createdPerson.getEnabled()); // verificar se o mock de uma pessoa está habilitado
-    }
-
-
-
-
-    @Test
-    @Order(3) // vai ser o terceiro teste a ser executado
-    void findByIdTest() throws JsonProcessingException { // colocando o sufixo "Test" no método findById
-
-        var content = given(specification) // armazenando todo esse conteúdo em uma variável
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
-                    .pathParam("id", personDTO.getId()) // dessa vez passamos o parâmetro através do pathParam, ou seja, direto da URL, nesse caso eu coloco o nome do parâmetro e depois pego id da classe PersonDTO
-                .when() // quando executar uma operação
-                    .get("{id}")// do tipo get e passando o "id" como parâmetro, faço a mesma coisa no Controller quando chamo a Annotation "GetMapping", porém a única diferença é que aqui são testes
-                .then() // então
-                    .statusCode(200)// eu espero a resposta de statusCode 200 OK (significa que deu tudo certo)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // assegurando que vai retornar um JSON após a execução do teste
-                .extract()
-                    .body() // pegar o conteúdo do body (corpo)
-                        .asString(); // transformar em String
+                    .body()
+                        .asString();
 
         PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         personDTO = createdPerson;
 
-        assertNotNull(createdPerson.getId()); // assegurar que o id não é nulo
-        assertTrue(createdPerson.getId() > 0); // assegurar que o id é maior que zero
+        assertNotNull(createdPerson.getId());
+        assertTrue(createdPerson.getId() > 0);
 
-        assertEquals("Arthur", createdPerson.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Callahan", createdPerson.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Indiana - USA", createdPerson.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Male", createdPerson.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
-        assertTrue(createdPerson.getEnabled()); // verificar se o mock de uma pessoa está habilitado
-         }
-
-    @Test
-    @Order(4) // vai ser o quarto teste a ser executado
-    void disablePersonTest() throws JsonProcessingException { // colocando o sufixo "Test" no método disablePerson
-
-        var content = given(specification) // armazenando todo esse conteúdo em uma variável
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
-                    .pathParam("id", personDTO.getId()) // dessa vez passamos o parâmetro através do pathParam, ou seja, direto da URL, nesse caso eu coloco o nome do parâmetro e depois pego id da classe PersonDTO
-                .when() // quando executar uma operação
-                    .patch("{id}")// do tipo patch e passando o "id" como parâmetro, faço a mesma coisa no Controller quando chamo a Annotation "PatchMapping", porém a única diferença é que aqui são testes
-                .then() // então
-                    .statusCode(200)// eu espero a resposta de statusCode 200 OK (significa que deu tudo certo)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // assegurando que vai retornar um JSON após a execução do teste
-                .extract()
-                    .body() // pegar o conteúdo do body (corpo)
-                        .asString(); // transformar em String
-
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
-        personDTO = createdPerson;
-
-        assertNotNull(createdPerson.getId()); // assegurar que o id não é nulo
-        assertTrue(createdPerson.getId() > 0); // assegurar que o id é maior que zero
-
-        assertEquals("Arthur", createdPerson.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Callahan", createdPerson.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Indiana - USA", createdPerson.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Male", createdPerson.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
-        assertFalse(createdPerson.getEnabled()); // verificar se o mock de uma pessoa está desabilitado, ou seja, Enabled = False
+        assertEquals("Arthur", createdPerson.getFirstName());
+        assertEquals("Callahan", createdPerson.getLastName());
+        assertEquals("Indiana - USA", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
     }
 
     @Test
-    @Order(5) // vai ser o quinto teste a ser executado
-    void deleteTest() throws JsonProcessingException { // colocando o sufixo "Test" no método delete
+    @Order(3)
+    void findByIdTest() throws JsonProcessingException {
+        var content = given(specification)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .pathParam("id", personDTO.getId())
+                .when()
+                    .get("{id}")
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                    .body()
+                        .asString();
 
-        given(specification) // não precisa guardar todo o conteúdo em uma váriavel, pois o método "delete" não retorna nada
-                    .pathParam("id", personDTO.getId()) // dessa vez passamos o parâmetro através do pathParam, ou seja, direto da URL, nesse caso eu coloco o nome do parâmetro e depois pego id da classe PersonDTO
-                .when() // quando executar uma operação
-                    .delete("{id}") // do tipo delete e passando o "id" como parâmetro, faço a mesma coisa no Controller quando chamo a Annotation "DeleteMapping", porém a única diferença é que aqui são testes
-                .then() // então
-                    .statusCode(204); // eu espero a resposta de statusCode 204 No Content Body (significa que não vai retornar nada, só que deu certo a operação)
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
+        personDTO = createdPerson;
+
+        assertNotNull(createdPerson.getId());
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("Arthur", createdPerson.getFirstName());
+        assertEquals("Callahan", createdPerson.getLastName());
+        assertEquals("Indiana - USA", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertTrue(createdPerson.getEnabled());
+    }
+
+    @Test
+    @Order(4)
+    void disablePersonTest() throws JsonProcessingException {
+        var content = given(specification)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .pathParam("id", personDTO.getId())
+                .when()
+                    .patch("{id}")
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                    .body()
+                        .asString();
+
+        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
+        personDTO = createdPerson;
+
+        assertNotNull(createdPerson.getId());
+        assertTrue(createdPerson.getId() > 0);
+
+        assertEquals("Arthur", createdPerson.getFirstName());
+        assertEquals("Callahan", createdPerson.getLastName());
+        assertEquals("Indiana - USA", createdPerson.getAddress());
+        assertEquals("Male", createdPerson.getGender());
+        assertFalse(createdPerson.getEnabled());
+    }
+
+    @Test
+    @Order(5)
+    void deleteTest() {
+        given(specification)
+                .pathParam("id", personDTO.getId())
+                .when()
+                .delete("{id}")
+                .then()
+                .statusCode(204);
     }
 
     @Test
     @Order(6)
     void findAllTest() throws JsonProcessingException {
-
         var content = given(specification)
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .queryParams("page", 3, "size", 12, "direction", "asc")
@@ -195,7 +215,6 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
                     .body()
                         .asString();
 
-        //WrapperPersonDTO wrapper = mapper.readValue(content, WrapperPersonDTO.class);
         WrapperPersonDTO wrapper = objectMapper.readValue(content, WrapperPersonDTO.class);
         List<PersonDTO> people = wrapper.getEmbedded().getPeople();
 
@@ -222,66 +241,58 @@ class PersonControllerJsonTest extends AbstractIntegrationTest { // sem estender
         assertEquals("Apt 551", personFour.getAddress());
         assertEquals("Female", personFour.getGender());
         assertFalse(personFour.getEnabled());
-
     }
 
     @Test
-    @Order(7) // vai ser o sétimo teste a ser executado
-    void findPeopleByNameTest() throws JsonProcessingException { // colocando o sufixo "Test" no método findAll
-
-        // {{baseUrl}}/api/person/v1/findPeopleByName/and?page=0&size=12&direction=asc
-        var content = given(specification) // armazenando todo esse conteúdo em uma variável
-                    .accept(MediaType.APPLICATION_JSON_VALUE) // como se fosse o "application/json", usamos o método para evitar erros na hora da digitação (serve para aceitar JSON na hora de criar users)
-                    .pathParam("firstName", "and") // colocar o nome do parâmetro e o valor do parâmetro, nesse caso é "and" como exemplo
+    @Order(7)
+    void findPeopleByNameTest() throws JsonProcessingException {
+        var content = given(specification)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .pathParam("firstName", "and")
                     .queryParams("page", 0, "size", 12, "direction", "asc")
-                .when() // quando executar uma operação
-                    .get("findPeopleByName/{firstName}")// do tipo get
-                .then() // então
-                    .statusCode(200)// eu espero a resposta de statusCode 200 OK (significa que deu tudo certo)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE) // assegurando que vai retornar um JSON após a execução do teste
+                .when()
+                    .get("findPeopleByName/{firstName}")
+                .then()
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract()
-                    .body() // pegar o conteúdo do body (corpo)
-                        .asString(); // transformar em String
+                    .body()
+                        .asString();
 
-        WrapperPersonDTO wrapper = objectMapper.readValue(content, WrapperPersonDTO.class); // convertendo para Wrapper
-        List<PersonDTO> people = wrapper.getEmbedded().getPeople(); // pegando a lista de pessoas dentro da classe do Wrapper
+        WrapperPersonDTO wrapper = objectMapper.readValue(content, WrapperPersonDTO.class);
+        List<PersonDTO> people = wrapper.getEmbedded().getPeople();
 
 
-        PersonDTO personOne = people.get(0); // pegando o indíce 0 da lista, ou seja, a primeira pessoa da lista
+        PersonDTO personOne = people.get(0);
         personDTO = personOne;
 
-        assertNotNull(personOne.getId()); // assegurar que o id não é nulo
-        assertTrue(personOne.getId() > 0); // assegurar que o id é maior que zero
+        assertNotNull(personOne.getId());
+        assertTrue(personOne.getId() > 0);
 
-        assertEquals("Alejandrina", personOne.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Turbayne", personOne.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Room 1511", personOne.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Female", personOne.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
-        assertTrue(personOne.getEnabled()); // verificar se o mock de uma pessoa está habilitado
+        assertEquals("Alejandrina", personOne.getFirstName());
+        assertEquals("Turbayne", personOne.getLastName());
+        assertEquals("Room 1511", personOne.getAddress());
+        assertEquals("Female", personOne.getGender());
+        assertTrue(personOne.getEnabled());
 
-        PersonDTO personFour = people.get(4); // pegando o indíce 0 da lista, ou seja, a primeira pessoa da lista
+        PersonDTO personFour = people.get(4);
         personDTO = personFour;
 
-        assertNotNull(personFour.getId()); // assegurar que o id não é nulo
-        assertTrue(personFour.getId() > 0); // assegurar que o id é maior que zero
+        assertNotNull(personFour.getId());
+        assertTrue(personFour.getId() > 0);
 
-        assertEquals("Andie", personFour.getFirstName()); // assegurar que o "firstName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Gawler", personFour.getLastName()); // assegurar que o "lastName" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Apt 234", personFour.getAddress()); // assegurar que o "address" de person que criamos é igual ao mockPerson que setei abaixo
-        assertEquals("Female", personFour.getGender()); // // assegurar que o "gender" de person que criamos é igual ao mockPerson que setei abaixo
-        assertFalse(personFour.getEnabled()); // verificar se o mock de uma pessoa está desabilitada
+        assertEquals("Andie", personFour.getFirstName());
+        assertEquals("Gawler", personFour.getLastName());
+        assertEquals("Apt 234", personFour.getAddress());
+        assertEquals("Female", personFour.getGender());
+        assertFalse(personFour.getEnabled());
     }
 
-
-
-
     private void mockPerson() {
-
         personDTO.setFirstName("Arthur");
         personDTO.setLastName("Morgan");
         personDTO.setAddress("Indiana - USA");
         personDTO.setGender("Male");
         personDTO.setEnabled(true);
-
     }
 }

@@ -1,7 +1,9 @@
+server:
+  port: 80
 cors:
-  originPatterns: http://localhost:8080,http://localhost:3000,https://example.com.br # preparando a aplicação para no futuro se conectar com React
-file: # essa propriedade está sendo gerenciado por mim
-  upload-dir: /Code/UploadDir # coloque o caminho do seu projeto em seu computador
+  originPatterns: http://localhost:8080,http://localhost:3000,https://example.com.br
+file:
+  upload-dir: /Code/UploadDir
 security:
   jwt:
     token:
@@ -16,21 +18,20 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/rest_with_spring_boot_java?userTimezone=true&serverTimezone=UTC
-    username: ${DB_USERNAME} # configure uma variável de ambiente e sete o username do banco de dados
-    password: ${DB_PASSWORD} # configure uma variável de ambiente e sete a password do banco de dados
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: none # através desse comando o banco de dados sabe que precisa criar a tabela para a aplicação
+      ddl-auto: none
     properties:
       hibernate:
-        #dialect: org.hibernate.dialect.MySQLDialect não há necessidade de especificar esse classe filha do hibernate, pois o Spring já a reconhece por padrão
-    show_sql: false # ativar essa funcao somente para debugar
+    show_sql: false
     open-in-view: false
   mail:
     host: smtp.gmail.com
-    port: 587 # porta que a google usa
-    username: ${EMAIL_USERNAME} # configure sua váriavel de ambiente no computador com o nome "EMAIL_USERNAME" e coloque o seu email do gmail
-    password: ${EMAIL_PASSWORD} # configure sua váriavel de ambiente no computador com o nome "EMAIL_PASSWORD" e coloque sua senha gerada na autenticação de 2 fatores do gmail
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enabled: true
@@ -43,9 +44,7 @@ spring:
       max-request-size: 215MB
 logging:
   level:
-    root: INFO # (o comando root dentro desse contexto, serve para eu especificar quais logs eu quero ver dentro da aplicação)
-    #net.sf.jasperreports.engine.*: TRACE tive que mudar o nível de log para poder investigar possíveis erros no relatório
-    #br.com.application: DEBUG (aqui eu consigo especificar que dentro desse pacote, eu consigo listar quais das quatro logs principais eu quero que apareça (DEBUG, INFO, WARN, ERROR))
+    root: INFO
 springdoc:
   paths-to-match:
     - /auth/**

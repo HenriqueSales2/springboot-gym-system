@@ -32,24 +32,19 @@ public class JwtTokenProvider {
     private long validityInMilliseconds = 3600000; // 1h
 
     @Autowired
-    private UserDetailsService service; // trocar aqui depois (possivel erro)
+    private UserDetailsService service;
 
     Algorithm algorithm = null;
 
-    /*
-     Usar essa annotation para inicializar qualquer coisa que queira após a aplicação ter sido inicializada.
-     Porém, isso ocorrerá antes do sistema executar qualquer ação do cliente
-    */
-
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes()); // pegar a secretKey em Bytes e setar na variável
-        algorithm = Algorithm.HMAC256(secretKey.getBytes()); // decodificando o token
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
     public TokenDTO createAccessToken(String username, List<String> roles) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds); // criando a variável responsável por determinar o prazo de validade do token que é de 1h
+        Date validity = new Date(now.getTime() + validityInMilliseconds);
         String accessToken = getAccessToken(username, roles, now, validity);
         String refreshToken = getRefreshToken(username, roles, now);
 
@@ -71,7 +66,7 @@ public class JwtTokenProvider {
     }
 
     private String getAccessToken(String username, List<String> roles, Date now, Date validity) {
-        String issueUrl = ServletUriComponentsBuilder // determinando a URL para criar o Token
+        String issueUrl = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                     .build()
                         .toUriString();
@@ -86,10 +81,6 @@ public class JwtTokenProvider {
     }
 
     private String getRefreshToken(String username, List<String> roles, Date now) {
-        /*
-        Acrescentar 3 horas a partir da validade do token a fim de evitar trafegar essas informações pela rede.
-        Além de que dará mais uma chance do cliente renovar o token expirado
-        */
         Date refreshTokenValidity = new Date(now.getTime() + (validityInMilliseconds * 3));
 
         return JWT.create()
@@ -102,14 +93,14 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         DecodedJWT decoded = decodedToken(token);
-        UserDetails userDetails = service.loadUserByUsername(decoded.getSubject()); // obtém a autenticação
+        UserDetails userDetails = service.loadUserByUsername(decoded.getSubject());
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public DecodedJWT decodedToken(String token) {
-        Algorithm algorithmDecodedToken = Algorithm.HMAC256(secretKey.getBytes()); // decodificando o token
-        JWTVerifier verifier = JWT.require(algorithmDecodedToken).build(); // verificando se a assinatura é válida
+        Algorithm algorithmDecodedToken = Algorithm.HMAC256(secretKey.getBytes());
+        JWTVerifier verifier = JWT.require(algorithmDecodedToken).build();
         DecodedJWT decoded = verifier.verify(token);
         return decoded;
     }
@@ -117,8 +108,7 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(SecurityConstants.AUTHORIZATION_HEADER);
 
-        // verificando se o bearerToken está vazio e começa com esse prefixo "Bearer "
-        if (tokenContainsBearer(bearerToken)) return bearerToken.substring((SecurityConstants.BEARER_PREFIX).length()); // removendo o prefixo "Bearer " e só vai retornar o token
+        if (tokenContainsBearer(bearerToken)) return bearerToken.substring((SecurityConstants.BEARER_PREFIX).length());
 
         return null;
     }
@@ -127,8 +117,8 @@ public class JwtTokenProvider {
         DecodedJWT decoded = decodedToken(token);
 
         try {
-            if (decoded.getExpiresAt().before(new Date())) return false; // se a data já tiver sido expirada irá retornar false
-            return true; // caso não não passe pelo if irá retornar true
+            if (decoded.getExpiresAt().before(new Date())) return false;
+            return true;
         }
         catch (Exception e) {
             throw new InvalidJwtAuthenticationException("Expired or Invalid JWT Token!");

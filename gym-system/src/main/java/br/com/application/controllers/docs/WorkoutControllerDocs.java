@@ -60,7 +60,7 @@ public interface WorkoutControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content),
             }
     )
-    WorkoutDTO create(@RequestBody WorkoutDTO workoutDTO);
+    ResponseEntity<WorkoutDTO> create(@RequestBody WorkoutDTO workoutDTO);
 
     @Operation(summary = "Update Workout",
             description = "Update an existing workout information",

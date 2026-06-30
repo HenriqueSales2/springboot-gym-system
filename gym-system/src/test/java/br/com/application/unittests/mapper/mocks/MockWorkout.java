@@ -39,6 +39,7 @@ public class MockWorkout {
         workout.setMuscleGroup("Muscle Group Test" + number);
         workout.setEquipment("Equipment Test" + number);
         workout.setDifficulty("Difficulty Test" + number);
+
         return workout;
     }
 
@@ -49,6 +50,7 @@ public class MockWorkout {
         workoutDTO.setMuscleGroup("Muscle Group Test" + number);
         workoutDTO.setEquipment("Equipment Test" + number);
         workoutDTO.setDifficulty("Difficulty Test" + number);
+
         return workoutDTO;
     }
 }

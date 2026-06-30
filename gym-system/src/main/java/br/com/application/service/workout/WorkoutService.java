@@ -10,6 +10,7 @@ import br.com.application.repository.WorkoutRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -36,21 +37,9 @@ public class WorkoutService {
     public PagedModel<EntityModel<WorkoutDTO>> findAllWorkout(Pageable pageable) {
         logger.info("Finding all Workouts!");
 
-        var people = repository.findAll(pageable);
+        var workouts = repository.findAll(pageable);
 
-        var peopleWithLinks = people.map(person -> {
-                    var dto = parseObject(person, WorkoutDTO.class); // convertendo em DTO, criando, e salvando a entidade
-                    addHateoasLinks(dto); // adicionando os links Hateoas
-                    return dto; // depois retornamos a entidade convertida junto com os links Hateoas
-                }
-        );
-
-        Link findAllLink = WebMvcLinkBuilder.linkTo
-                (
-                        WebMvcLinkBuilder.methodOn(WorkoutController.class)
-                                .findAllWorkouts(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))
-                ).withSelfRel();
-        return assembler.toModel(peopleWithLinks, findAllLink);
+        return buildPagedModel(pageable, workouts);
 
     }
 
@@ -70,8 +59,8 @@ public class WorkoutService {
 
         logger.info("Creating one Workout!");
 
-        var entity = parseObject(workoutDTO, Workout.class); // fazendo a conversão de PersonalDTO para Personal
-        var dto = parseObject(repository.save(entity), WorkoutDTO.class); // convertendo em DTO, criando, e salvando a entidade
+        var entity = parseObject(workoutDTO, Workout.class);
+        var dto = parseObject(repository.save(entity), WorkoutDTO.class);
         addHateoasLinks(dto);
         return dto;
     }
@@ -100,6 +89,22 @@ public class WorkoutService {
         Workout entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No record found for this ID!"));
         repository.delete(entity);
+    }
+
+    private PagedModel<EntityModel<WorkoutDTO>> buildPagedModel(Pageable pageable, Page<Workout> workouts) {
+        var peopleWithLinks = workouts.map(workout -> {
+            var dto = parseObject(workout, WorkoutDTO.class);
+            addHateoasLinks(dto);
+            return dto;
+        });
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo
+                        (
+                                WebMvcLinkBuilder.methodOn(WorkoutController.class)
+                                        .findAllWorkouts(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))
+                        )
+                .withSelfRel();
+        return assembler.toModel(peopleWithLinks, findAllLink);
     }
 
     private static void addHateoasLinks(WorkoutDTO dto) {

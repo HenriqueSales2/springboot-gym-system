@@ -29,30 +29,18 @@ public class FileController implements FileControllerDocs {
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
-    private FileStorageService service; // injetando o service de FileStorageService no Controller
+    private FileStorageService service;
 
     @PostMapping("/uploadFile")
     @Override
-    public UploadFileDTO uploadFile(@RequestParam("file") MultipartFile file) { // recebendo o MultipartFile através da Request
+    public UploadFileDTO uploadFile(@RequestParam("file") MultipartFile file) {
 
-        var fileName = service.storageFile(file); // o parâmetro passa pelo método de fazer a gravação em disco do service e assim tratando o nome do arquivo
-
-        /*
-        aqui constrói o caminho do arquivo, através do ServletUriComponentsBuilder
-        e o fromCurrentContextPath é o BasePath (http://localhost:8080), isso pode mudar dependendo de onde a aplicação está implantada
-        */
-        // exemplo de como o link vai ficar : http://localhost:8080/api/file/v1/downloadFile/fileName.docx
+        var fileName = service.storageFile(file);
 
         var fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/file/v1/downloadFile/") // aqui temos o caminho padrão para todos os Endpoints e depois o nome do Endpoint desse método em específico
-                .path(fileName) // adiciona no caminho o nome do arquivo
+                .path("/api/file/v1/downloadFile/")
+                .path(fileName)
                 .toUriString();
-
-        /*
-        aqui retorna o nome do arquivo, a URL de download,
-        o content type para que o cliente consiga criar o arquivo de novo na hora do download,
-        e o tamanho para que ele consiga reconstruir o arquivo e assim fazer o download
-        */
 
         return new UploadFileDTO(fileName, fileDownloadUri, file.getContentType(), file.getSize());
     }
@@ -60,7 +48,6 @@ public class FileController implements FileControllerDocs {
     @PostMapping("/uploadMultipleFiles")
     @Override
     public List<UploadFileDTO> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-        // retornando um lambda com uma lista de upload de múltiplos arquivos
         return Arrays.asList(files)
                 .stream()
                 .map(file -> uploadFile(file))
@@ -70,28 +57,25 @@ public class FileController implements FileControllerDocs {
     @GetMapping("/downloadFile/{fileName:.+}")
     @Override
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        Resource resource = service.loadFileAsResource(fileName); // lendo o arquivo em disco, a partir do nome, armazenando em uma váriavel com o nome "resource"
-        String contentyType = null; // declarando uma váriavel null para conseguir puxa-lá no try-catch
+        Resource resource = service.loadFileAsResource(fileName);
+        String contentyType = null;
 
         try {
-
-            contentyType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath()); // tentamos determinar o contenty type a partir da váriavel "resource"
-
-        }
-        catch (Exception e) {
-            logger.error("Code not determine file type!"); // caso não consiga lançamos uma exceção com uma mensagem dizendo que não conseguiu determinar o tipo de arquivo
+            contentyType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (Exception e) {
+            logger.error("Code not determine file type!");
         }
 
-        if (contentyType == null) { // caso o content type seja null
-            contentyType = "application/octet-stream"; // retorna um content type default (genérico)
-        }
+            if (contentyType == null) {
+                contentyType = "application/octet-stream";
+            }
 
-        return ResponseEntity.ok() // por fim, retorna uma Reponse Entity
-                .contentType(MediaType.parseMediaType(contentyType)) // contendo o tipo de contéudo (contenty type), convertido para parseMediaType
-                .header(
-                        HttpHeaders.CONTENT_DISPOSITION, //dizendo que na Header da Response será mandado um anexo
-                        "attachment; filename=\"" + resource.getFilename() + "\"" // e esse anexo está definido aqui
-                )
-                .body(resource); // no corpo da Response, passamos o arquivo
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentyType))
+                    .header(
+                            HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + resource.getFilename() + "\""
+                    )
+                    .body(resource);
+        }
     }
-}

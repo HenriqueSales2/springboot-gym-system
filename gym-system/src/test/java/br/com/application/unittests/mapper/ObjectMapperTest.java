@@ -11,7 +11,7 @@ import br.com.application.unittests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ObjectMapperTests {
+public class ObjectMapperTest {
     MockPerson inputObject;
 
     @BeforeEach
@@ -24,11 +24,13 @@ public class ObjectMapperTests {
         PersonDTO output = parseObject(inputObject.mockEntity(), PersonDTO.class);
 
         assertEquals(Long.valueOf(0L), output.getId());
-
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
         assertEquals("Address Test0", output.getAddress());
         assertEquals("Male", output.getGender());
+        assertEquals(true, output.getEnabled());
+        assertEquals("Profile Url Test0", output.getProfileUrl());
+        assertEquals("Photo Url Test0", output.getPhotoUrl());
     }
 
     @Test
@@ -42,6 +44,9 @@ public class ObjectMapperTests {
         assertEquals("Last Name Test0", outputZero.getLastName());
         assertEquals("Address Test0", outputZero.getAddress());
         assertEquals("Male", outputZero.getGender());
+        assertEquals(true, outputZero.getEnabled());
+        assertEquals("Profile Url Test0", outputZero.getProfileUrl());
+        assertEquals("Photo Url Test0", outputZero.getPhotoUrl());
 
         PersonDTO outputSeven = outputList.get(7);
 
@@ -50,6 +55,9 @@ public class ObjectMapperTests {
         assertEquals("Last Name Test7", outputSeven.getLastName());
         assertEquals("Address Test7", outputSeven.getAddress());
         assertEquals("Female", outputSeven.getGender());
+        assertEquals(false, outputSeven.getEnabled());
+        assertEquals("Profile Url Test7", outputSeven.getProfileUrl());
+        assertEquals("Photo Url Test7", outputSeven.getPhotoUrl());
 
         PersonDTO outputTwelve = outputList.get(12);
 
@@ -58,6 +66,9 @@ public class ObjectMapperTests {
         assertEquals("Last Name Test12", outputTwelve.getLastName());
         assertEquals("Address Test12", outputTwelve.getAddress());
         assertEquals("Male", outputTwelve.getGender());
+        assertEquals(true, outputTwelve.getEnabled());
+        assertEquals("Profile Url Test12", outputTwelve.getProfileUrl());
+        assertEquals("Photo Url Test12", outputTwelve.getPhotoUrl());
     }
 
     @Test
@@ -65,11 +76,13 @@ public class ObjectMapperTests {
         Person output = parseObject(inputObject.mockDTO(), Person.class);
 
         assertEquals(Long.valueOf(0L), output.getId());
-
         assertEquals("First Name Test0", output.getFirstName());
         assertEquals("Last Name Test0", output.getLastName());
         assertEquals("Address Test0", output.getAddress());
         assertEquals("Male", output.getGender());
+        assertEquals(true, output.getEnabled());
+        assertEquals("Profile Url Test0", output.getProfileUrl());
+        assertEquals("Photo Url Test0", output.getPhotoUrl());
     }
 
     @Test
@@ -83,6 +96,9 @@ public class ObjectMapperTests {
         assertEquals("Last Name Test0", outputZero.getLastName());
         assertEquals("Address Test0", outputZero.getAddress());
         assertEquals("Male", outputZero.getGender());
+        assertEquals(true, outputZero.getEnabled());
+        assertEquals("Profile Url Test0", outputZero.getProfileUrl());
+        assertEquals("Photo Url Test0", outputZero.getPhotoUrl());
 
         Person outputSeven = outputList.get(7);
 
@@ -91,6 +107,9 @@ public class ObjectMapperTests {
         assertEquals("Last Name Test7", outputSeven.getLastName());
         assertEquals("Address Test7", outputSeven.getAddress());
         assertEquals("Female", outputSeven.getGender());
+        assertEquals(false, outputSeven.getEnabled());
+        assertEquals("Profile Url Test7", outputSeven.getProfileUrl());
+        assertEquals("Photo Url Test7", outputSeven.getPhotoUrl());
 
         Person outputTwelve = outputList.get(12);
 
@@ -99,5 +118,8 @@ public class ObjectMapperTests {
         assertEquals("Last Name Test12", outputTwelve.getLastName());
         assertEquals("Address Test12", outputTwelve.getAddress());
         assertEquals("Male", outputTwelve.getGender());
+        assertEquals(true, outputTwelve.getEnabled());
+        assertEquals("Profile Url Test12", outputTwelve.getProfileUrl());
+        assertEquals("Photo Url Test12", outputTwelve.getPhotoUrl());
     }
 }

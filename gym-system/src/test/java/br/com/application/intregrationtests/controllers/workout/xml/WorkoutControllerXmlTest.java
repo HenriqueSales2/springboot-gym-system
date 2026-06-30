@@ -1,6 +1,8 @@
 package br.com.application.intregrationtests.controllers.workout.xml;
 
 import br.com.application.config.TestConfigs;
+import br.com.application.intregrationtests.dto.security.AccountCredentialsDTO;
+import br.com.application.intregrationtests.dto.security.TokenDTO;
 import br.com.application.intregrationtests.dto.workout.WorkoutDTO;
 import br.com.application.intregrationtests.dto.workout.wrappers.xml.PagedModelWorkout;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
@@ -29,24 +31,48 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
     private static RequestSpecification specification;
     private static XmlMapper mapper;
     private static WorkoutDTO workoutDTO;
+    private static TokenDTO tokenDTO;
 
     @BeforeAll
     static void setUp() {
-
         mapper = new XmlMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         workoutDTO = new WorkoutDTO();
+        tokenDTO = new TokenDTO();
+    }
+
+    @Test
+    @Order(0)
+    void sigIn() {
+        AccountCredentialsDTO credentials = new AccountCredentialsDTO("john", "admin123");
+
+        tokenDTO = given()
+                .basePath("auth/signin")
+                .port(TestConfigs.SERVER_PORT)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(credentials)
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                .body()
+                .as(TokenDTO.class);
+
+        assertNotNull(tokenDTO.getAccessToken());
+        assertNotNull(tokenDTO.getRefreshToken());
     }
 
     @Test
     @Order(1)
     void createWorkoutTestXml() throws JsonProcessingException {
-
-        mockWorkout();
+        mockWorkoutXml();
 
         specification = new RequestSpecBuilder()
                 .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN,
                         TestConfigs.ORIGIN_EXAMPLE))
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, TestConfigs.BEARER_PREFIX + tokenDTO.getAccessToken())
                 .setBasePath("/api/workout/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilters(List.of(new RequestLoggingFilter(LogDetail.ALL), new ResponseLoggingFilter(LogDetail.ALL)))
@@ -59,7 +85,7 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
                 .when()
                     .post()
                 .then()
-                    .statusCode(200)
+                    .statusCode(201)
                     .contentType(MediaType.APPLICATION_XML_VALUE)
                 .extract()
                     .body()
@@ -80,7 +106,6 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
     @Test
     @Order(2)
     void updateWorkoutTestXml() throws JsonProcessingException {
-
         workoutDTO.setExerciseName("Pull Up");
         workoutDTO.setEquipment("Bodyweight");
 
@@ -113,7 +138,6 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
     @Test
     @Order(3)
     void findByIdWorkoutTestXml() throws JsonProcessingException {
-
         var content = given(specification)
                     .accept(MediaType.APPLICATION_XML_VALUE)
                     .contentType(MediaType.APPLICATION_XML_VALUE)
@@ -142,7 +166,6 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
     @Test
     @Order(4)
     void deleteWorkoutTestXml() throws JsonProcessingException {
-
         given(specification)
                     .pathParam("id", workoutDTO.getId())
                 .when()
@@ -154,7 +177,6 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
     @Test
     @Order(5)
     void findAllWorkoutsTestXml() throws JsonProcessingException {
-
         var content = given(specification)
                     .accept(MediaType.APPLICATION_XML_VALUE)
                     .queryParams("page", 0, "size", 6, "direction", "asc")
@@ -167,7 +189,6 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
                     .body()
                         .asString();
 
-        //WrapperPersonDTO wrapper = mapper.readValue(content, WrapperPersonDTO.class);
         PagedModelWorkout wrapper = mapper.readValue(content, PagedModelWorkout.class);
         List<WorkoutDTO> workouts = wrapper.getContent();
 
@@ -194,8 +215,7 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
         assertEquals("Advanced", workoutFour.getDifficulty());
     }
 
-    private void mockWorkout() {
-
+    private void mockWorkoutXml() {
         workoutDTO.setExerciseName("Deadlift");
         workoutDTO.setMuscleGroup("Back");
         workoutDTO.setEquipment("Barbell");

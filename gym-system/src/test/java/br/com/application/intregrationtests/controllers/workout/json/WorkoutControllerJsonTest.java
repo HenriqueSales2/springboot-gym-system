@@ -1,6 +1,8 @@
 package br.com.application.intregrationtests.controllers.workout.json;
 
 import br.com.application.config.TestConfigs;
+import br.com.application.intregrationtests.dto.security.AccountCredentialsDTO;
+import br.com.application.intregrationtests.dto.security.TokenDTO;
 import br.com.application.intregrationtests.dto.workout.WorkoutDTO;
 import br.com.application.intregrationtests.dto.workout.wrappers.json.WrapperWorkoutDTO;
 import br.com.application.intregrationtests.testcontainers.AbstractIntegrationTest;
@@ -29,24 +31,48 @@ class WorkoutControllerJsonTest extends AbstractIntegrationTest {
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
     private static WorkoutDTO workoutDTO;
+    private static TokenDTO tokenDTO;
 
     @BeforeAll
     static void setUp() {
-
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         workoutDTO = new WorkoutDTO();
+        tokenDTO = new TokenDTO();
+    }
+
+    @Test
+    @Order(0)
+    void sigIn() {
+        AccountCredentialsDTO credentials = new AccountCredentialsDTO("john", "admin123");
+
+        tokenDTO = given()
+                .basePath("auth/signin")
+                .port(TestConfigs.SERVER_PORT)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(credentials)
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                .body()
+                .as(TokenDTO.class);
+
+        assertNotNull(tokenDTO.getAccessToken());
+        assertNotNull(tokenDTO.getRefreshToken());
     }
 
     @Test
     @Order(1)
     void createWorkoutTest() throws JsonProcessingException {
-
         mockWorkout();
 
         specification = new RequestSpecBuilder()
                 .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN,
                         TestConfigs.ORIGIN_EXAMPLE))
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, TestConfigs.BEARER_PREFIX + tokenDTO.getAccessToken())
                 .setBasePath("/api/workout/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilters(List.of(new RequestLoggingFilter(LogDetail.ALL), new ResponseLoggingFilter(LogDetail.ALL)))
@@ -58,7 +84,7 @@ class WorkoutControllerJsonTest extends AbstractIntegrationTest {
                 .when()
                     .post()
                 .then()
-                    .statusCode(200)
+                    .statusCode(201)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .extract()
                     .body()
@@ -78,7 +104,6 @@ class WorkoutControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(2)
     void updateWorkoutTest() throws JsonProcessingException {
-
         workoutDTO.setExerciseName("Incline Bench Press");
 
         var content = given(specification)
@@ -108,7 +133,6 @@ class WorkoutControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(3)
     void findByIdWorkoutTest() throws JsonProcessingException {
-
         var content = given(specification)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .pathParam("id", workoutDTO.getId())
@@ -135,8 +159,7 @@ class WorkoutControllerJsonTest extends AbstractIntegrationTest {
 
     @Test
     @Order(4)
-    void deleteWorkoutTest() throws JsonProcessingException {
-
+    void deleteWorkoutTest() {
         given(specification)
                     .pathParam("id", workoutDTO.getId())
                 .when()
@@ -148,7 +171,6 @@ class WorkoutControllerJsonTest extends AbstractIntegrationTest {
     @Test
     @Order(5)
     void findAllWorkoutsTest() throws JsonProcessingException {
-
         var content = given(specification)
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .queryParams("page", 0, "size", 6, "direction", "asc")
@@ -161,7 +183,6 @@ class WorkoutControllerJsonTest extends AbstractIntegrationTest {
                     .body()
                         .asString();
 
-        //WrapperPersonDTO wrapper = mapper.readValue(content, WrapperPersonDTO.class);
         WrapperWorkoutDTO wrapper = objectMapper.readValue(content, WrapperWorkoutDTO.class);
         List<WorkoutDTO> workouts = wrapper.getEmbedded().getWorkouts();
 
@@ -189,7 +210,6 @@ class WorkoutControllerJsonTest extends AbstractIntegrationTest {
     }
 
     private void mockWorkout() {
-
         workoutDTO.setExerciseName("Bench Press");
         workoutDTO.setMuscleGroup("Chest");
         workoutDTO.setEquipment("Barbell");

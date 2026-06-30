@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3f08d401-74f1-4023-a542-129ffea82d6d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.env-example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.github/workflows/continuos-deployment.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/auth/json/AuthControllerJsonTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/auth/xml/AuthControllerXmlTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/auth/yaml/AuthControllerYamlTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/json/PersonControllerCorsTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/dto/security/AccountCredentialsDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/dto/security/TokenDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/auth/json/AuthControllerJsonTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/auth/xml/AuthControllerXmlTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/auth/yaml/AuthControllerYamlTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/json/PersonControllerCorsTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/dto/security/AccountCredentialsDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/dto/security/TokenDTO.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/mapper/ObjectMapperTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/auth/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/auth/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/docs/FileControllerDocs.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/docs/FileControllerDocs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/docs/WorkoutControllerDocs.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/docs/WorkoutControllerDocs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/file/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/file/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/person/PersonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/person/PersonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/workout/WorkoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/controllers/workout/WorkoutController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/data/dto/security/AccountCredentialsDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/data/dto/security/AccountCredentialsDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/repository/PersonRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/repository/PersonRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/repository/WorkoutRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/repository/WorkoutRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/security/jwt/JwtTokenFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/security/jwt/JwtTokenFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/security/jwt/JwtTokenProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/security/jwt/JwtTokenProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/service/person/PersonService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/service/person/PersonService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/service/workout/WorkoutService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/java/br/com/application/service/workout/WorkoutService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/config/TestConfigs.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/config/TestConfigs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/cors/withjson/PersonControllerCorsTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/json/PersonControllerJsonTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/json/PersonControllerJsonTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/xml/PersonControllerXmlTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/xml/PersonControllerXmlTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/yaml/PersonControllerYamlTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/yaml/PersonControllerYamlTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/yaml/mapper/YAMLMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/person/yaml/mapper/YAMLMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/workout/json/WorkoutControllerJsonTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/workout/json/WorkoutControllerJsonTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/workout/xml/WorkoutControllerXmlTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/workout/xml/WorkoutControllerXmlTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/workout/yaml/WorkoutControllerYamlTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/intregrationtests/controllers/workout/yaml/WorkoutControllerYamlTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/repository/PersonRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/repository/PersonRepositoryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/mapper/ObjectMapperTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/mapper/ObjectMapperTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/mapper/ObjectMapperWorkoutTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/mapper/ObjectMapperWorkoutTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/mapper/mocks/MockPerson.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/mapper/mocks/MockPerson.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/mapper/mocks/MockWorkout.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/mapper/mocks/MockWorkout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/service/PersonServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/service/PersonServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/service/WorkoutServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/java/br/com/application/unittests/service/WorkoutServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/src/test/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/src/test/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/config/ScalarRedirectConfig$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/config/ScalarRedirectConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/auth/AuthController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/auth/AuthController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/docs/WorkoutControllerDocs.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/docs/WorkoutControllerDocs.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/file/FileController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/file/FileController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/person/PersonController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/person/PersonController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/workout/WorkoutController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/controllers/workout/WorkoutController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/data/dto/security/AccountCredentialsDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/data/dto/security/AccountCredentialsDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/security/jwt/JwtTokenProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/security/jwt/JwtTokenProvider.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/service/person/PersonService.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/service/person/PersonService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/service/workout/WorkoutService.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/classes/br/com/application/service/workout/WorkoutService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/static/music/BackHome.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/classes/static/scalar/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/config/TestConfigs.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/config/TestConfigs.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/cors/withjson/PersonControllerCorsTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/json/PersonControllerJsonTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/json/PersonControllerJsonTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/xml/PersonControllerXmlTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/xml/PersonControllerXmlTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/yaml/PersonControllerYamlTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/yaml/PersonControllerYamlTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/yaml/mapper/YAMLMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/person/yaml/mapper/YAMLMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/workout/json/WorkoutControllerJsonTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/workout/json/WorkoutControllerJsonTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/workout/xml/WorkoutControllerXmlTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/workout/xml/WorkoutControllerXmlTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/workout/yaml/WorkoutControllerYamlTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/controllers/workout/yaml/WorkoutControllerYamlTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/swagger/SwaggerIntegrationTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/intregrationtests/swagger/SwaggerIntegrationTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/repository/PersonRepositoryTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/repository/PersonRepositoryTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/mapper/ObjectMapperTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/mapper/mocks/MockPerson.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/mapper/mocks/MockPerson.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/mapper/mocks/MockWorkout.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/mapper/mocks/MockWorkout.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/service/PersonServiceTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/service/PersonServiceTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/service/WorkoutServiceTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/gym-system/target/test-classes/br/com/application/unittests/service/WorkoutServiceTest.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/projetos-pessoais/springboot-gym-system" value="3FoTsWMDbyR0346Tdzy11AXW1Bx" />
+      <entry key="_C:/projetos-pessoais/springboot-gym-system/springboot-gym-system" value="3EGQ02ZkC0QO70QPdB9AsVa94RL" />
+    </persistenceIdMap>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Exception" />
+        <option value="Interface" />
+        <option value="HTML File" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="3EGQ02ZkC0QO70QPdB9AsVa94RL" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Startup.executor&quot;: &quot;Run&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Docker.docker-compose.yml.db: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml.portainer: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in springboot-gym-project.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ObjectMapperTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ObjectMapperTests.parseEntityListToDTOListTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PersonControllerJsonTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PersonServiceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PersonServiceTest.findAll.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.WorkoutServiceTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.java in springboot-gym-project.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.springboot-gym-project [clean,package].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.Startup.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/projetos-pessoais/springboot-gym-system&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;TEXT&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\projetos-pessoais\springboot-gym-system\springboot-gym-system\gym-system\src\test\java\br\com\application\intregrationtests\dto\security" />
+      <recent name="C:\projetos-pessoais\springboot-gym-system\springboot-gym-system\gym-system\src\main\resources\static\music" />
+      <recent name="C:\projetos-pessoais\springboot-gym-system\springboot-gym-system\gym-system\src\main\resources\db\migration" />
+      <recent name="C:\projetos-pessoais\springboot-gym-system\springboot-gym-system\gym-system\src\main\resources\templates" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\projetos-pessoais\springboot-gym-system\springboot-gym-system\gym-system\src\main\resources\static" />
+      <recent name="C:\projetos-pessoais\springboot-gym-system\springboot-gym-system\gym-system" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.java in springboot-gym-project">
+    <configuration name="All in springboot-gym-project" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-gym-project" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="java in springboot-gym-project" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-gym-project" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/gym-system/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml.db: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="db" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml.portainer: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="portainer" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Docker.docker-compose.yml.portainer: Compose Deployment" />
+      <item itemvalue="Docker.docker-compose.yml.db: Compose Deployment" />
+      <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+      <item itemvalue="JUnit.java in springboot-gym-project" />
+      <item itemvalue="JUnit.All in springboot-gym-project" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.java in springboot-gym-project" />
+        <item itemvalue="Docker.docker-compose.yml.portainer: Compose Deployment" />
+        <item itemvalue="Docker.docker-compose.yml.db: Compose Deployment" />
+        <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+        <item itemvalue="JUnit.All in springboot-gym-project" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.25134.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.25134.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3f08d401-74f1-4023-a542-129ffea82d6d" name="Changes" comment="" />
+      <created>1779802200107</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1779802200107</updated>
+      <workItem from="1782401366081" duration="14141000" />
+      <workItem from="1782415599241" duration="158000" />
+      <workItem from="1782415866691" duration="3483000" />
+      <workItem from="1782420326070" duration="2088000" />
+      <workItem from="1782735275138" duration="4050000" />
+      <workItem from="1782740630176" duration="5128000" />
+      <workItem from="1782763888198" duration="387000" />
+      <workItem from="1782781390843" duration="298000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

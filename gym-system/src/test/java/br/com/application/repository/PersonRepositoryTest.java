@@ -14,29 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/* @ExtendWith(SpringExtension.class)
-integra o Spring Framework com o JUnit 5 ,
-essa anottation instrui o JUnit 5 para carregar o contexto do Spring,
-permitindo o uso de componentes, beans e recursos configuráveis.
-*/
-
-/* @DataJpaTest
-configura o teste para trabalhar com JPA,
-e carrega apenas os componentes relacionados a camada de persistencia,
-como repositórios, entidades e o contexto do banco de dados,
-por padrão ele usa um banco de dados embutido,
-como por exemplo um H2, para executar os testes (utilizaremos o Test Containers do Docker).
- */
-
-/* @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-essa anottation vai garantir que o banco de dados real vai ser configurado na aplicação,
-e que vai ser utilizado durante os testes.
- */
-
-/* @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-define a ordem de execução dos testes.
- */
-
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -54,7 +31,7 @@ class PersonRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(1) // primeiro teste a ser executado
+    @Order(1)
     void findPeopleByName() {
         Pageable pageable = PageRequest.of(
                 0,
@@ -76,9 +53,8 @@ class PersonRepositoryTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @Order(2) // segundo teste a ser executado
+    @Order(2)
     void disablePerson() {
-
         Long id = person.getId();
         repository.disablePerson(id);
 
@@ -93,6 +69,5 @@ class PersonRepositoryTest extends AbstractIntegrationTest {
         assertEquals("Room 1511", person.getAddress());
         assertEquals("Female", person.getGender());
         assertFalse(person.getEnabled());
-
     }
 }
