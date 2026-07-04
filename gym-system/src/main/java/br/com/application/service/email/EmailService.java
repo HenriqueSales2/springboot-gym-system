@@ -22,36 +22,35 @@ public class EmailService {
     private EmailConfig emailConfig;
 
     public void sendSimpleEmail(EmailRequestDTO emailRequestDTO) {
-        // como é só um email não é necessário desserializar (fica mais simples, apenas passando os parametros)
-        emailSender // enviando o email
-                .to(emailRequestDTO.getTo()) // para alguém
-                .withSubject(emailRequestDTO.getSubject()) // com um assunto
-                .withMessage(emailRequestDTO.getBody()) // com uma mensagem
-                .send(emailConfig);// passando as configurações de email
+        emailSender
+                .to(emailRequestDTO.getTo())
+                .withSubject(emailRequestDTO.getSubject())
+                .withMessage(emailRequestDTO.getBody())
+                .send(emailConfig);
     }
 
     public void sendEmailWithAttachment(String emailRequestJSON, MultipartFile attachment) {
         File tempFile = null;
 
         try {
-            EmailRequestDTO emailRequestDTO = new ObjectMapper() // desserializando o email e fazendo com que ele vire um objeto
+            EmailRequestDTO emailRequestDTO = new ObjectMapper()
                     .readValue(emailRequestJSON, EmailRequestDTO.class);
-            tempFile = File.createTempFile("attachment",  attachment.getOriginalFilename()); // gravando um arquivo temporariamente em disco para depois enviá-los
+            tempFile = File.createTempFile("attachment",  attachment.getOriginalFilename());
             attachment.transferTo(tempFile);
 
-            emailSender // enviando o email
-                    .to(emailRequestDTO.getTo()) // para alguém
-                    .withSubject(emailRequestDTO.getSubject()) // com um assunto
-                    .withMessage(emailRequestDTO.getBody()) // com uma mensagem
-                    .attach(tempFile.getAbsolutePath()) // e o arquivo que queira mandar para esse alguém
-                    .send(emailConfig); // passando as configurações de email
+            emailSender
+                    .to(emailRequestDTO.getTo())
+                    .withSubject(emailRequestDTO.getSubject())
+                    .withMessage(emailRequestDTO.getBody())
+                    .attach(tempFile.getAbsolutePath())
+                    .send(emailConfig);
 
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error parsing email request JSON!", e); // exceção caso ocorra algum erro na hora de parsear o objeto
+            throw new RuntimeException("Error parsing email request JSON!", e);
         } catch (IOException e) {
-            throw new RuntimeException("Error processing the attachment!", e); // exceção caso ocorra algum erro relacionado ao arquivo
+            throw new RuntimeException("Error processing the attachment!", e);
         } finally {
-            if(tempFile != null && tempFile.exists()) tempFile.delete(); // deletando o arquivo temporário
+            if(tempFile != null && tempFile.exists()) tempFile.delete();
         }
     }
 }

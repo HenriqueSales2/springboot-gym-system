@@ -11,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Date;
 
-@ControllerAdvice // usar essa anotação para chamar esse métodos dessa classe para qualquer controller da aplicação
+@ControllerAdvice
 @RestController
 public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler {
 

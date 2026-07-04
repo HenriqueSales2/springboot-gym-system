@@ -7,7 +7,7 @@ import org.springframework.http.converter.json.AbstractJackson2HttpMessageConver
 
 public final class YamlJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
 
-    private YamlJackson2HttpMessageConverter() { // fazendo a conversão das messagens em yaml
+    private YamlJackson2HttpMessageConverter() {
         super(new YAMLMapper()
                         .setSerializationInclusion(JsonInclude.Include.NON_NULL),
                 MediaType.parseMediaType("application/yaml"));

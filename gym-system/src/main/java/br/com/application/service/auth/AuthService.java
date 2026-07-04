@@ -41,18 +41,18 @@ public class AuthService {
 
     public ResponseEntity<TokenDTO> sigIn(AccountCredentialsDTO credentials) {
         manager.authenticate(
-                new UsernamePasswordAuthenticationToken( // passando as credenciais que o usuário colocou na requisição
+                new UsernamePasswordAuthenticationToken(
                         credentials.getUsername(),
                         credentials.getPassword()
                 )
         );
 
-        var user = repository.findByUsername(credentials.getUsername()); // resgatando o username no banco de dados
-        if (user == null) throw new UsernameNotFoundException("Username: " + credentials.getUsername() + " not found!"); // validando se o user está null ou não
+        var user = repository.findByUsername(credentials.getUsername());
+        if (user == null) throw new UsernameNotFoundException("Username: " + credentials.getUsername() + " not found!");
 
-        var token = provider.createAccessToken( // criando o acesso ao token usando as credenciais passadas pelo cliente
+        var token = provider.createAccessToken(
                 credentials.getUsername(),
-                user.getRoles() // passando a lista de permissões
+                user.getRoles()
         );
         return ResponseEntity.ok(token);
     }
@@ -70,7 +70,6 @@ public class AuthService {
     public AccountCredentialsDTO create(AccountCredentialsDTO user) {
         if (user == null) throw new RequiredObjectIsNullException();
 
-        // validando se o username já existe, se existir não vai ser criado e vai cair em uma exceção de conflito
         if (repository.findByUsername(user.getUsername()) != null) throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
 
         logger.info("Creating one new User!");
@@ -78,28 +77,28 @@ public class AuthService {
         var entity = new User();
         entity.setFullname(user.getFullname());
         entity.setUsername(user.getUsername());
-        entity.setPassword(generateHashPassword(user.getPassword())); // criptografando a senha
+        entity.setPassword(generateHashPassword(user.getPassword()));
         entity.setAccountNonExpired(true);
         entity.setAccountNonLocked(true);
         entity.setCredentialsNonExpired(true);
         entity.setEnabled(true);
 
-        return parseObject(repository.save(entity), AccountCredentialsDTO.class); // convertendo em DTO, criando, e salvando a entidade
+        return parseObject(repository.save(entity), AccountCredentialsDTO.class);
     }
 
     private String generateHashPassword(String password) {
         PasswordEncoder pbkdf2Enconder = new Pbkdf2PasswordEncoder(
-                "", // salt vazio
-                8, // comprimento da chave gerada (8 bits)
-                185000, // número de vezes que o algoritmo será aplicado
-                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256 // usa HMAC-SHA256 para fazer o hash a senha (criptografar a senha)
+                "",
+                8,
+                185000,
+                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
         );
 
         Map<String, PasswordEncoder> encoders = new HashMap<>();
-        encoders.put("pbkdf2", pbkdf2Enconder); // setando o nome da chave e o algoritmo de criptografia
+        encoders.put("pbkdf2", pbkdf2Enconder);
         DelegatingPasswordEncoder encoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
 
-        encoder.setDefaultPasswordEncoderForMatches(pbkdf2Enconder); // setando o algoritmo padrão para comparar as senhas (comparar a senha digitada com a senha criptografada)
+        encoder.setDefaultPasswordEncoderForMatches(pbkdf2Enconder);
         return encoder.encode(password);
     }
 }

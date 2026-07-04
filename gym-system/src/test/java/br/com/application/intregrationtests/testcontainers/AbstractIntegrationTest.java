@@ -18,29 +18,24 @@ public class AbstractIntegrationTest {
         static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:9.1.0");
 
         private static void startContainers() {
-            Startables.deepStart(Stream.of(mysql)).join(); // starta com os parâmetros que eu determino acima, porém, como eu não determinei nenhum ele pega os default
-            // ou seja, vai inicializar o container a partir dessa instância do mysql (só para deixar bem claro)
+            Startables.deepStart(Stream.of(mysql)).join();
         }
 
-        private static Map<String, String> createConnectionConfiguration() { // aqui vai ser definido as propriedades de conexão com o banco de dados
-            return Map.of( // vamos setar as propriedades, no application.yml está fixo, porém aqui vai ser gerado dinamicamente (a cada execução da aplicação, os valores mudam)
-                    "spring.datasource.url", mysql.getJdbcUrl(), // pegando a URL
-                    "spring.datasource.username", mysql.getUsername(), // pegando o username
-                    "spring.datasource.password", mysql.getPassword() // pegando a senha
+        private static Map<String, String> createConnectionConfiguration() {
+            return Map.of(
+                    "spring.datasource.url", mysql.getJdbcUrl(),
+                    "spring.datasource.username", mysql.getUsername(),
+                    "spring.datasource.password", mysql.getPassword()
             );
         }
 
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
             startContainers();
-            ConfigurableEnvironment environment = applicationContext.getEnvironment(); // obtendo as variáveis de ambiente do Application Context
+            ConfigurableEnvironment environment = applicationContext.getEnvironment();
             MapPropertySource testContainers = new MapPropertySource("testcontainers",
-                    (Map) createConnectionConfiguration()); // criando as configurações de conexão
-            environment.getPropertySources().addFirst(testContainers); // antes de todas as configurações essas acima vão ser adicionadas primeiro
+                    (Map) createConnectionConfiguration());
+            environment.getPropertySources().addFirst(testContainers);
         }
-
-
-
-
     }
 }

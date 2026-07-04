@@ -57,23 +57,13 @@ class PersonServiceTest {
 
         var result = service.create(dto);
 
-        assertNotNull(result);
-        assertNotNull(result.getId());
-        assertNotNull(result.getLinks());
+        assertPerson(result, 1);
 
         assertHasLink(result, "self", "/api/person/v1/1", "GET");
         assertHasLink(result, "findAll", "/api/person/v1", "GET");
         assertHasLink(result, "create", "/api/person/v1", "POST");
         assertHasLink(result, "update", "/api/person/v1", "PUT");
         assertHasLink(result, "delete", "/api/person/v1/1", "DELETE");
-
-        assertEquals("Address Test1", result.getAddress());
-        assertEquals("First Name Test1", result.getFirstName());
-        assertEquals("Last Name Test1", result.getLastName());
-        assertEquals("Female", result.getGender());
-        assertEquals(false, result.getEnabled());
-        assertEquals("Profile Url Test1", result.getProfileUrl());
-        assertEquals("Photo Url Test1", result.getPhotoUrl());
     }
 
     @Test
@@ -105,24 +95,13 @@ class PersonServiceTest {
         when(repository.save(person)).thenReturn(persisted);
         var result = service.update(dto);
 
-        assertNotNull(result);
-        assertNotNull(result.getId());
-        assertNotNull(result.getLinks());
+        assertPerson(result, 1);
 
         assertHasLink(result, "self", "/api/person/v1/1", "GET");
         assertHasLink(result, "findAll", "/api/person/v1", "GET");
         assertHasLink(result, "create", "/api/person/v1", "POST");
         assertHasLink(result, "update", "/api/person/v1", "PUT");
         assertHasLink(result, "delete", "/api/person/v1/1", "DELETE");
-
-        assertEquals("Address Test1", result.getAddress());
-        assertEquals("First Name Test1", result.getFirstName());
-        assertEquals("Last Name Test1", result.getLastName());
-        assertEquals("Female", result.getGender());
-        assertEquals(false, result.getEnabled());
-        assertEquals("Profile Url Test1", result.getProfileUrl());
-        assertEquals("Photo Url Test1", result.getPhotoUrl());
-
     }
 
     @Test
@@ -149,23 +128,13 @@ class PersonServiceTest {
 
         var result = service.findById(1L);
 
-        assertNotNull(result);
-        assertNotNull(result.getId());
-        assertNotNull(result.getLinks());
+        assertPerson(result, 1);
 
         assertHasLink(result, "self", "/api/person/v1/1", "GET");
         assertHasLink(result, "findAll", "/api/person/v1", "GET");
         assertHasLink(result, "create", "/api/person/v1", "POST");
         assertHasLink(result, "update", "/api/person/v1", "PUT");
         assertHasLink(result, "delete", "/api/person/v1/1", "DELETE");
-
-        assertEquals("Address Test1", result.getAddress());
-        assertEquals("First Name Test1", result.getFirstName());
-        assertEquals("Last Name Test1", result.getLastName());
-        assertEquals("Female", result.getGender());
-        assertEquals(false, result.getEnabled());
-        assertEquals("Profile Url Test1", result.getProfileUrl());
-        assertEquals("Photo Url Test1", result.getPhotoUrl());
     }
 
     @Test
@@ -216,9 +185,7 @@ class PersonServiceTest {
 
         PersonDTO personOne = pageSentToAssembler.getContent().get(1);
 
-        assertNotNull(personOne);
-        assertNotNull(personOne.getId());
-        assertNotNull(personOne.getLinks());
+        assertPerson(personOne, 1);
 
         assertHasLink(personOne, "self", "/api/person/v1/1", "GET");
         assertHasLink(personOne, "findAll", "/api/person/v1", "GET");
@@ -226,19 +193,9 @@ class PersonServiceTest {
         assertHasLink(personOne, "update", "/api/person/v1", "PUT");
         assertHasLink(personOne, "delete", "/api/person/v1/1", "DELETE");
 
-        assertEquals("First Name Test1", personOne.getFirstName());
-        assertEquals("Last Name Test1", personOne.getLastName());
-        assertEquals("Address Test1", personOne.getAddress());
-        assertEquals("Female", personOne.getGender());
-        assertEquals(false, personOne.getEnabled());
-        assertEquals("Profile Url Test1", personOne.getProfileUrl());
-        assertEquals("Photo Url Test1", personOne.getPhotoUrl());
-
         PersonDTO personFour = pageSentToAssembler.getContent().get(4);
 
-        assertNotNull(personFour);
-        assertNotNull(personFour.getId());
-        assertNotNull(personFour.getLinks());
+        assertPerson(personFour, 4);
 
         assertHasLink(personFour, "self", "/api/person/v1/4", "GET");
         assertHasLink(personFour, "findAll", "/api/person/v1", "GET");
@@ -246,33 +203,29 @@ class PersonServiceTest {
         assertHasLink(personFour, "update", "/api/person/v1", "PUT");
         assertHasLink(personFour, "delete", "/api/person/v1/4", "DELETE");
 
-        assertEquals("First Name Test4", personFour.getFirstName());
-        assertEquals("Last Name Test4", personFour.getLastName());
-        assertEquals("Address Test4", personFour.getAddress());
-        assertEquals("Male", personFour.getGender());
-        assertEquals(true, personFour.getEnabled());
-        assertEquals("Profile Url Test4", personFour.getProfileUrl());
-        assertEquals("Photo Url Test4", personFour.getPhotoUrl());
-
         PersonDTO personSeven = pageSentToAssembler.getContent().get(7);
 
-        assertNotNull(personSeven);
-        assertNotNull(personSeven.getId());
-        assertNotNull(personSeven.getLinks());
+        assertPerson(personSeven, 7);
 
         assertHasLink(personSeven, "self", "/api/person/v1/7", "GET");
         assertHasLink(personSeven, "findAll", "/api/person/v1", "GET");
         assertHasLink(personSeven, "create", "/api/person/v1", "POST");
         assertHasLink(personSeven, "update", "/api/person/v1", "PUT");
         assertHasLink(personSeven, "delete", "/api/person/v1/7", "DELETE");
+    }
 
-        assertEquals("First Name Test7", personSeven.getFirstName());
-        assertEquals("Last Name Test7", personSeven.getLastName());
-        assertEquals("Address Test7", personSeven.getAddress());
-        assertEquals("Female", personSeven.getGender());
-        assertEquals(false, personSeven.getEnabled());
-        assertEquals("Profile Url Test7", personSeven.getProfileUrl());
-        assertEquals("Photo Url Test7", personSeven.getPhotoUrl());
+    private static void assertPerson(PersonDTO person, int index) {
+        assertNotNull(person);
+        assertNotNull(person.getId());
+        assertNotNull(person.getLinks());
+
+        assertEquals("First Name Test" + index, person.getFirstName());
+        assertEquals("Last Name Test" + index, person.getLastName());
+        assertEquals("Address Test" + index, person.getAddress());
+        assertEquals(index % 2 == 0 ? "Male" : "Female", person.getGender());
+        assertEquals(index % 2 == 0, person.getEnabled());
+        assertEquals("Profile Url Test" + index, person.getProfileUrl());
+        assertEquals("Photo Url Test" + index, person.getPhotoUrl());
     }
 
     private static void assertHasLink(PersonDTO dto, String rel, String href, String httpMethod) {

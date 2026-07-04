@@ -1,7 +1,6 @@
 package br.com.application.service.person;
 
 import br.com.application.controllers.person.PersonController;
-import br.com.application.controllers.person.TestLogController;
 import br.com.application.data.dto.PersonDTO;
 import br.com.application.exception.*;
 
@@ -38,7 +37,7 @@ import java.util.Optional;
 @Service
 public class PersonService {
 
-    private Logger logger = LoggerFactory.getLogger(TestLogController.class.getName());
+    private Logger logger = LoggerFactory.getLogger(PersonController.class);
 
     @Autowired
     PersonRepository repository;

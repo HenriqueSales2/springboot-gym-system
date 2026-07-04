@@ -41,12 +41,9 @@ public class User implements UserDetails, Serializable {
     @Column
     private Boolean enabled;
 
-    // Relacionamento ManyToMany unidirecional (só a tabela 'users' conhece a tabela 'permission').
-    // Vale ressaltar o uso do EAGER, não é recomendável usá-lo em grandes aplicações, pois pode quebra-lá.
-    // O melhor a se fazer é discutir com a equipe para descobrir se essa é a melhor forma ou existe uma mais adequada.
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_permission", // tabela que vai ser usada para fazer o relacionamento entre as tabelas 'users' e 'permissions'
+            name = "user_permission",
             joinColumns = {@JoinColumn(name = "id_user")},
             inverseJoinColumns = {@JoinColumn(name = "id_permission")}
     )
@@ -57,7 +54,7 @@ public class User implements UserDetails, Serializable {
     public List<String> getRoles() {
         List<String> roles = new ArrayList<>();
         for (Permission p : permissions) {
-            roles.add(p.getDescription()); // criar um arraylist com as Strings com as permissões que essa pessoa possui
+            roles.add(p.getDescription());
         }
         return roles;
     }

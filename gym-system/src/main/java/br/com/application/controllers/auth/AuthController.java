@@ -69,13 +69,11 @@ public class AuthController implements AuthControllerDocs {
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    // método para verificar se os parametros de "refreshToken" estão válidos
     private boolean parametersAreInvalid(String username, String refreshToken) {
         return StringUtils.isBlank(username) ||
                 StringUtils.isBlank(refreshToken);
     }
 
-    // método para fazer validações das credencias do cliente
     private static boolean credentialsValidations(AccountCredentialsDTO credentials) {
         return credentials == null ||
                 StringUtils.isBlank(credentials.getUsername()) ||

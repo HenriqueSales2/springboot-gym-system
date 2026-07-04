@@ -7,7 +7,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.4.1</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 
 	<groupId>br.com.application</groupId>
@@ -33,133 +33,102 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
-        <!--adicionando a dependencia do springmail-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
-            <!--<version>4.0.6</version> -->
         </dependency>
 
-<!--adicionando a dependencia para habilitar a função de banco de dados-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<!--adicionando a dependencia para habilitar a função do spring security-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- Source: https://mvnrepository.com/artifact/com.auth0/java-jwt -->
-		<!--adicionando a dependencia do JWT-->
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
 			<version>${java-jwt.version}</version>
 		</dependency>
 
-<!--adicionando a dependencia do HATEOAS-->
 		<dependency>
 			<groupId>org.springframework.hateoas</groupId>
 			<artifactId>spring-hateoas</artifactId>
 		</dependency>
 
-		<!-- Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
-		<!--adicionando a dependencia do Swagger-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${springdoc.version}</version>
-<!--			<scope>compile</scope>-->
 		</dependency>
 
-		<!--adicionando a dependencia do Scalar-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-scalar</artifactId>
 			<version>${springdoc.version}</version>
 		</dependency>
 
-		<!--adicionando a dependencia do XML na aplicação-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
 		</dependency>
 
-		<!--adicionando a dependencia do YAML na aplicação-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
 		</dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
-        <!--dependencia CSV-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>${commons-csv.version}</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.apache.poi/poi -->
-        <!--dependencia apache POI-->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>${apache.poi.version}</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
-        <!--dependencia do Jasper Reports-->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>${jasperreports.version}</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts -->
-        <!--dependencia do Jasper Reports Fonts-->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-fonts</artifactId>
             <version>${jasperreports.version}</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-pdf -->
-        <!--dependencia do Jasper Reports PDF-->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-pdf</artifactId>
             <version>${jasperreports.version}</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/com.google.zxing/core -->
-        <!--dependencia do Zxing Core (dependência para usar QR CODE na aplicação)-->
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
             <version>${zxing.version}</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/com.google.zxing/javase -->
-        <!--dependencia do Zxing Java SE-->
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>javase</artifactId>
             <version>${zxing.version}</version>
         </dependency>
 
-		<!-- Source: https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
-		<!--dependencia do MySQL-->
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
-<!--		dependencia do Flyway-->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -170,7 +139,6 @@
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
 
-		<!--dependencia do Dozer-->
 		<dependency>
 			<groupId>com.github.dozermapper</groupId>
 			<artifactId>dozer-core</artifactId>
@@ -183,12 +151,9 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!--dependencia do TestContainers-->
 		<dependency>
 			<groupId>org.testcontainers</groupId>
-		<!--caso haja algum erro na aplicacao, trocar artifactId para "mysql"-->
 			<artifactId>testcontainers-mysql</artifactId>
-		<!--caso haja algum erro na aplicacao, trocar para a versao "1.20.4"-->
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -196,7 +161,6 @@
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
-<!--			<version>6.0.0</version>-->
 			<scope>test</scope>
 		</dependency>
 
@@ -215,7 +179,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-<!--			adicionando o plugin do flyway no maven-->
 			<plugin>
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
@@ -224,17 +187,12 @@
 					<user>your_username</user>
 					<password>your_password</password>
 				</configuration>
-<!--				adicionando a dependencia do MySQL no flyway-->
-<!--				nesse caso aqui devemos adicionar a versao do plugin na dependencia do MySQL-->
-<!--					pois na hora de executar o terminal nao pega o contexto do spring, só o do plugin,-->
-<!--					e o terminal nao consegue encontrar a dependencia-->
 				<dependencies>
 					<dependency>
 						<groupId>com.mysql</groupId>
 						<artifactId>mysql-connector-j</artifactId>
 						<version>9.1.0</version>
 						<exclusions>
-<!--		fazendo uma exclusao de dependencia, pois haverá conflito entre as dependencias do MySQL dentro do flyway-->
 							<exclusion>
 								<groupId>org.slf4j</groupId>
 								<artifactId>slf4j-api</artifactId>

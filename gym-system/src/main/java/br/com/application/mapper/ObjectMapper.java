@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ObjectMapper {
 
-    private static Mapper mapper = DozerBeanMapperBuilder.buildDefault(); // vai mapear a Entidade > DTO e vice versa
+    private static Mapper mapper = DozerBeanMapperBuilder.buildDefault();
 
     public static <O, D> D parseObject(O origin, Class<D> destination) {
         return mapper.map(origin, destination);

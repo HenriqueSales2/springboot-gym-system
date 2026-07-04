@@ -39,14 +39,14 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         PasswordEncoder pbkdf2Enconder = new Pbkdf2PasswordEncoder(
-                "", // salt vazio
-                8, // comprimento da chave gerada (8 bits)
-                185000, // número de vezes que o algoritmo será aplicado
-                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256 // usa HMAC-SHA256 para fazer o hash a senha (criptografar a senha)
+                "",
+                8,
+                185000,
+                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256
         );
 
         Map<String, PasswordEncoder> enconders = new HashMap<>();
-        enconders.put("pbkdf2", pbkdf2Enconder); // setando o nome da chave e o algoritmo de criptografia
+        enconders.put("pbkdf2", pbkdf2Enconder);
         DelegatingPasswordEncoder encoder = new DelegatingPasswordEncoder("pbkdf2", enconders);
 
         encoder.setDefaultPasswordEncoderForMatches(pbkdf2Enconder);
@@ -58,34 +58,32 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         JwtTokenFilter filter = new JwtTokenFilter(provider);
-        //@formatter:off
+
         return http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(
                         session -> session
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // não vai guardar o estado da sessão
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers(
                                         "/auth/signin",
                                         "/auth/refresh/**",
-                                        "/auth/createUser", // remover esse endpoint em produção, permitindo ele apenas para facilitar alguns testes
+                                        "/auth/createUser",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/scalar/**"
-                                ).permitAll() // permitindo acesso total para essas URLs
+                                ).permitAll()
                                 .requestMatchers("/api/**")
-                                .authenticated() // acesso apenas com JWT válido
-                                .requestMatchers("/users").denyAll() // evitando expor as entidades
-                ).cors(cors -> {}) // subindo cors em modo default
-                .build(); // construindo o filtro no padrão Builder (chamando métodos e setando os valores)
-        //@formatter:on
+                                .authenticated()
+                                .requestMatchers("/users").denyAll()
+                ).cors(cors -> {})
+                .build();
     }
 }

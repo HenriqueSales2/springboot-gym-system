@@ -1,7 +1,6 @@
 package br.com.application.service.workout;
 
 import br.com.application.controllers.workout.WorkoutController;
-import br.com.application.controllers.person.TestLogController;
 import br.com.application.data.dto.WorkoutDTO;
 import br.com.application.exception.RequiredObjectIsNullException;
 import br.com.application.exception.ResourceNotFoundException;
@@ -26,7 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class WorkoutService {
 
-    private Logger logger = LoggerFactory.getLogger(TestLogController.class.getName());
+    private Logger logger = LoggerFactory.getLogger(WorkoutController.class);
 
     @Autowired
     WorkoutRepository repository;

@@ -48,18 +48,20 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
         AccountCredentialsDTO credentials = new AccountCredentialsDTO("john", "admin123");
 
         tokenDTO = given()
-                .basePath("auth/signin")
-                .port(TestConfigs.SERVER_PORT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(credentials)
+                    .config(RestAssured.config().encoderConfig(encoderConfig().encodeContentTypeAs("application/yaml", ContentType.TEXT)))
+                    .basePath("auth/signin")
+                    .port(TestConfigs.SERVER_PORT)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
+                    .accept(MediaType.APPLICATION_YAML_VALUE)
+                    .body(credentials, mapper)
                 .when()
-                .post()
+                    .post()
                 .then()
-                .statusCode(200)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .statusCode(200)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
-                .body()
-                .as(TokenDTO.class);
+                    .body()
+                        .as(TokenDTO.class, mapper);
 
         assertNotNull(tokenDTO.getAccessToken());
         assertNotNull(tokenDTO.getRefreshToken());

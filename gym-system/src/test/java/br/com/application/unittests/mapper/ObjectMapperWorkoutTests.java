@@ -23,13 +23,7 @@ public class ObjectMapperWorkoutTests {
     @Test
     public void parseEntityToDTOTest() {
         WorkoutDTO output = parseObject(inputObject.mockEntity(), WorkoutDTO.class);
-
-        assertEquals(Long.valueOf(0L), output.getId());
-
-        assertEquals("Exercise Name Test0", output.getExerciseName());
-        assertEquals("Muscle Group Test0", output.getMuscleGroup());
-        assertEquals("Equipment Test0", output.getEquipment());
-        assertEquals("Difficulty Test0", output.getDifficulty());
+        assertWorkoutDTO(output, 0);
     }
 
     @Test
@@ -37,40 +31,19 @@ public class ObjectMapperWorkoutTests {
         List<WorkoutDTO> outputList = parseListObjects(inputObject.mockEntityList(), WorkoutDTO.class);
 
         WorkoutDTO outputZero = outputList.get(0);
-
-        assertEquals(Long.valueOf(0L), outputZero.getId());
-        assertEquals("Exercise Name Test0", outputZero.getExerciseName());
-        assertEquals("Muscle Group Test0", outputZero.getMuscleGroup());
-        assertEquals("Equipment Test0", outputZero.getEquipment());
-        assertEquals("Difficulty Test0", outputZero.getDifficulty());
+        assertWorkoutDTO(outputZero, 0);
 
         WorkoutDTO outputSeven = outputList.get(7);
-
-        assertEquals(Long.valueOf(7L), outputSeven.getId());
-        assertEquals("Exercise Name Test7", outputSeven.getExerciseName());
-        assertEquals("Muscle Group Test7", outputSeven.getMuscleGroup());
-        assertEquals("Equipment Test7", outputSeven.getEquipment());
-        assertEquals("Difficulty Test7", outputSeven.getDifficulty());
+        assertWorkoutDTO(outputSeven, 7);
 
         WorkoutDTO outputTwelve = outputList.get(12);
-
-        assertEquals(Long.valueOf(12L), outputTwelve.getId());
-        assertEquals("Exercise Name Test12", outputTwelve.getExerciseName());
-        assertEquals("Muscle Group Test12", outputTwelve.getMuscleGroup());
-        assertEquals("Equipment Test12", outputTwelve.getEquipment());
-        assertEquals("Difficulty Test12", outputTwelve.getDifficulty());
+        assertWorkoutDTO(outputTwelve, 12);
     }
 
     @Test
     public void parseDTOToEntityTest() {
         Workout output = parseObject(inputObject.mockDTO(), Workout.class);
-
-        assertEquals(Long.valueOf(0L), output.getId());
-
-        assertEquals("Exercise Name Test0", output.getExerciseName());
-        assertEquals("Muscle Group Test0", output.getMuscleGroup());
-        assertEquals("Equipment Test0", output.getEquipment());
-        assertEquals("Difficulty Test0", output.getDifficulty());
+        assertWorkout(output, 0);
     }
 
     @Test
@@ -78,28 +51,28 @@ public class ObjectMapperWorkoutTests {
         List<Workout> outputList = parseListObjects(inputObject.mockDTOList(), Workout.class);
 
         Workout outputZero = outputList.get(0);
-
-        assertEquals(Long.valueOf(0L), outputZero.getId());
-
-        assertEquals("Exercise Name Test0", outputZero.getExerciseName());
-        assertEquals("Muscle Group Test0", outputZero.getMuscleGroup());
-        assertEquals("Equipment Test0", outputZero.getEquipment());
-        assertEquals("Difficulty Test0", outputZero.getDifficulty());
+        assertWorkout(outputZero, 0);
 
         Workout outputSeven = outputList.get(7);
-
-        assertEquals(Long.valueOf(7L), outputSeven.getId());
-        assertEquals("Exercise Name Test7", outputSeven.getExerciseName());
-        assertEquals("Muscle Group Test7", outputSeven.getMuscleGroup());
-        assertEquals("Equipment Test7", outputSeven.getEquipment());
-        assertEquals("Difficulty Test7", outputSeven.getDifficulty());
+        assertWorkout(outputSeven, 7);
 
         Workout outputTwelve = outputList.get(12);
+        assertWorkout(outputTwelve, 12);
+    }
 
-        assertEquals(Long.valueOf(12L), outputTwelve.getId());
-        assertEquals("Exercise Name Test12", outputTwelve.getExerciseName());
-        assertEquals("Muscle Group Test12", outputTwelve.getMuscleGroup());
-        assertEquals("Equipment Test12", outputTwelve.getEquipment());
-        assertEquals("Difficulty Test12", outputTwelve.getDifficulty());
+    private void assertWorkoutDTO(WorkoutDTO workout, int index) {
+        assertEquals(Long.valueOf(index), workout.getId());
+        assertEquals("Exercise Name Test" + index, workout.getExerciseName());
+        assertEquals("Muscle Group Test" + index, workout.getMuscleGroup());
+        assertEquals("Equipment Test" + index, workout.getEquipment());
+        assertEquals("Difficulty Test" + index, workout.getDifficulty());
+    }
+
+    private void assertWorkout(Workout workout, int index) {
+        assertEquals(Long.valueOf(index), workout.getId());
+        assertEquals("Exercise Name Test" + index, workout.getExerciseName());
+        assertEquals("Muscle Group Test" + index, workout.getMuscleGroup());
+        assertEquals("Equipment Test" + index, workout.getEquipment());
+        assertEquals("Difficulty Test" + index, workout.getDifficulty());
     }
 }

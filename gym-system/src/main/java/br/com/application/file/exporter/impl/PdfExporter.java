@@ -2,7 +2,7 @@ package br.com.application.file.exporter.impl;
 
 import br.com.application.data.dto.PersonDTO;
 import br.com.application.file.exporter.contract.PersonExporter;
-import br.com.application.service.QRCodeService;
+import br.com.application.service.qrcode.QRCodeService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;

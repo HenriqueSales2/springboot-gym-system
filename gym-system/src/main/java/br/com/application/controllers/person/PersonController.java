@@ -36,7 +36,7 @@ public class PersonController implements PersonControllerDocs {
     private PersonService service;
 
     @GetMapping(
-            produces = { // produz JSON, ou seja, me retorna um JSON
+            produces = {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE

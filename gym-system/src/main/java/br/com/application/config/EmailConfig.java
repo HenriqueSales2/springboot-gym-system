@@ -16,8 +16,7 @@ public class EmailConfig {
     private String from;
     private boolean ssl;
 
-    public EmailConfig() {
-    }
+    public EmailConfig() {}
 
     public String getHost() {
         return host;

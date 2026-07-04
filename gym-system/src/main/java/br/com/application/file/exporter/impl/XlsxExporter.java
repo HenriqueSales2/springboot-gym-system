@@ -21,9 +21,8 @@ public class XlsxExporter implements PersonExporter {
 
             Row headerRow = sheet.createRow(0);
 
-            String[] headers = {"ID", "First Name", "Last Name", "Address", "Gender", "Enabled"}; // criando o cabeçalho
+            String[] headers = {"ID", "First Name", "Last Name", "Address", "Gender", "Enabled"};
 
-            // iterando o cabeçalho criando célula por célula
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
@@ -32,7 +31,6 @@ public class XlsxExporter implements PersonExporter {
 
             int rowIndex = 1;
 
-            // criando uma linha para cada registro e seta o valor em cada célula
             for (PersonDTO personDTO : people) {
                 Row row = sheet.createRow(rowIndex++);
                 row.createCell(0).setCellValue(personDTO.getId());
@@ -43,9 +41,8 @@ public class XlsxExporter implements PersonExporter {
                 row.createCell(5).setCellValue(personDTO.getEnabled() != null && personDTO.getEnabled() ? "Yes" : "No");
             }
 
-            // reformatando a planilha para que os dados fiquem legíveis
             for (int i = 0; i < headers.length; i++) {
-                sheet.autoSizeColumn(i); // refo
+                sheet.autoSizeColumn(i);
             }
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -55,7 +52,6 @@ public class XlsxExporter implements PersonExporter {
         }
     }
 
-    // método que estiliza a criação do cabeçalho
     private CellStyle createHeaderCellStyle(Workbook workbook) {
 
         CellStyle style = workbook.createCellStyle();

@@ -8,24 +8,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT) // vamos definir a porta que o spring boot vai utilizar para os testes
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class SwaggerIntegrationTest extends AbstractIntegrationTest {
 
 	@Test
 	void shouldDisplaySwaggerUIPage() {
-		var content = given() // armazenando todo esse conteúdo em uma variável
-				.basePath("/swagger-ui/index.html")
+		var content = given()
+					.basePath("/swagger-ui/index.html")
 					.port(TestConfigs.SERVER_PORT)
-				.when() // quando executar uma operação
-					.get()// do tipo get
-				.then() // então
-					.statusCode(200)// eu espero a resposta de statusCode 200 OK (significa que deu tudo certo)
+				.when()
+					.get()
+				.then()
+					.statusCode(200)
 				.extract()
-					.body() // pegar o conteúdo do body (corpo)
-						.asString(); // transformar em String
+					.body()
+						.asString();
 
 		assertTrue(content.contains("Swagger UI"));
-
 	}
-
 }

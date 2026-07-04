@@ -58,20 +58,13 @@ class WorkoutServiceTest {
 
         var result = service.create(dto);
 
-        assertNotNull(result);
-        assertNotNull(result.getId());
-        assertNotNull(result.getLinks());
+        assertWorkout(result, 1);
 
         assertHasLink(result, "self", "/api/workout/v1/1", "GET");
         assertHasLink(result, "findAllWorkouts", "/api/workout/v1", "GET");
         assertHasLink(result, "create", "/api/workout/v1", "POST");
         assertHasLink(result, "update", "/api/workout/v1", "PUT");
         assertHasLink(result, "delete", "/api/workout/v1/1", "DELETE");
-
-        assertEquals("Exercise Name Test1", result.getExerciseName());
-        assertEquals("Muscle Group Test1", result.getMuscleGroup());
-        assertEquals("Equipment Test1", result.getEquipment());
-        assertEquals("Difficulty Test1", result.getDifficulty());
     }
 
     @Test
@@ -103,20 +96,13 @@ class WorkoutServiceTest {
         when(repository.save(workout)).thenReturn(persisted);
         var result = service.update(dto);
 
-        assertNotNull(result);
-        assertNotNull(result.getId());
-        assertNotNull(result.getLinks());
+        assertWorkout(result, 1);
 
         assertHasLink(result, "self", "/api/workout/v1/1", "GET");
         assertHasLink(result, "findAllWorkouts", "/api/workout/v1", "GET");
         assertHasLink(result, "create", "/api/workout/v1", "POST");
         assertHasLink(result, "update", "/api/workout/v1", "PUT");
         assertHasLink(result, "delete", "/api/workout/v1/1", "DELETE");
-
-        assertEquals("Exercise Name Test1", result.getExerciseName());
-        assertEquals("Muscle Group Test1", result.getMuscleGroup());
-        assertEquals("Equipment Test1", result.getEquipment());
-        assertEquals("Difficulty Test1", result.getDifficulty());
     }
 
     @Test
@@ -143,20 +129,13 @@ class WorkoutServiceTest {
 
         var result = service.findWorkoutById(1L);
 
-        assertNotNull(result);
-        assertNotNull(result.getId());
-        assertNotNull(result.getLinks());
+        assertWorkout(result, 1);
 
         assertHasLink(result, "self", "/api/workout/v1/1", "GET");
         assertHasLink(result, "findAllWorkouts", "/api/workout/v1", "GET");
         assertHasLink(result, "create", "/api/workout/v1", "POST");
         assertHasLink(result, "update", "/api/workout/v1", "PUT");
         assertHasLink(result, "delete", "/api/workout/v1/1", "DELETE");
-
-        assertEquals("Exercise Name Test1", result.getExerciseName());
-        assertEquals("Muscle Group Test1", result.getMuscleGroup());
-        assertEquals("Equipment Test1", result.getEquipment());
-        assertEquals("Difficulty Test1", result.getDifficulty());
     }
 
     @Test
@@ -207,9 +186,7 @@ class WorkoutServiceTest {
 
         WorkoutDTO workoutOne = pageSentToAssembler.getContent().get(1);
 
-        assertNotNull(workoutOne);
-        assertNotNull(workoutOne.getId());
-        assertNotNull(workoutOne.getLinks());
+        assertWorkout(workoutOne, 1);
 
         assertHasLink(workoutOne, "self", "/api/workout/v1/1", "GET");
         assertHasLink(workoutOne, "findAllWorkouts", "/api/workout/v1", "GET");
@@ -217,16 +194,9 @@ class WorkoutServiceTest {
         assertHasLink(workoutOne, "update", "/api/workout/v1", "PUT");
         assertHasLink(workoutOne, "delete", "/api/workout/v1/1", "DELETE");
 
-        assertEquals("Exercise Name Test1", workoutOne.getExerciseName());
-        assertEquals("Muscle Group Test1", workoutOne.getMuscleGroup());
-        assertEquals("Equipment Test1", workoutOne.getEquipment());
-        assertEquals("Difficulty Test1", workoutOne.getDifficulty());
-
         WorkoutDTO workoutFour = pageSentToAssembler.getContent().get(4);
 
-        assertNotNull(workoutFour);
-        assertNotNull(workoutFour.getId());
-        assertNotNull(workoutFour.getLinks());
+        assertWorkout(workoutFour, 4);
 
         assertHasLink(workoutFour, "self", "/api/workout/v1/4", "GET");
         assertHasLink(workoutFour, "findAllWorkouts", "/api/workout/v1", "GET");
@@ -234,28 +204,26 @@ class WorkoutServiceTest {
         assertHasLink(workoutFour, "update", "/api/workout/v1", "PUT");
         assertHasLink(workoutFour, "delete", "/api/workout/v1/4", "DELETE");
 
-        assertEquals("Exercise Name Test4", workoutFour.getExerciseName());
-        assertEquals("Muscle Group Test4", workoutFour.getMuscleGroup());
-        assertEquals("Equipment Test4", workoutFour.getEquipment());
-        assertEquals("Difficulty Test4", workoutFour.getDifficulty());
-
-
         WorkoutDTO workoutSeven = pageSentToAssembler.getContent().get(7);
 
-        assertNotNull(workoutSeven);
-        assertNotNull(workoutSeven.getId());
-        assertNotNull(workoutSeven.getLinks());
+        assertWorkout(workoutSeven, 7);
 
         assertHasLink(workoutSeven, "self", "/api/workout/v1/7", "GET");
         assertHasLink(workoutSeven, "findAllWorkouts", "/api/workout/v1", "GET");
         assertHasLink(workoutSeven, "create", "/api/workout/v1", "POST");
         assertHasLink(workoutSeven, "update", "/api/workout/v1", "PUT");
         assertHasLink(workoutSeven, "delete", "/api/workout/v1/7", "DELETE");
+    }
 
-        assertEquals("Exercise Name Test7", workoutSeven.getExerciseName());
-        assertEquals("Muscle Group Test7", workoutSeven.getMuscleGroup());
-        assertEquals("Equipment Test7", workoutSeven.getEquipment());
-        assertEquals("Difficulty Test7", workoutSeven.getDifficulty());
+    private static void assertWorkout(WorkoutDTO workout, int index) {
+        assertNotNull(workout);
+        assertNotNull(workout.getId());
+        assertNotNull(workout.getLinks());
+
+        assertEquals("Exercise Name Test" + index, workout.getExerciseName());
+        assertEquals("Muscle Group Test" + index, workout.getMuscleGroup());
+        assertEquals("Equipment Test" + index, workout.getEquipment());
+        assertEquals("Difficulty Test" + index, workout.getDifficulty());
     }
 
     private static void assertHasLink(WorkoutDTO dto, String rel, String href, String httpMethod) {

@@ -84,7 +84,7 @@ public class EmailSender implements Serializable {
     }
 
     private ArrayList<InternetAddress> getRecipients(String to) {
-        String toWithoutSpaces = to.replaceAll("\\s", ""); // caso o usuário por algum motivo tenha colocado espaço no email vai ser tratado
+        String toWithoutSpaces = to.replaceAll("\\s", "");
         StringTokenizer tokenizer = new StringTokenizer(toWithoutSpaces, ";");
         ArrayList<InternetAddress> recipientsList = new ArrayList<>();
 

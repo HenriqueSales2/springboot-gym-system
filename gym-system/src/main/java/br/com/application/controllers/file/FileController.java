@@ -3,7 +3,7 @@ package br.com.application.controllers.file;
 import br.com.application.config.SecurityConfig;
 import br.com.application.controllers.docs.FileControllerDocs;
 import br.com.application.data.dto.UploadFileDTO;
-import br.com.application.service.file.FileStorageService;
+import br.com.application.service.file.FileService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class FileController implements FileControllerDocs {
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
-    private FileStorageService service;
+    private FileService service;
 
     @PostMapping("/uploadFile")
     @Override

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,22 +44,26 @@ public class WorkoutControllerXmlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(0)
-    void sigIn() {
+    void sigIn() throws IOException {
         AccountCredentialsDTO credentials = new AccountCredentialsDTO("john", "admin123");
+        String credentialsXml = mapper.writeValueAsString(credentials);
 
-        tokenDTO = given()
-                .basePath("auth/signin")
-                .port(TestConfigs.SERVER_PORT)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(credentials)
+        var content = given()
+                    .basePath("auth/signin")
+                    .port(TestConfigs.SERVER_PORT)
+                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                    .accept(MediaType.APPLICATION_XML_VALUE)
+                    .body(credentialsXml)
                 .when()
-                .post()
+                    .post()
                 .then()
-                .statusCode(200)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .statusCode(200)
+                    .contentType(MediaType.APPLICATION_XML_VALUE)
                 .extract()
-                .body()
-                .as(TokenDTO.class);
+                    .body()
+                        .asString();
+
+        tokenDTO = mapper.readValue( content, TokenDTO.class);
 
         assertNotNull(tokenDTO.getAccessToken());
         assertNotNull(tokenDTO.getRefreshToken());

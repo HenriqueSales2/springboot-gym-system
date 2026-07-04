@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-// é necessário estender essa classe "RepresentationModel" para utilizar HATEOAS
 @Relation(collectionRelation = "people")
 public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
 
@@ -28,8 +27,7 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     @JsonIgnore
     private List<Workout> workouts;
 
-    public PersonDTO() {
-    }
+    public PersonDTO() {}
 
     public Long getId() {
         return id;

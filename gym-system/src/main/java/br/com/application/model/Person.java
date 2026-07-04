@@ -37,16 +37,15 @@ public class Person implements Serializable {
     @Column(name = "photo_url", length = 255)
     private String photoUrl;
 
-    @ManyToMany(fetch = FetchType.EAGER) // define o tipo de relacionamento entre as tabelas e trazer os dados assim que carregar as pessoas
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "person_workouts", // temos uma coluna específica para a junção de persons com workouts
-            joinColumns = @JoinColumn(name = "person_id"), // coluna que vai ser usada para fazer a conexão com a tabela person
-            inverseJoinColumns = @JoinColumn(name = "workout_id") // coluna que vai ser usada para fazer a conexão com o tabela workout
+            name = "person_workouts",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "workout_id")
     )
     private List<Workout> workouts;
 
-    public Person() {
-    }
+    public Person() {}
 
     public Long getId() {
         return id;
