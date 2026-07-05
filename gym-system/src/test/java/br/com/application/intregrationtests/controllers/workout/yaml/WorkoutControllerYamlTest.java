@@ -76,7 +76,7 @@ public class WorkoutControllerYamlTest extends AbstractIntegrationTest {
                 .addHeaders(Map.of(TestConfigs.HEADER_PARAM_ORIGIN,
                         TestConfigs.ORIGIN_EXAMPLE))
                 .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, TestConfigs.BEARER_PREFIX + tokenDTO.getAccessToken())
-                .setBasePath("/api/workout/v1")
+                .setBasePath(TestConfigs.BASEPATH_PARAM_WORKOUT)
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilters(List.of(new RequestLoggingFilter(LogDetail.ALL), new ResponseLoggingFilter(LogDetail.ALL)))
                 .build();
