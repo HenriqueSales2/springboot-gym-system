@@ -22,6 +22,7 @@ temp/
 
 .env
 .env.*
+task-definition.json
 
 application-local.yml
 application-dev.yml
