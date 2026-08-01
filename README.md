@@ -2,6 +2,8 @@
 
 REST API desenvolvida com **Java 21**, **Spring Boot**, **Spring Data JPA**, **MySQL**, **Flyway**, **Swagger/OpenAPI**, **JasperReports**, **JUnit 5**, **Mockito** e **Testcontainers** para gerenciamento de pessoas, exercícios de academia, armazenamento de arquivos, geração de relatórios e envio de e-mails.
 
+[![CI/CD with GitHub Actions](https://github.com/HenriqueSales2/springboot-gym-system/actions/workflows/continuos-deployment.yml/badge.svg)](https://github.com/HenriqueSales2/springboot-gym-system/actions/workflows/continuos-deployment.yml)
+
 ---
 
 ## Tecnologias Utilizadas
