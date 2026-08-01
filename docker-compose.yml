@@ -17,8 +17,8 @@ services:
    gym-system:
       image: henriquesales2/gym-system
       restart: always
-      build: ./gym-system
-      working_dir: /gym-system
+      build: ./gym-system/server
+      working_dir: /gym-system/server
       environment:
          TZ: America/Sao_Paulo
          SPRING.DATASOURCE.URL: ${MYSQL_URL}
