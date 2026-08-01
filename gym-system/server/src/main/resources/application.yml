@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8080
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://example.com.br
 file:
@@ -18,8 +18,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${JDBC_URL}
-    username: ${AMAZON_USERNAME}
-    password: ${AMAZON_PASSWORD}
+    username: ${DB_USERNAME} #${AMAZON_USERNAME}
+    password: ${DB_PASSWORD} #${AMAZON_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: none

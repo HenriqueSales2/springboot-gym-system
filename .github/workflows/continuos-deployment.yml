@@ -35,7 +35,7 @@ jobs:
           cache: maven
 
       - name: Build application .jar
-        working-directory: ./gym-system
+        working-directory: ./gym-system/server
         run: mvn clean package
 
       - name: Docker Compose Build Application .jar
