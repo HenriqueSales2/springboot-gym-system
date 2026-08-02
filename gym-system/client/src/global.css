@@ -9,54 +9,83 @@
 
 body {
     font: 400 14px Montserrat, sans-serif;
-    background: #000000;
+    background: linear-gradient(to right, #160106, #0D1117);
     -webkit-font-smoothing: antialiased;
+    
+    /* CONFIGURAÇÕES DO FLEXBOX NO BODY */
+    display: flex;             /* Transforma a página inteira em um container flexível */
+    justify-content: center;   /* Centraliza todo o conteúdo da página HORIZONTALMENTE */
+    align-items: center;       /* Centraliza todo o conteúdo da página VERTICALMENTE */
+    min-height: 100vh;         /* Garante que o body ocupe 100% da altura da tela, necessário para o alinhamento vertical funcionar */
+}
+
+/* Assumindo que seus inputs e botão estão dentro de uma tag <form> */
+form {
+    display: flex;             /* Transforma o formulário em um container flexível também */
+    flex-direction: column;    /* Coloca os itens um abaixo do outro (em coluna) ao invés de lado a lado */
+    align-items: center;       /* Centraliza os inputs e o botão no meio do próprio formulário */
+    gap: 30px;                 /* Cria um espaçamento uniforme de 16px entre os inputs e o botão (substitui o margin-top) */
+    width: 125%;
+    max-width: 450px;          /* Define uma largura máxima para o formulário não esticar infinitamente em telas grandes */
+    color: #FFFFFF;
 }
 
 input, button, textarea {
-    font: 400 18px Montserrat, sans-serif;
-
+    font: 300 15px Montserrat, sans-serif;
 }
 
 button {
     cursor: pointer;
-    border :1px solid #DCDCE6;
+    border: 1px solid #DCDCE6;
     border-radius: 5px;
 }
 
 form input {
-    width: 40%;
-    height: 50px;
-    
-    color: #F0F6FC;
+    width: 100%;
+    height: 45px;
+    color: #F0F6FC; 
     background-color: #0D1117;
-    border :1px solid #DCDCE6;
+    border: 1px solid #3D444D; /* Simplifiquei a declaração de borda */
     border-radius: 15px;
-    margin-top: 16px;
-    border-color: #F0F6FC;
+    padding: 0 15px;           /* Adicionado para o texto digitado não ficar colado nas bordas laterais do input */
+    
+    /* 
+       REMOVIDOS: margin-top, margin-left e transform.
+       O Flexbox do elemento pai (form) já cuida de toda a posição!
+    */
+}
+
+form input:hover {
+    filter: brightness(80%);
+    background-color: #000000;
+    transform: scale(1.01);
 }
 
 .button {
     width: 100%;
-    height: 600px;
-    background: #251FC5;
-    border: 0;
-    border-radius: 0;
+    height: 45px;   
+    background: #29903B;
+    border: 1px solid #29903B;
+    border-radius: 15px;
     color: #FFFFFF;
-    font-weight: 700;
-    margin-top: 16px;
-    display: inline-block;
-    text-align: center;
+    font-weight: 600;
     text-decoration: none;
     font-size: 18px;
-    line-height: 60px;
+    transition: filter 0.3s;
+    
+    /* --- FLEXBOX INTERNO PARA CENTRALIZAR O TEXTO DO BOTÃO --- */
+    display: flex;             /* Transforma o botão num container para o texto dentro dele */
+    justify-content: center;   /* Centraliza o texto "Login" horizontalmente */
+    align-items: center;       /* Centraliza o texto "Login" verticalmente */
+    
+    /* 
+       REMOVIDOS: transform, margin-top e line-height.
+       O espaçamento externo é gerido pelo 'gap' do form, e o alinhamento interno pelo Flexbox.
+    */
 }
-/*
-h1 {
-    background-color: black;
-    color: #fff;
-    height: 40px;
-    width: 550px;
-    border-radius: 30px;
+
+.button:hover {
+    filter: brightness(80%);
+    background-color: #1f702d;
+    transform: scale(1.05);
 }
-*/

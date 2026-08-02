@@ -1,7 +1,93 @@
-h1 {
-    color: #ffffff;
-    height: 40px;
-    width: 550px;
+.login-container {
+    width: 100%;
+    min-height: 100vh;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-around; /* Mantém a logo/form na esquerda/centro e o cadeado na direita */ 
+}
+
+.logo {
+    width: 100px;
+    max-width: 500px;
+}
+
+.login-container section.form {
+    width: 100%;
+    max-width: 450px;
+    
+    display: flex;
+    flex-direction: column; /* Empilha a logo, o título e os inputs um debaixo do outro */
+    align-items: center;
+    gap: 10px; /* Espaço entre a logo, o título e o formulário */
+}
+
+/* Cria uma mini-coluna para o texto e a caixinha de input ficarem juntos */
+.input-group {
+    display: flex;
+    flex-direction: column; /* Coloca o Label em cima e o Input embaixo */
+    width: 100%;
+    gap: 8px; /* Espaço bem pequeno e delicado entre o texto e a caixa */
+}
+
+/* Estiliza apenas os textos que ficam em cima das caixinhas */
+.input-group label {
+    display: flex;
+    text-align: left; /* Garante que o texto fique colado na esquerda */
+    font-size: 14px;
+    font-weight: 500;
+    color: #F0F6FC;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column; /* Coloca o Label em cima e o Input embaixo */
+    width: 100%;
+    gap: 8px; /* Espaço bem pequeno e delicado entre o texto e a caixa */
+}
+
+/* Container fixo no canto da tela que segura os botões */
+.music-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    
+    /* Flexbox de novo! Coloca os botões lado a lado com um espacinho */
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+/* O estilo base de ambos os botões */
+.music-button {
+    background-color: #29903B;
+    color: white;
+    border: 2px solid transparent;
+    padding: 10px 20px;
     border-radius: 30px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.music-button:hover {
+    background-color: #1f702d;
+    border-color: white;
+    transform: scale(1.05);
+}
+
+.music-button.paused {
+    background-color: #3d444d;
+}
+
+/* Um visual um pouco mais discreto para o botão de pular faixa */
+.skip-button {
+    background-color: #0D1117;
+    border: 1px solid #3D444D;
+}
+
+.skip-button:hover {
+    background-color: #21262d;
 }
