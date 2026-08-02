@@ -11,22 +11,19 @@ body {
     font: 400 14px Montserrat, sans-serif;
     background: linear-gradient(to right, #160106, #0D1117);
     -webkit-font-smoothing: antialiased;
-    
-    /* CONFIGURAÇÕES DO FLEXBOX NO BODY */
-    display: flex;             /* Transforma a página inteira em um container flexível */
-    justify-content: center;   /* Centraliza todo o conteúdo da página HORIZONTALMENTE */
-    align-items: center;       /* Centraliza todo o conteúdo da página VERTICALMENTE */
-    min-height: 100vh;         /* Garante que o body ocupe 100% da altura da tela, necessário para o alinhamento vertical funcionar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-/* Assumindo que seus inputs e botão estão dentro de uma tag <form> */
 form {
-    display: flex;             /* Transforma o formulário em um container flexível também */
-    flex-direction: column;    /* Coloca os itens um abaixo do outro (em coluna) ao invés de lado a lado */
-    align-items: center;       /* Centraliza os inputs e o botão no meio do próprio formulário */
-    gap: 30px;                 /* Cria um espaçamento uniforme de 16px entre os inputs e o botão (substitui o margin-top) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
     width: 125%;
-    max-width: 450px;          /* Define uma largura máxima para o formulário não esticar infinitamente em telas grandes */
+    max-width: 450px;
     color: #FFFFFF;
 }
 
@@ -45,14 +42,9 @@ form input {
     height: 45px;
     color: #F0F6FC; 
     background-color: #0D1117;
-    border: 1px solid #3D444D; /* Simplifiquei a declaração de borda */
+    border: 1px solid #3D444D;
     border-radius: 15px;
-    padding: 0 15px;           /* Adicionado para o texto digitado não ficar colado nas bordas laterais do input */
-    
-    /* 
-       REMOVIDOS: margin-top, margin-left e transform.
-       O Flexbox do elemento pai (form) já cuida de toda a posição!
-    */
+    padding: 0 15px;
 }
 
 form input:hover {
@@ -73,15 +65,9 @@ form input:hover {
     font-size: 18px;
     transition: filter 0.3s;
     
-    /* --- FLEXBOX INTERNO PARA CENTRALIZAR O TEXTO DO BOTÃO --- */
-    display: flex;             /* Transforma o botão num container para o texto dentro dele */
-    justify-content: center;   /* Centraliza o texto "Login" horizontalmente */
-    align-items: center;       /* Centraliza o texto "Login" verticalmente */
-    
-    /* 
-       REMOVIDOS: transform, margin-top e line-height.
-       O espaçamento externo é gerido pelo 'gap' do form, e o alinhamento interno pelo Flexbox.
-    */
+    display: flex;     
+    justify-content: center;
+    align-items: center;
 }
 
 .button:hover {

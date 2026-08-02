@@ -1,10 +1,9 @@
 .login-container {
     width: 100%;
     min-height: 100vh;
-    
     display: flex;
     align-items: center;
-    justify-content: space-around; /* Mantém a logo/form na esquerda/centro e o cadeado na direita */ 
+    justify-content: space-around;
 }
 
 .logo {
@@ -15,25 +14,22 @@
 .login-container section.form {
     width: 100%;
     max-width: 450px;
-    
     display: flex;
-    flex-direction: column; /* Empilha a logo, o título e os inputs um debaixo do outro */
+    flex-direction: column;
     align-items: center;
-    gap: 10px; /* Espaço entre a logo, o título e o formulário */
+    gap: 10px;
 }
 
-/* Cria uma mini-coluna para o texto e a caixinha de input ficarem juntos */
 .input-group {
     display: flex;
-    flex-direction: column; /* Coloca o Label em cima e o Input embaixo */
+    flex-direction: column;
     width: 100%;
-    gap: 8px; /* Espaço bem pequeno e delicado entre o texto e a caixa */
+    gap: 8px;
 }
 
-/* Estiliza apenas os textos que ficam em cima das caixinhas */
 .input-group label {
     display: flex;
-    text-align: left; /* Garante que o texto fique colado na esquerda */
+    text-align: left;
     font-size: 14px;
     font-weight: 500;
     color: #F0F6FC;
@@ -41,24 +37,20 @@
 
 .button-group {
     display: flex;
-    flex-direction: column; /* Coloca o Label em cima e o Input embaixo */
+    flex-direction: column;
     width: 100%;
-    gap: 8px; /* Espaço bem pequeno e delicado entre o texto e a caixa */
+    gap: 8px; 
 }
 
-/* Container fixo no canto da tela que segura os botões */
 .music-controls {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    
-    /* Flexbox de novo! Coloca os botões lado a lado com um espacinho */
     display: flex;
     gap: 10px;
     z-index: 1000;
 }
 
-/* O estilo base de ambos os botões */
 .music-button {
     background-color: #29903B;
     color: white;
@@ -82,7 +74,6 @@
     background-color: #3d444d;
 }
 
-/* Um visual um pouco mais discreto para o botão de pular faixa */
 .skip-button {
     background-color: #0D1117;
     border: 1px solid #3D444D;
