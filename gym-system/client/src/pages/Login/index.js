@@ -9,6 +9,8 @@ import AugustTaylorSwift from '../../assets/music/August-TaylorSwift.mp3';
 import OhYeahSteveLacy from '../../assets/music/ohYeah-SteveLacy.mp3';
 import CoolfortheSummerDemiLovato from '../../assets/music/CoolfortheSummer-DemiLovato.mp3';
 import MirrorsRadioEditJustinTimberlake from '../../assets/music/MirrorsRadioEdit-JustinTimberlake.mp3';
+import ANSIEDADECefa from '../../assets/music/ANSIEDADECefa.mp3';
+import LABIRINTOCefa from '../../assets/music/LABIRINTOCefa.mp3';
 
 export default function Login() {
  
@@ -18,7 +20,9 @@ export default function Login() {
         AugustTaylorSwift,
         OhYeahSteveLacy,
         CoolfortheSummerDemiLovato,
-        MirrorsRadioEditJustinTimberlake
+        MirrorsRadioEditJustinTimberlake, 
+        ANSIEDADECefa, 
+        LABIRINTOCefa
     ];
 
     const [isPlaying, setIsPlaying] = useState(false);
@@ -51,7 +55,7 @@ export default function Login() {
         <div className="login-container">
 
             <section className="form">
-                <img src={logoImage} className="logo" alt="Logo Gym System"/>
+                <img src={logoImage} className="logo" alt="GymLab"/>
                 <form>
                         <div className="input-group">
                             <label htmlFor="username">Username</label>

@@ -1,0 +1,110 @@
+.workout-container {
+    width: 100%;
+    max-width: 1180px;
+    padding: 0 30px;
+    margin: 32px auto;
+    background-color: #0D1117;
+    border: 0.01px solid #363C44;
+    border-radius: 15px;
+}
+
+.workout-container header {
+    display: flex;
+    align-items: center;
+}
+
+.workout-container header span {
+    font-size: 20px;
+    margin-right:auto;
+    color: #FFFFFF;
+}
+
+.workout-container header span strong {
+    color: #e4544b;
+}
+
+.workout-container header img {
+    height: 64px;
+}
+
+.workout-container header a {
+    width: 280px;
+    margin-left: auto;
+    margin-top: 0;
+    margin-left: 16px;
+}
+
+.workout-container header button {
+
+    height: 60px;
+    width: 60px;
+    border-radius: 4px;
+    border: 1px solid #626974;
+    background: transparent;
+    margin-left: 16px;
+    transition: border-color 0.3s;
+}
+
+.workout-container header button:hover {
+    border-color: #e4544b;
+    transform: scale(1.02);
+}
+
+.workout-container h1 {
+    padding: 24px;
+    margin-top: 80px;
+    margin-bottom: 24px;
+    color: #FFFFFF;
+}
+
+.workout-container ul {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 24px;
+    padding: 24px;
+    list-style: none;
+    color: #FFFFFF;
+}
+
+.workout-container ul li {
+    background: #010409;
+    padding: 20px;
+    border: 0.01px solid #363C44;
+    border-radius: 15px;
+}
+
+.workout-container ul li button.edit {
+    margin: 5px;
+    height: 30px;
+    width: 30px;
+    border-radius: 4px;
+    border: 1px solid #626974;
+    background: transparent;
+    margin-left: 16px;
+    transition: border-color 0.3s;
+}
+
+.workout-container ul li button.edit:hover {
+    border-color: #4053bd;
+    transform: scale(1.05);
+}
+
+.workout-container ul li button.delete {
+    margin: 5px;
+    height: 30px;
+    width: 30px;
+    border-radius: 4px;
+    border: 1px solid #626974;
+    background: transparent;
+    margin-left: 16px;
+    transition: border-color 0.3s;
+}
+
+.workout-container ul li button.delete:hover {
+    border-color: #e4544b;
+    transform: scale(1.05);
+}
+
+
+
+

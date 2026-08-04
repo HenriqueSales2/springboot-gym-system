@@ -9,9 +9,8 @@
 
 body {
     font: 400 14px Montserrat, sans-serif;
-    background: linear-gradient(to right, #160106, #0D1117);
+    background: linear-gradient(to right, #0e0003, #0D1117);
     -webkit-font-smoothing: antialiased;
-    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -73,5 +72,5 @@ form input:hover {
 .button:hover {
     filter: brightness(80%);
     background-color: #1f702d;
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
