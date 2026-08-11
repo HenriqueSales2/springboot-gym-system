@@ -3,7 +3,7 @@ server:
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://example.com.br
 file:
-  upload-dir: /Code/UploadDir
+  upload-dir: ${HOME}/uploads
 security:
   jwt:
     token:
@@ -17,9 +17,9 @@ spring:
     name: rest-with-spring-boot-and-java
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${JDBC_URL}
-    username: ${DB_USERNAME} #${AMAZON_USERNAME}
-    password: ${DB_PASSWORD} #${AMAZON_PASSWORD}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: none

@@ -1,0 +1,113 @@
+.spotify-player {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 380px;
+    background-color: #0D1117;
+    border: 1px solid #363C44;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cover-image {
+    width: 56px;
+    height: 56px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.track-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.track-details strong {
+    color: #FFFFFF;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.track-details span {
+    color: #a79c9c;
+    font-size: 13px;
+}
+
+.player-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.buttons-container {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.play-button {
+    background-color: #F25F57;
+    color: #000;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.play-button:hover {
+    transform: scale(1.1);
+}
+
+.icon-button {
+    background: transparent;
+    border: none;
+    color: #a79c9c;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.icon-button:hover {
+    color: #fff;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.time {
+    color: #a79c9c;
+    font-size: 12px;
+    min-width: 35px;
+    text-align: center;
+}
+
+.progress-bar {
+    flex: 1;
+    cursor: pointer;
+    height: 4px;
+    border-radius: 2px;
+    accent-color: #F25F57; 
+    background-color: #363C44;
+}

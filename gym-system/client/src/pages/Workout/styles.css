@@ -35,13 +35,12 @@
 }
 
 .workout-container header button {
-
     height: 60px;
     width: 60px;
     border-radius: 4px;
     border: 1px solid #626974;
     background: transparent;
-    margin-left: 16px;
+    margin-left: 20px;
     transition: border-color 0.3s;
 }
 
@@ -59,7 +58,7 @@
 
 .workout-container ul {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 24px;
     padding: 24px;
     list-style: none;
@@ -69,40 +68,50 @@
 .workout-container ul li {
     background: #010409;
     padding: 20px;
+    gap: 5px;
     border: 0.01px solid #363C44;
     border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
 }
 
-.workout-container ul li button.edit {
-    margin: 5px;
-    height: 30px;
-    width: 30px;
-    border-radius: 4px;
+.workout-container ul li button {
+    padding: 2px;
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: 10px;
     border: 1px solid #626974;
     background: transparent;
-    margin-left: 16px;
     transition: border-color 0.3s;
 }
 
 .workout-container ul li button.edit:hover {
+    opacity: 0.8;
     border-color: #4053bd;
     transform: scale(1.05);
 }
 
-.workout-container ul li button.delete {
-    margin: 5px;
-    height: 30px;
-    width: 30px;
-    border-radius: 4px;
-    border: 1px solid #626974;
-    background: transparent;
-    margin-left: 16px;
-    transition: border-color 0.3s;
-}
-
 .workout-container ul li button.delete:hover {
+    opacity: 0.8;
     border-color: #e4544b;
     transform: scale(1.05);
+}
+
+.workout-container ul li strong {
+    display: block;
+    margin-bottom: 16px;
+    color: #a79c9c;
+}
+
+.workout-container ul li p + strong {
+    margin-top: 32px;
+}
+
+.workout-container ul li p {
+    color: #737380;
+    line-height: 21px;
+    font-size: 16px;
 }
 
 
