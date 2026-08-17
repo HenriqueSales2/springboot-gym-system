@@ -58,7 +58,7 @@
 }
 
 .play-button {
-    background-color: #F25F57;
+    background-color: #29903B;
     color: #000;
     border: none;
     border-radius: 50%;
@@ -108,6 +108,6 @@
     cursor: pointer;
     height: 4px;
     border-radius: 2px;
-    accent-color: #F25F57; 
+    accent-color: #29903B; 
     background-color: #363C44;
 }

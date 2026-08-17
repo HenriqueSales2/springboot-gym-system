@@ -9,7 +9,7 @@
 
 body {
     font: 400 14px Montserrat, sans-serif;
-    background: linear-gradient(to right, #0e0003, #0D1117);
+    background-color: #0D1117;
     -webkit-font-smoothing: antialiased;
     justify-content: center;
     align-items: center;
