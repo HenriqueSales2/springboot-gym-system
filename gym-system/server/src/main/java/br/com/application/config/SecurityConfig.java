@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -78,12 +79,15 @@ public class SecurityConfig {
                                         "/auth/createUser",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
-                                        "/scalar/**"
+                                        "/scalar/**",
+                                        "/h2-console/**"
                                 ).permitAll()
                                 .requestMatchers("/api/**")
                                 .authenticated()
                                 .requestMatchers("/users").denyAll()
-                ).cors(cors -> {})
+                )
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                .cors(cors -> {})
                 .build();
     }
 }

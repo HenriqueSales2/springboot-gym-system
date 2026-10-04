@@ -1,4 +1,3 @@
--- Copiando dados para a tabela rest_with_spring_boot_java.person
 INSERT INTO `person` (`first_name`,`last_name`, `address`, `gender`) VALUES
 ('Arnold', 'Schwarzenegger', 'Thal - Austria', 'Male'),
 ('Ronnie', 'Coleman', 'Monroe - USA', 'Male'),
