@@ -1,329 +1,107 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link } from 'react-router-dom';
-import { FiPower, FiEdit, FiTrash2, FiPlay, FiPause, FiSkipForward, FiSkipBack } from 'react-icons/fi';
-import playlist from "../../utils/playlist.js";
+import { useState, useEffect } from "react";
+import { Link , useNavigate } from 'react-router-dom';
+import { FiPower, FiEdit, FiTrash2 } from 'react-icons/fi';
+import MusicPlayer from "../../components/MusicPlayer/index.js";
+
+import api from '../../services/api';
 
 import './styles.css';
-import '../../player.css'; 
+import '../../player.css';
 
 import logoImage from '../../assets/images/logo.png';
 
 export default function Workout() {
 
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [currentSongIndex, setCurrentSongIndex] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
+    const [workout, setWorkouts] = useState([]);
+    const [page, setPage] = useState([0]);
 
-    const audioRef = useRef(null);
+    const username = localStorage.getItem('username');
+    const accessToken = localStorage.getItem('accessToken');
+            
+    const navigate = useNavigate();
 
-    const toggleMusic = () => {
-        if (isPlaying) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
+    async function logout() {
+        localStorage.clear();
+        navigate('/');
+    }
+
+    async function updateWorkout(id) {
+        try {
+            navigate(`/workouts/new/${id}`)
+        } catch (error) {
+            alert('Edit failed! Try again!')
         }
-        setIsPlaying(!isPlaying);
+    }
+
+    async function deleteWorkout(id) {
+        try {
+            await api.delete(`/api/workout/v1/${id}`, {
+                headers: {
+                Authorization: `Bearer ${accessToken}`
+                }
+            })
+
+            setWorkouts(workout.filter(workout => workout.id !== id));
+        } catch (error) {
+            alert('Delete failed! Try again!')
+        }
+    }
+
+    const header = {
+        headers: {
+        Authorization: `Bearer ${accessToken}`
+        }
     };
 
-    // next music
-    const nextTrack = () => {
-        setCurrentSongIndex((indexAtual) => (indexAtual + 1) % playlist.length);
-    };
-
-    // back music
-    const prevTrack = () => {
-        setCurrentSongIndex((indexAtual) => (indexAtual - 1 + playlist.length) % playlist.length);
-    };
+    async function fetchMoreWorkouts() {
+        try {
+            const response = await api.get(`/api/workout/v1?page=${page}&size=40&direction=asc`, header);
+            if(!response.data._embedded) return;
+            setWorkouts([ ...workout, ...response.data._embedded.workouts]);
+            setPage(page + 1);
+        } catch (error) {
+            console.error("Error loading workouts:", error);
+        }
+    }
 
     useEffect(() => {
-        if (isPlaying) {
-            audioRef.current.play();
-        }
-    }, [currentSongIndex, isPlaying]);
-
-    const handleTimeUpdate = () => setCurrentTime(audioRef.current.currentTime);
-    const handleLoadedMetadata = () => setDuration(audioRef.current.duration);
-    
-    const handleSeek = (e) => {
-        const time = Number(e.target.value);
-        audioRef.current.currentTime = time;
-        setCurrentTime(time);
-    };
-
-    const formatTime = (time) => {
-        if (time && !isNaN(time)) {
-            const minutes = Math.floor(time / 60);
-            const seconds = Math.floor(time % 60);
-            return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-        return '00:00';
-    };
-
-    const currentTrack = playlist[currentSongIndex];
+    fetchMoreWorkouts();
+    }, []); 
 
     return (
         <div className="workout-container">
             <header>
                 <img src={logoImage} alt="GymLab"/>
-                <span>Welcome the GymLab, <strong>Name</strong>!</span>
-                <Link className="button" to="/workouts/new">Add New Workout</Link>
-                <button type="button">
+                <span>Welcome the GymLab, <strong>{username.charAt(0).toUpperCase() + username.slice(1).toLowerCase()}</strong>!</span>
+                <Link className="button" to="/workouts/new/0">Add New Workout</Link>
+                <button onClick={() => logout()} type="button">
                     <FiPower size={18} color="#e4544b"/>    
                 </button>
             </header>
 
             <h1>Registered Workouts</h1>
             <ul>
-                <li>
+                {workout.map(workout => (
+                    <li key={workout.id}>
                     <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
+                    <p>{workout.exerciseName}</p>
                     <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
+                    <p>{workout.muscleGroup}</p>
                     <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
+                    <p>{workout.equipment}</p>
                     <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
+                    <p>{workout.difficulty}</p>
+                        <button onClick={() => updateWorkout(workout.id)} type="button" className="edit">
                             <FiEdit size={20} color="#4053bd" />
                         </button>
-                        <button type="button" className="delete">
+                        <button onClick={() => deleteWorkout(workout.id)} type="button" className="delete">
                             <FiTrash2 size={20} color="#e4544b" />
                         </button>
                 </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
-
-                <li>
-                    <strong>Exercise Name:</strong>
-                    <p>Alternating Dumbbell Curl</p>
-                    <strong>Muscle Group:</strong>
-                    <p>Biceps</p>
-                    <strong>Equipment:</strong>
-                    <p>Dumbbells</p>
-                    <strong>Difficulty:</strong>
-                    <p>Beginner</p>
-                        <button type="button" className="edit">
-                            <FiEdit size={20} color="#4053bd" />
-                        </button>
-                        <button type="button" className="delete">
-                            <FiTrash2 size={20} color="#e4544b" />
-                        </button>
-                </li>
+                ))}
             </ul>
-            
-            <audio 
-                ref={audioRef} 
-                src={currentTrack.src} 
-                onEnded={nextTrack}
-                onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleLoadedMetadata}
-            />
-
-            <div className="spotify-player">
-                <div className="player-info">
-                    <img src={currentTrack.cover} alt="Capa" className="cover-image" />
-                    <div className="track-details">
-                        <strong>{currentTrack.title}</strong>
-                        <span>{currentTrack.artist}</span>
-                    </div>
-                </div>
-
-                <div className="player-controls">
-                    <div className="buttons-container">
-                        <button className="icon-button" onClick={prevTrack}>
-                            <FiSkipBack size={20} />
-                        </button>
-                        <button className="play-button" onClick={toggleMusic}>
-                            {isPlaying ? <FiPause size={20} /> : <FiPlay size={20} style={{marginLeft: '2px'}} />}
-                        </button>
-                        <button className="icon-button" onClick={nextTrack}>
-                            <FiSkipForward size={20} />
-                        </button>
-                    </div>
-
-                    <div className="progress-container">
-                        <span className="time">{formatTime(currentTime)}</span>
-                        <input
-                            type="range"
-                            className="progress-bar"
-                            min="0"
-                            max={duration || 0}
-                            value={currentTime}
-                            onChange={handleSeek}
-                        />
-                        <span className="time">{formatTime(duration)}</span>
-                    </div>
-                </div>
-            </div>
+            <button className="button" onClick={fetchMoreWorkouts} type="button">Load More</button>
+            <MusicPlayer/>
         </div>
     );
 }

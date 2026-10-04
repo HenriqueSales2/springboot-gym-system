@@ -11,7 +11,7 @@ export default function AppRoutes() {
             <Routes>
                 <Route path="/" exact element={<Login/>}></Route>
                 <Route path="/workouts" element={<Workout/>}></Route>
-                <Route path="/workouts/new" element={<NewWorkout/>}></Route>
+                <Route path="/workouts/new/:workoutId" element={<NewWorkout/>}></Route>
             </Routes>
 
         </BrowserRouter>
