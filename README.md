@@ -1,640 +1,475 @@
 # Spring Boot Gym System
 
-REST API desenvolvida com **Java 21**, **Spring Boot**, **Spring Data JPA**, **MySQL**, **Flyway**, **Swagger/OpenAPI**, **JasperReports**, **JUnit 5**, **Mockito** e **Testcontainers** para gerenciamento de pessoas, exercícios de academia, armazenamento de arquivos, geração de relatórios e envio de e-mails.
-
 [![CI/CD with GitHub Actions](https://github.com/HenriqueSales2/springboot-gym-system/actions/workflows/continuos-deployment.yml/badge.svg)](https://github.com/HenriqueSales2/springboot-gym-system/actions/workflows/continuos-deployment.yml)
+
+API REST para gerenciamento de **pessoas**, **exercícios de academia**, **arquivos**, **relatórios** e **e-mails**, protegida com **Spring Security (JWT)** e com front-end para uso no navegador.
+
+**Stack:** Java 21 · Spring Boot · Spring Security · Spring Data JPA · H2 / MySQL · Flyway · Scalar/OpenAPI · JasperReports · JUnit 5 · Mockito · Testcontainers · Docker · GitHub Actions · Node.js (front-end)
+
+## Índice
+
+- [Quick Start](#quick-start)
+- [Duas formas de testar](#duas-formas-de-testar)
+- [Capturas de tela do front-end](#capturas-de-tela-do-front-end)
+- [Autenticação (Spring Security)](#autenticação-spring-security)
+- [Funcionalidades](#funcionalidades)
+- [Endpoints](#endpoints)
+- [Postman](#postman-alternativa)
+- [Capturas de tela da API](#capturas-de-tela-da-api)
+- [Outras formas de executar](#outras-formas-de-executar)
+- [Arquitetura](#arquitetura)
+- [Testes](#testes)
+- [Autor](#autor)
 
 ---
 
-## Tecnologias Utilizadas
+## Quick Start
 
-* Java 21
-* Spring Boot
-* Spring Data JPA
-* Spring Web
-* Spring Mail
-* Spring HATEOAS
-* MySQL
-* Flyway
-* Swagger/OpenAPI
-* JasperReports
-* JUnit 5
-* Mockito
-* Testcontainers
-* Maven
+O projeto usa o banco **H2 (em memória) como padrão**, então você não precisa instalar nem configurar banco de dados.
+
+**Pré-requisitos:** Java 21, Maven e Node.js.
+
+### 1. Subir a API (back-end)
+
+```bash
+git clone https://github.com/HenriqueSales2/springboot-gym-system.git
+cd springboot-gym-system/gym-system
+mvn spring-boot:run
+```
+
+A API fica disponível em `http://localhost:8080`.
+
+### 2. Subir o front-end (em outro terminal)
+
+```bash
+cd springboot-gym-system/gym-system/client
+npm install
+npm run dev
+```
+
+O front-end fica disponível em `http://localhost:3000`.
+
+### 3. Fazer login e testar
+
+Use o usuário de teste **`john` / `admin123`** (veja [Autenticação](#autenticação-spring-security)) e escolha como quer testar:
+
+> Como o H2 roda em memória, os dados são zerados toda vez que a aplicação reinicia.
+
+---
+
+## Duas formas de testar
+
+| | Opção A: **Scalar** (API) | Opção B: **Front-end** (interface) |
+|---|---|---|
+| **Para quem?** | Quem quer ver os endpoints, contratos e respostas | Quem quer usar o sistema como um usuário final |
+| **Link** | http://localhost:8080/scalar | http://localhost:3000 |
+| **O que dá pra fazer** | Executar qualquer endpoint direto da documentação, como exportar relatórios e subir arquivos, além de ver schemas e exemplos de body | Cadastrar, editar e excluir exercícios |
+
+### Opção A: Scalar ou Swagger (documentação interativa da API)
+
+1. Abra **http://localhost:8080/scalar** (ou, se preferir o Swagger, **http://localhost:8080/swagger-ui/index.html**).
+2. No menu lateral, abra **Authentication** e escolha **Authenticates an user and returns a token**.
+3. Envie este body:
+   ```json
+   {
+     "username": "john",
+     "password": "admin123"
+   }
+   ```
+4. Copie o valor do campo **accessToken** da resposta.
+5. Informe o token na ferramenta:
+   - **Scalar:** no canto superior direito, em **bearerAuth**, clique na caixinha e cole o token.
+   - **Swagger:** clique no cadeado (**Authorize**), cole o token e confirme.
+6. No menu lateral, escolha um grupo: **Person**, **Workout**, **File** ou **Email**.
+7. Clique em **Test Request** (Scalar) ou **Try it out** (Swagger) no endpoint desejado.
+
+Roteiro rápido para testar:
+
+1. `POST /api/person/v1`: cria uma pessoa
+2. `GET /api/person/v1`: lista paginada
+3. `GET /api/person/v1/exportPage` com `Accept: application/pdf`: baixa o relatório
+
+> A especificação OpenAPI crua também fica disponível em `/v3/api-docs`.
+
+### Opção B: Front-end
+
+1. Com a API e o front-end rodando, abra **http://localhost:3000**.
+2. Faça login com `john` / `admin123`.
+3. Navegue pelas telas de **Exercícios**.
+4. Experimente ouvir uma música enquanto cadastra, edita ou exclui um treino.
+
+---
+
+## Capturas de tela do front-end
+
+<details>
+<summary>Ver prints das telas</summary>
+
+**Tela de login**
+
+<img width="700" alt="Tela de login" src="gym-system/client/src/assets/screenshots/front-end/login.png" />
+
+**Tela de treinos**
+
+<img width="700" alt="Lista de treinos" src="gym-system/client/src/assets/screenshots/front-end/workouts.png" />
+
+**Tela de cadastro e edição de treinos**
+
+<img width="700" alt="Cadastro de treino" src="gym-system/client/src/assets/screenshots/front-end/addWorkouts.png" />
+<img width="700" alt="Edição de treino" src="gym-system/client/src/assets/screenshots/front-end/editWorkouts.png" />
+
+</details>
+
+---
+
+## Autenticação (Spring Security)
+
+Os endpoints são protegidos com **Spring Security** e **JWT**. Antes de testar, faça login para obter um token e envie esse token nas requisições.
+
+### Usuário de teste (admin padrão)
+
+| Campo | Valor |
+|---|---|
+| **username** | `john` |
+| **password** | `admin123` |
+
+> Credenciais criadas apenas para demonstração e testes locais. Troque ou remova este usuário em qualquer ambiente real.
+
+### 1. Fazer login
+
+```http
+POST /auth/signin
+Content-Type: application/json
+```
+
+```json
+{
+   "username": "john",
+   "password": "admin123"
+}
+```
+
+A resposta traz o token de acesso:
+
+```json
+{
+   "username": "john",
+   "authenticated": true,
+   "created": "2026-10-04T14:52:51.610+00:00",
+   "expiration": "2026-10-04T15:52:51.610+00:00",
+   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+### 2. Usar o token
+
+Envie o `accessToken` no header de todas as outras requisições:
+
+```http
+Authorization: Bearer <accessToken>
+```
+
+> O token expira após **1 hora**. Se receber **401/403**, faça login novamente ou renove o token com o endpoint de refresh (veja os prints em [Capturas de tela da API](#capturas-de-tela-da-api)).
+
+### Como fazer em cada ferramenta
+
+- **Scalar / Swagger:** siga o passo a passo da [Opção A](#opção-a-scalar-ou-swagger-documentação-interativa-da-api).
+- **Front-end:** na tela de login, informe `john` / `admin123`.
+- **Postman:** na aba **Authorization** da requisição ou da collection, escolha **Bearer Token** e cole o token.
 
 ---
 
 ## Funcionalidades
 
-### Pessoas
-
-* Cadastro de pessoas
-* Atualização de pessoas
-* Exclusão de pessoas
-* Busca por ID
-* Busca por nome
-* Listagem paginada
-* Exportação individual em PDF
-* Exportação de páginas em:
-
-  * PDF
-  * CSV
-  * XLSX
-* Importação em massa através de arquivos CSV e XLSX
-
-### Exercícios
-
-* Cadastro de exercícios
-* Atualização de exercícios
-* Exclusão de exercícios
-* Busca por ID
-* Listagem paginada
-
-### Arquivos
-
-* Upload de arquivo único
-* Upload múltiplo
-* Download de arquivos
-
-### E-mails
-
-* Envio de e-mail simples
-* Envio de e-mail com anexo
+| Módulo | O que faz |
+|---|---|
+| **Autenticação** | Login com JWT, criação de usuário e renovação de token |
+| **Pessoas** | CRUD completo, busca por ID e por nome, listagem paginada, atualização parcial (PATCH), exportação individual em PDF, exportação de página em PDF/CSV/XLSX, importação em massa via CSV/XLSX |
+| **Exercícios** | CRUD completo, busca por ID e listagem paginada |
+| **Arquivos** | Upload único, upload múltiplo e download |
+| **E-mails** | Envio de e-mail simples e com anexo (Gmail SMTP) |
 
 ---
 
-# Árvore do projeto
+## Endpoints
 
-```text
-src
-├── main
-│   ├── java
-│   │   └── br/com/application
-│   │       ├── config/          # Configurações da aplicação
-│   │       ├── controller/      # Endpoints REST e documentação com Swagger
-│   │       ├── data/
-│   │       │   ├── dto/         # Objetos de transferência
-│   │       │   └── vo/          # Value Objects
-│   │       ├── exception/       # Tratamento global de exceções
-│   │       ├── file/            # Exportador e Importador de arquivos
-│   │       ├── mail/            # Lógica de mandar email
-│   │       ├── mapper/          # Conversão entre entidades e DTOs
-│   │       ├── model/           # Entidades JPA
-│   │       ├── repository/      # Camada de acesso a dados
-│   │       ├── serialization/   # Suporte para YAML
-│   │       ├── service/         # Regras de negócio
-│   │       └── SpringBootGymSystemApplication.java
-│   │
-│   └── resources
-│       ├── db/migration/        # Scripts Flyway
-│       ├── templates/           # Templates JasperReports e auxiliares
-│       └── application.yml      # Configurações da aplicação
-│
-└── test                         # todos os testes
-    └── java
-        └── br/com/application
-            ├── integrationtests/
-            ├── mocks/
-            ├── repository/
-            └── services/
+### Autenticação — `/auth`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/auth/signin` | Autentica o usuário e retorna o token |
+
+Também existem os endpoints de criação de usuário e de renovação de token (veja os prints e o Scalar).
+
+### Pessoas — `/api/person/v1`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/` | Lista paginada (`page=0`, `size=12`, `direction=asc`) |
+| GET | `/{id}` | Busca por ID |
+| GET | `/findPeopleByName/{firstName}` | Busca por nome |
+| POST | `/` | Cria pessoa |
+| PUT | `/` | Atualiza pessoa |
+| PATCH | `/{id}` | Atualização parcial |
+| DELETE | `/{id}` | Exclui pessoa |
+| GET | `/exportPerson/{id}` | Exporta uma pessoa (`Accept: application/pdf`) |
+| GET | `/exportPage` | Exporta a página atual (`application/pdf`, `text/csv` ou `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`) |
+
+### Exercícios — `/api/workout/v1`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| GET | `/` | Lista exercícios |
+| GET | `/{id}` | Busca por ID |
+| POST | `/` | Cria exercício |
+| PUT | `/` | Atualiza exercício |
+| DELETE | `/{id}` | Exclui exercício |
+
+### Arquivos — `/api/file/v1`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/uploadFile` | Upload de um arquivo (`file`) |
+| POST | `/uploadMultipleFiles` | Upload múltiplo (`files`) |
+| GET | `/downloadFile/{fileName}` | Download |
+
+### E-mails — `/api/email/v1`
+
+| Método | Rota | Descrição |
+|---|---|---|
+| POST | `/` | E-mail simples (`to`, `subject`, `message`) |
+| POST | `/withAttachment` | E-mail com anexo (form-data: `emailRequest` + `attachment`) |
+
+> Os endpoints de e-mail são opcionais para testar o resto do sistema. Para usá-los, configure as variáveis de ambiente `EMAIL_USERNAME` e `EMAIL_PASSWORD` (veja [Outras formas de executar](#outras-formas-de-executar)); sem elas, esses endpoints vão falhar.
+
+<details>
+<summary>Exemplos de body</summary>
+
+**Pessoa (JSON)**
+```json
+{
+   "firstName": "Mary",
+   "lastName": "Doe",
+   "address": "New York - USA",
+   "gender": "Female",
+   "enabled": true
+}
 ```
+
+**Exercício**
+```json
+{
+   "exerciseName": "Bench Press",
+   "muscleGroup": "Chest",
+   "equipment": "Barbell",
+   "difficulty": "Intermediate"
+}
+```
+
+**E-mail**
+```json
+{
+   "to": "destinatario@email.com",
+   "subject": "Teste",
+   "message": "Mensagem enviada pela API"
+}
+```
+</details>
+
 ---
 
-# Configuração do Ambiente
+## Postman (alternativa)
 
-## Banco de Dados
+Importe os dois arquivos da pasta `Collections/` no Postman para testar todos os endpoints:
 
-Crie um banco MySQL:
+- `Gym Training API.postman_collection.json`
+- `Spring_Boot_Application.postman_environment.json`
+
+---
+
+## Capturas de tela da API
+
+<details>
+<summary>Ver prints dos endpoints</summary>
+
+**Autenticação**
+
+<img width="700" alt="Login" src="gym-system/client/src/assets/screenshots/back-end/authentication/signin.png" />
+<img width="700" alt="Criar usuário" src="gym-system/client/src/assets/screenshots/back-end/authentication/createUser.png" />
+<img width="700" alt="Atualizar token" src="gym-system/client/src/assets/screenshots/back-end/authentication/refreshToken.png" />
+
+**Pessoas**
+
+<img width="700" alt="Listar pessoas" src="gym-system/client/src/assets/screenshots/back-end/person/findAll.png" />
+<img width="700" alt="Buscar por ID" src="gym-system/client/src/assets/screenshots/back-end/person/findById.png" />
+<img width="700" alt="Buscar por nome" src="gym-system/client/src/assets/screenshots/back-end/person/findByFirstname.png" />
+<img width="700" alt="Criar pessoa" src="gym-system/client/src/assets/screenshots/back-end/person/create.png" />
+<img width="700" alt="Atualizar pessoa" src="gym-system/client/src/assets/screenshots/back-end/person/update.png" />
+<img width="700" alt="Atualização parcial (desabilitar pessoa)" src="gym-system/client/src/assets/screenshots/back-end/person/disablePerson.png" />
+<img width="700" alt="Excluir pessoa" src="gym-system/client/src/assets/screenshots/back-end/person/delete.png" />
+
+**Relatórios**
+
+<img width="700" alt="Exportar página PDF" src="gym-system/client/src/assets/screenshots/back-end/person/exportPersonPDF.png" />
+<img width="700" alt="CSV no Excel" src="gym-system/client/src/assets/screenshots/back-end/person/exportPageCSV.png" />
+<img width="700" alt="XLSX no Excel" src="gym-system/client/src/assets/screenshots/back-end/person/exportPageXLSX.png" />
+
+**Exercícios**
+
+<img width="700" alt="Listar exercícios" src="gym-system/client/src/assets/screenshots/back-end/workout/findAll.png" />
+<img width="700" alt="Exercício por ID" src="gym-system/client/src/assets/screenshots/back-end/workout/findById.png" />
+<img width="700" alt="Criar exercício" src="gym-system/client/src/assets/screenshots/back-end/workout/create.png" />
+<img width="700" alt="Atualizar exercício" src="gym-system/client/src/assets/screenshots/back-end/workout/update.png" />
+<img width="700" alt="Excluir exercício" src="gym-system/client/src/assets/screenshots/back-end/workout/delete.png" />
+
+**Arquivos**
+
+<img width="700" alt="Upload" src="gym-system/client/src/assets/screenshots/back-end/file/uploadFile.png" />
+<img width="700" alt="Upload múltiplo" src="gym-system/client/src/assets/screenshots/back-end/file/uploadMultipleFiles.png" />
+<img width="700" alt="Download" src="gym-system/client/src/assets/screenshots/back-end/file/downloadFile.png" />
+
+**E-mails**
+
+<img width="700" alt="E-mail" src="gym-system/client/src/assets/screenshots/back-end/email/sendEmail.png" />
+<img width="700" alt="E-mail no Gmail" src="gym-system/client/src/assets/screenshots/back-end/email/sendEmailGmail.png" />
+<img width="700" alt="E-mail com anexo" src="gym-system/client/src/assets/screenshots/back-end/email/sendEmailWithAttachment.png" />
+<img width="700" alt="E-mail com anexo no Gmail" src="gym-system/client/src/assets/screenshots/back-end/email/sendEmailWithAttachmentGmail.png" />
+
+</details>
+
+---
+
+## Outras formas de executar
+
+### Configurar o envio de e-mail (opcional)
+
+Use uma **Senha de Aplicativo** do Google (não a sua senha normal) e defina as variáveis de ambiente antes de subir a aplicação:
+
+```bash
+# Linux/macOS
+export EMAIL_USERNAME=seuemail@gmail.com
+export EMAIL_PASSWORD=sua_senha_de_aplicativo
+```
+
+```cmd
+:: Windows (abra um novo terminal depois de executar)
+setx EMAIL_USERNAME "seuemail@gmail.com"
+setx EMAIL_PASSWORD "senha_de_aplicativo_google"
+```
+
+### Diretório de upload
+
+Ajuste o caminho no `application.yml` (`gym-system/src/main/resources`):
+
+```yaml
+file:
+   upload-dir: C:/caminho/do/projeto/UploadDir
+```
+
+### Usando MySQL
+
+**Manualmente:** crie o banco e ajuste o `application.yml`:
 
 ```sql
 CREATE DATABASE rest_with_spring_boot_java;
 ```
 
-Configure o arquivo no application.yml:
-```text
-└── resources
-       ├── db/migration/
-       ├── templates/       
-       └── application.yml      # AQUI
-```
 ```yaml
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/rest_with_spring_boot_java
-    username: seu_usuario
-    password: sua_senha
+   datasource:
+      url: jdbc:mysql://localhost:3306/rest_with_spring_boot_java
+      username: seu_usuario
+      password: sua_senha
 ```
 
----
-
-## Configuração do Gmail
-
-Crie as variáveis de ambiente:
-
-### Windows
-
-```cmd
-setx EMAIL_USERNAME "seuemail@gmail.com"
-setx EMAIL_PASSWORD "senha_de_aplicativo_google"
-```
-
-### Linux
+**Com Docker Compose** (sobe o MySQL e a aplicação em containers):
 
 ```bash
-export EMAIL_USERNAME=seuemail@gmail.com
-export EMAIL_PASSWORD=sua_senha_de_aplicativo
+cp .env-example .env        # Windows (cmd): copy .env-example .env
+docker compose up -d --build
 ```
 
-> Utilize uma Senha de Aplicativo do Google e não sua senha normal.
+Exemplo de `.env`:
+
+```env
+MYSQL_ROOT_PASSWORD=root123
+MYSQL_DATABASE=rest_with_spring_boot_java
+MYSQL_USER=gym
+MYSQL_PASSWORD=gym123
+MYSQL_URL=jdbc:mysql://db:3306/rest_with_spring_boot_java
+EMAIL_USERNAME=seuemail@gmail.com
+EMAIL_PASSWORD=senha_de_aplicativo_google
+```
+
+| Serviço | URL |
+|---|---|
+| API / Scalar | http://localhost:8080/scalar |
+| MySQL (acesso externo) | `localhost:3310` |
+| Portainer (gestão dos containers) | http://localhost:9000 |
+
+O front-end continua rodando separadamente com Node.js (veja o [Quick Start](#quick-start)).
+
+Para derrubar tudo: `docker compose down` (use `-v` para apagar também os volumes).
+
+> As migrations do **Flyway** criam as tabelas automaticamente na primeira execução.
 
 ---
 
-## Configuração do Diretório de Upload
+## Arquitetura
 
-Ajuste o caminho:
-
-```yaml
-file:
-  upload-dir: C:/caminho/do/projeto/UploadDir
+```text
+springboot-gym-system
+├── Collections/                 # Collection e environment do Postman
+├── docker-compose.yml
+├── .env-example
+└── gym-system
+    ├── client/                  # Front-end (Node.js)
+    ├── pom.xml
+    └── src
+        ├── main
+        │   ├── java/br/com/application
+        │   │   ├── config/          # Configurações da aplicação
+        │   │   ├── controller/      # Endpoints REST + documentação OpenAPI
+        │   │   ├── data/dto|vo/     # DTOs e Value Objects
+        │   │   ├── exception/       # Tratamento global de exceções
+        │   │   ├── file/            # Exportadores e importadores (PDF, CSV, XLSX)
+        │   │   ├── mail/            # Envio de e-mails
+        │   │   ├── mapper/          # Entidade <-> DTO
+        │   │   ├── model/           # Entidades JPA
+        │   │   ├── repository/      # Acesso a dados
+        │   │   ├── serialization/   # Suporte a YAML
+        │   │   └── service/         # Regras de negócio
+        │   └── resources
+        │       ├── db/migration/    # Scripts Flyway
+        │       ├── templates/       # Templates JasperReports
+        │       └── application.yml
+        └── test
+            └── java/br/com/application
+                ├── integrationtests/  # Testes de integração (Testcontainers)
+                ├── mocks/
+                ├── repository/
+                └── services/          # Testes unitários (Mockito)
 ```
 
 ---
 
-# Executando o Projeto
+## Testes
 
-Clone o repositório:
+Dentro da pasta `gym-system`:
 
 ```bash
-git clone https://github.com/HenriqueSales2/springboot-gym-system.git
+mvn test      # testes unitários
+mvn verify    # inclui testes de integração (requer Docker para o Testcontainers)
 ```
 
-Entre na pasta:
-
-```bash
-cd gym-system
-```
-
-Execute:
-
-```bash
-mvn spring-boot:run
-```
-
-Ou:
-
-```bash
-mvn clean install
-java -jar target/*.jar
-```
+O pipeline **CI/CD com GitHub Actions** roda a build e os testes a cada push.
 
 ---
 
-# Swagger ou Postman
+## Autor
 
-Após iniciar a aplicação:
+**Henrique Oliveira Sales**
 
-```text
-http://localhost:8080/swagger-ui/index.html
-```
-
-> Sugiro que utilize o Postman e importe a Collection que eu irei mencionar abaixo.
-
----
-
-
-# Endpoints de Pessoas
-
-Base URL:
-
-```text
-/api/person/v1
-```
-
----
-
-## Listar Pessoas
-
-```http
-GET /api/person/v1
-```
-
-Parâmetros:
-
-| Parâmetro | Padrão |
-| --------- | ------ |
-| page      | 0      |
-| size      | 12     |
-| direction | asc    |
-
-Exemplo:
-
-```http
-GET /api/person/v1?page=0&size=6&direction=asc
-```
-
-<img width="1435" height="958" alt="image" src="https://github.com/user-attachments/assets/00382b9c-7fe5-4de9-b685-87998407aea6" />
-
----
-
-## Buscar Pessoa por ID
-
-```http
-GET /api/person/v1/{id}
-```
-
-Exemplo:
-
-```http
-GET /api/person/v1/1
-```
-
-<img width="1433" height="961" alt="image" src="https://github.com/user-attachments/assets/273f2ef3-1e30-46e2-af56-009be03e3322" />
-
----
-
-## Buscar Pessoa por Nome
-
-```http
-GET /api/person/v1/findPeopleByName/{firstName}
-```
-
-Exemplo:
-
-```http
-GET /api/person/v1/findPeopleByName/Phil
-```
-
-<img width="1435" height="953" alt="image" src="https://github.com/user-attachments/assets/64f01c8f-0e22-4267-a6ed-f0cfd4b04bb7" />
-
----
-
-## Criar Pessoa
-
-```http
-POST /api/person/v1
-```
-
-Body:
-
-```xml
-<PersonDTO>
-    <id>1</id>
-    <firstName>John</firstName>
-    <lastName>Doe</lastName>
-    <address>São Paulo - Brazil</address>
-    <gender>Male</gender>
-    <enabled>True</enabled>
-</PersonDTO>
-```
-
-<img width="1436" height="958" alt="image" src="https://github.com/user-attachments/assets/cf8e952d-405d-4dbe-ad76-c549dad139af" />
-
----
-
-## Atualizar Pessoa
-
-```http
-PUT /api/person/v1
-```
-
-Body:
-
-```json
-{
-  "id": 1,
-  "firstName": "Mary",
-  "lastName": "Doe",
-  "address": "New York - USA",
-  "gender": "Female",
-  "enabled": true
-}
-```
-
-<img width="1436" height="958" alt="image" src="https://github.com/user-attachments/assets/a2de0ce6-4259-4202-9a78-a3e296108675" />
-
----
-
-## Atualização Parcial
-
-```http
-PATCH /api/person/v1/{id}
-```
-
-Exemplo:
-
-```http
-PATCH /api/person/v1/1
-```
-
-<img width="1436" height="960" alt="image" src="https://github.com/user-attachments/assets/c4fbdbb8-695d-4341-81c8-b5ff74d5d0e8" />
-
----
-
-## Excluir Pessoa
-
-```http
-DELETE /api/person/v1/{id}
-```
-
-Exemplo:
-
-```http
-DELETE /api/person/v1/1
-```
-
-<img width="1436" height="958" alt="image" src="https://github.com/user-attachments/assets/2e3ee27c-0534-4847-a643-0cf26657ef77" />
-
----
-
-# Exportação de Relatórios
-
-## Exportar Pessoa
-
-```http
-GET /api/person/v1/exportPerson/{id}
-```
-
-Header:
-
-```http
-Accept: application/pdf
-```
-
-<img width="1435" height="962" alt="image" src="https://github.com/user-attachments/assets/1baf270b-a049-4818-a6be-b38e883a091a" />
-
----
-
-## Exportar Página
-
-PDF:
-
-```http
-GET /api/person/v1/exportPage
-Accept: application/pdf
-```
-
-<img width="1434" height="961" alt="image" src="https://github.com/user-attachments/assets/7662011b-02ea-4619-9c84-016dff797014" />
-
-CSV:
-
-```http
-GET /api/person/v1/exportPage
-Accept: text/csv
-```
-No Postman:
-
-<img width="1433" height="960" alt="image" src="https://github.com/user-attachments/assets/8341c58f-9258-4430-bb29-8075dcecf8b0" />
-
-
-No Excel:
-
-<img width="1865" height="944" alt="image" src="https://github.com/user-attachments/assets/2ba0458b-750d-40fb-a688-0453c552735b" />
-
-
-XLSX:
-
-```http
-GET /api/person/v1/exportPage
-Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-```
-No Postman:
-
-<img width="1435" height="959" alt="image" src="https://github.com/user-attachments/assets/0659c9ba-ebc1-46ed-abab-f5a52ba32626" />
-
-
-No Excel:
-
-<img width="1865" height="942" alt="image" src="https://github.com/user-attachments/assets/76da4286-d3ab-4f2d-9176-ca61cababca5" />
-
----
-
-# Endpoints de Exercícios
-
-Base URL:
-
-```text
-/api/workout/v1
-```
-
----
-
-## Listar Exercícios
-
-```http
-GET /api/workout/v1
-```
-
-<img width="1433" height="958" alt="image" src="https://github.com/user-attachments/assets/b89f4bcd-289a-4cfc-89bb-8a88ddaf62ba" />
-
----
-
-## Buscar Exercício por ID
-
-```http
-GET /api/workout/v1/{id}
-```
-
-<img width="1429" height="961" alt="image" src="https://github.com/user-attachments/assets/5e1bc777-8e06-4f6f-a00b-4724245df81e" />
-
----
-
-## Criar Exercício
-
-```http
-POST /api/workout/v1
-```
-
-Exemplo:
-
-```json
-{
-  "exerciseName": "Bench Press",
-  "muscleGroup": "Chest",
-  "equipment": "Barbell",
-  "difficulty": "Intermediate"
-}
-```
-
-<img width="1433" height="960" alt="image" src="https://github.com/user-attachments/assets/959ffb7f-ca57-469e-abf1-4ab32cdac5e5" />
-
----
-
-## Atualizar Exercício
-
-```http
-PUT /api/workout/v1
-```
-
-<img width="1437" height="960" alt="image" src="https://github.com/user-attachments/assets/d91e8bbf-1963-417d-99db-e7eba52f6030" />
-
----
-
-## Excluir Exercício
-
-```http
-DELETE /api/workout/v1/{id}
-```
-
-<img width="1435" height="960" alt="image" src="https://github.com/user-attachments/assets/903a9a8c-195c-41e8-a407-2429965f8e83" />
-
----
-
-# Upload e Download de Arquivos
-
-Base URL:
-
-```text
-/api/file/v1
-```
-
----
-
-## Upload de Arquivo
-
-```http
-POST /api/file/v1/uploadFile
-```
-
-Body:
-
-```form-data
-file: arquivo.pdf
-```
-
-<img width="1434" height="937" alt="image" src="https://github.com/user-attachments/assets/52add364-7b2f-4670-948a-504bf87a163f" />
-
----
-
-## Upload Múltiplo
-
-```http
-POST /api/file/v1/uploadMultipleFiles
-```
-
-Body:
-
-```form-data
-files: arquivo1.pdf
-files: arquivo2.xlsx
-files: arquivo3.csv
-```
-
-<img width="1436" height="960" alt="image" src="https://github.com/user-attachments/assets/083b0cc0-6bc0-4762-9ca1-8683aaccce5d" />
-
----
-
-## Download
-
-```http
-GET /api/file/v1/downloadFile/{fileName}
-```
-
-Exemplo:
-
-```http
-GET /api/file/v1/downloadFile/people_exported.pdf
-```
-
-<img width="1436" height="955" alt="image" src="https://github.com/user-attachments/assets/1be47c49-f148-4c1d-834a-bdb7c106b664" />
-
----
-
-# Envio de E-mails
-
-Base URL:
-
-```text
-/api/email/v1
-```
-
----
-
-## E-mail Simples
-
-```http
-POST /api/email/v1
-```
-
-Body:
-
-```json
-{
-  "to": "destinatario@email.com",
-  "subject": "Teste",
-  "message": "Mensagem enviada pela API"
-}
-```
-No Postman:
-<img width="1437" height="961" alt="print email" src="https://github.com/user-attachments/assets/2e9f686f-1cc6-4ff6-8814-b74b04e20ed6" />
-
-No Gmail:
-<img width="1869" height="944" alt="print email gmail" src="https://github.com/user-attachments/assets/c590db40-a315-4ef0-b277-1f7e1b329885" />
-
-
----
-
-## E-mail com Anexo
-
-```http
-POST /api/email/v1/withAttachment
-```
-
-Body (form-data):
-
-```text
-emailRequest = {
-  "to":"destinatario@email.com",
-  "subject":"Teste",
-  "message":"Mensagem com anexo"
-}
-
-attachment = arquivo.pdf
-```
-No Postman:
-<img width="1436" height="959" alt="print email with image" src="https://github.com/user-attachments/assets/9a00b6dd-2120-4761-ae22-23080109d1ed" />
-
-No Gmail:
-<img width="1864" height="942" alt="print email with image gmail" src="https://github.com/user-attachments/assets/70a18ab6-0546-42f7-afa9-72e21d597d7b" />
-
----
-
-# Testes
-
-Executar todos os testes:
-
-```bash
-mvn test
-```
-
-Executar testes de integração:
-
-```bash
-mvn verify
-```
-
----
-
-# Coleção Postman
-
-O projeto possui coleções prontas:
-
-```text
-Collections/
-├── Gym Training API.postman_collection.json
-└── Spring_Boot_Application.postman_environment.json
-```
-
-Importe ambos no Postman para testar todos os endpoints rapidamente.
-
----
-
-# Autor
-
-Henrique Oliveira Sales
-
-LinkedIn:
-https://www.linkedin.com
-
-GitHub:
-https://github.com/HenriqueSales2
+- GitHub: [@HenriqueSales2](https://github.com/HenriqueSales2)
+- LinkedIn: [Henrique Sales](https://www.linkedin.com/in/henriquessales/)
